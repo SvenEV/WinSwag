@@ -16,8 +16,10 @@
                               IsSourceGrouped="True"
                               Source="{x:Bind ViewModel.Specification.OperationGroups, Mode=OneWay}"/>
 
-        <vm:ParameterTemplateSelector x:Key="ParameterTemplateSelector"
-                                      FallbackTemplate="{StaticResource FallbackParameterTemplate}"/>
+        <vm:ParameterTemplateSelector
+            x:Key="ParameterTemplateSelector"
+            EnumTemplate="{StaticResource EnumParameterTemplate}"
+            FallbackTemplate="{StaticResource FallbackParameterTemplate}"/>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -120,7 +122,7 @@
 
                                         <TextBlock FontSize="12" TextWrapping="Wrap"
                                                    Margin="0,2,0,0" Opacity=".8"
-                                                   Text="{x:Bind Model.Description}"
+                                                   Text="{x:Bind Model.Operation.Description}"
                                                    MaxLines="2" TextTrimming="WordEllipsis"
                                                    Visibility="{x:Bind HasDescription}"/>
                                     </StackPanel>
@@ -177,15 +179,26 @@
                             <Grid Margin="0,0,0,4" Padding="0,4,0,4"
                                   ColumnSpacing="12">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="150"/>
                                     <ColumnDefinition/>
+                                    <ColumnDefinition Width="300"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="{x:Bind DisplayName}" Margin="0,4,0,0"/>
+                                
+                                <TextBlock Text="{x:Bind DisplayName}"
+                                           FontFamily="Consolas"
+                                           Margin="0,4,0,0"/>
+                                
                                 <ContentControl Grid.Column="1"
                                                 Content="{x:Bind}"
                                                 ContentTemplateSelector="{StaticResource ParameterTemplateSelector}"
                                                 HorizontalContentAlignment="Stretch"
-                                                VerticalContentAlignment="Stretch"/>
+                                                VerticalContentAlignment="Top"/>
+
+                                <TextBlock Grid.Column="2"
+                                           Text="{x:Bind Model.Description}"
+                                           FontSize="12"
+                                           TextWrapping="Wrap"
+                                           Margin="0,2,0,0"/>
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -263,10 +276,26 @@
                             </Button>
                         </Grid>
 
-                        <AutoSuggestBox Text="{x:Bind DashboardVM.Url, Mode=TwoWay}"
-                                        PlaceholderText="URL to a Swagger specification file (swagger.json)"
-                                        QuerySubmitted="{x:Bind DashboardVM.LoadFromQuerySubmissionAsync}"
-                                        QueryIcon="Forward" Margin="0,12"/>
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button Click="{x:Bind DashboardVM.OpenFileAsync}">
+                                <StackPanel Orientation="Horizontal">
+                                    <SymbolIcon Symbol="OpenFile"/>
+                                    <TextBlock Margin="8,0,0,0" Text="Open File"/>
+                                </StackPanel>
+                            </Button>
+                            
+                            <AutoSuggestBox Grid.Column="1"
+                                            Text="{x:Bind DashboardVM.Url, Mode=TwoWay}"
+                                            PlaceholderText="URL to a Swagger specification file (swagger.json)"
+                                            QuerySubmitted="{x:Bind DashboardVM.LoadFromQuerySubmissionAsync}"
+                                            QueryIcon="Forward" Margin="0,12"/>
+
+                        </Grid>
 
                         <GridView ItemsSource="{x:Bind DashboardVM.Favorites}"
                                   ItemClick="{x:Bind DashboardVM.LoadFavoriteAsync}"

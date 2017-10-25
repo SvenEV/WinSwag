@@ -6,6 +6,7 @@ namespace WinSwag.ViewModels
     public class ParameterTemplateSelector : DataTemplateSelector
     {
         public DataTemplate FallbackTemplate { get; set; }
+        public DataTemplate EnumTemplate { get; set; }
 
         public ParameterTemplateSelector()
         {
@@ -15,6 +16,9 @@ namespace WinSwag.ViewModels
         {
             if (!(item is ParameterViewModel param))
                 return null;
+
+            if (param.Model.ActualSchema.IsEnumeration)
+                return EnumTemplate;
 
             return FallbackTemplate;
         }

@@ -1,10 +1,12 @@
 ﻿using GalaSoft.MvvmLight;
+using NSwag;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Controls;
-using WinSwag.Models;
 
 namespace WinSwag.ViewModels
 {
@@ -32,12 +34,23 @@ namespace WinSwag.ViewModels
         {
         }
 
-        public async Task LoadAsync()
+        private async Task LoadFromUrlAsync(string url)
         {
             MessengerInstance.Send(AppMessage.CloseDashboard);
             MessengerInstance.Send(AppMessage.ClearCurrentSpecification);
             MessengerInstance.Send(AppMessage.BeginLoad);
-            var spec = await SwaggerSpecification.LoadAsync(_url);
+            var spec = await SwaggerDocument.FromUrlAsync(url);
+            MessengerInstance.Send(AppMessage.EndLoad);
+            MessengerInstance.Send(new SpecificationLoaded(spec));
+        }
+
+        private async Task LoadFromFileAsync(StorageFile file)
+        {
+            MessengerInstance.Send(AppMessage.CloseDashboard);
+            MessengerInstance.Send(AppMessage.ClearCurrentSpecification);
+            MessengerInstance.Send(AppMessage.BeginLoad);
+            var json = await FileIO.ReadTextAsync(file);
+            var spec = await SwaggerDocument.FromJsonAsync(json);
             MessengerInstance.Send(AppMessage.EndLoad);
             MessengerInstance.Send(new SpecificationLoaded(spec));
         }
@@ -45,14 +58,28 @@ namespace WinSwag.ViewModels
         public async Task LoadFromQuerySubmissionAsync(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             Url = args.QueryText;
-            await LoadAsync();
+            await LoadFromUrlAsync(args.QueryText);
+        }
+
+        public async Task OpenFileAsync()
+        {
+            var picker = new FileOpenPicker();
+            picker.FileTypeFilter.Add(".json");
+
+            var file = await picker.PickSingleFileAsync();
+
+            if (file != null)
+            {
+                Url = "";
+                await LoadFromFileAsync(file);
+            }
         }
 
         public async Task LoadFavoriteAsync(object sender, ItemClickEventArgs e)
         {
             var favorite = (ApiFavorite)e.ClickedItem;
             Url = favorite.Url;
-            await LoadAsync();
+            await LoadFromUrlAsync(favorite.Url);
         }
     }
 
