@@ -88,29 +88,33 @@ namespace WinSwag.ViewModels
                     Method = Model.Method.ToHttpMethod(),
                 };
 
-                foreach (var parameter in Parameters.Where(p => !string.IsNullOrEmpty(p.Value)))
+                foreach (var parameter in Parameters)
                 {
                     switch (parameter.Model.Kind)
                     {
                         case SwaggerParameterKind.Path:
-                            requestUri = requestUri.Replace("{" + parameter.Model.Name + "}", parameter.Value);
+                            requestUri = requestUri.Replace("{" + parameter.Model.Name + "}", parameter.Value ?? "");
                             break;
 
                         case SwaggerParameterKind.Header:
-                            request.Headers.Add(parameter.Model.Name, parameter.Value);
+                            if (!string.IsNullOrEmpty(parameter.Value))
+                                request.Headers.Add(parameter.Model.Name, parameter.Value);
                             break;
 
                         case SwaggerParameterKind.Query:
-                            var value = Uri.EscapeDataString(parameter.Value);
-                            requestUri += $"{(isFirstQueryParameter ? "?" : "&")}{parameter.Model.Name}={value}";
-                            isFirstQueryParameter = false;
+                            if (!string.IsNullOrEmpty(parameter.Value))
+                            {
+                                var value = Uri.EscapeDataString(parameter.Value);
+                                requestUri += $"{(isFirstQueryParameter ? "?" : "&")}{parameter.Model.Name}={value}";
+                                isFirstQueryParameter = false;
+                            }
                             break;
 
                         case SwaggerParameterKind.Body:
                             request.Content = new StringContent(parameter.Value, Encoding.UTF8, "application/json");
                             break;
 
-                        // TODO
+                            // TODO
                     }
                 }
 

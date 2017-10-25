@@ -8,7 +8,7 @@
     mc:Ignorable="d">
 
     <DataTemplate x:Key="FallbackParameterTemplate" x:DataType="vm:ParameterViewModel">
-        <TextBox Text="{x:Bind Value, Mode=TwoWay}"
+        <TextBox Text="{x:Bind Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  AcceptsReturn="True"
                  FontFamily="Consolas"/>
     </DataTemplate>
