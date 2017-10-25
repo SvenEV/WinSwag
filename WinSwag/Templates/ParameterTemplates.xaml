@@ -8,9 +8,26 @@
     mc:Ignorable="d">
 
     <DataTemplate x:Key="FallbackParameterTemplate" x:DataType="vm:ParameterViewModel">
-        <TextBox Text="{x:Bind Value, Mode=TwoWay}"
+        <TextBox Text="{x:Bind Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  AcceptsReturn="True"
                  FontFamily="Consolas"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="EnumParameterTemplate" x:DataType="vm:ParameterViewModel">
+        <ComboBox ItemsSource="{x:Bind EnumerationValues}"
+                  SelectedItem="{x:Bind SelectedEnumerationValue, Mode=TwoWay}"
+                  HorizontalAlignment="Stretch">
+            <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:NamedValue">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{x:Bind Name}"/>
+                        <TextBlock Text="(default)" FontStyle="Italic"
+                                   Visibility="{x:Bind IsDefault}"
+                                   Opacity=".7" Margin="8,0,0,0"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
     </DataTemplate>
 
 </ResourceDictionary>

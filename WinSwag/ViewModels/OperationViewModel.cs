@@ -1,10 +1,10 @@
 ﻿using GalaSoft.MvvmLight;
+using NSwag;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Web;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
 using WinSwag.Models;
@@ -23,9 +23,9 @@ namespace WinSwag.ViewModels
         private ResponseViewModel _response;
         private bool _canSendRequest = true;
 
-        public Operation Model { get; }
+        public SwaggerOperationDescription Model { get; }
 
-        public bool HasDescription => !string.IsNullOrWhiteSpace(Model.Description);
+        public bool HasDescription => !string.IsNullOrWhiteSpace(Model.Operation.Description);
 
         public string Method => Model.Method.ToString().ToUpper();
 
@@ -35,10 +35,10 @@ namespace WinSwag.ViewModels
             {
                 switch (Model.Method)
                 {
-                    case HttpVerb.Get: return GetBrush;
-                    case HttpVerb.Post: return PostBrush;
-                    case HttpVerb.Put: return PutBrush;
-                    case HttpVerb.Delete: return DeleteBrush;
+                    case SwaggerOperationMethod.Get: return GetBrush;
+                    case SwaggerOperationMethod.Post: return PostBrush;
+                    case SwaggerOperationMethod.Put: return PutBrush;
+                    case SwaggerOperationMethod.Delete: return DeleteBrush;
                     default: return DefaultBrush;
                 }
             }
@@ -64,11 +64,11 @@ namespace WinSwag.ViewModels
 
         public bool IsBusy => !CanSendRequest;
 
-        public OperationViewModel(Operation model, string host)
+        public OperationViewModel(SwaggerOperationDescription model, string host)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
-            _host = host ?? throw new ArgumentNullException(nameof(host));
-            Parameters = model.Parameters.Select(p => new ParameterViewModel(p)).ToList();
+            _host = host ?? "";
+            Parameters = model.Operation.Parameters.Select(p => new ParameterViewModel(p)).ToList();
         }
 
         public async void BeginSendRequest()
@@ -88,29 +88,33 @@ namespace WinSwag.ViewModels
                     Method = Model.Method.ToHttpMethod(),
                 };
 
-                foreach (var parameter in Parameters.Where(p => !string.IsNullOrEmpty(p.Value)))
+                foreach (var parameter in Parameters)
                 {
-                    switch (parameter.Model.Location)
+                    switch (parameter.Model.Kind)
                     {
-                        case ParameterLocation.Path:
-                            requestUri = requestUri.Replace("{" + parameter.Model.Name + "}", parameter.Value);
+                        case SwaggerParameterKind.Path:
+                            requestUri = requestUri.Replace("{" + parameter.Model.Name + "}", parameter.Value ?? "");
                             break;
 
-                        case ParameterLocation.Header:
-                            request.Headers.Add(parameter.Model.Name, parameter.Value);
+                        case SwaggerParameterKind.Header:
+                            if (!string.IsNullOrEmpty(parameter.Value))
+                                request.Headers.Add(parameter.Model.Name, parameter.Value);
                             break;
 
-                        case ParameterLocation.Query:
-                            var value = Uri.EscapeDataString(parameter.Value);
-                            requestUri += $"{(isFirstQueryParameter ? "?" : "&")}{parameter.Model.Name}={value}";
-                            isFirstQueryParameter = false;
+                        case SwaggerParameterKind.Query:
+                            if (!string.IsNullOrEmpty(parameter.Value))
+                            {
+                                var value = Uri.EscapeDataString(parameter.Value);
+                                requestUri += $"{(isFirstQueryParameter ? "?" : "&")}{parameter.Model.Name}={value}";
+                                isFirstQueryParameter = false;
+                            }
                             break;
 
-                        case ParameterLocation.Body:
+                        case SwaggerParameterKind.Body:
                             request.Content = new StringContent(parameter.Value, Encoding.UTF8, "application/json");
                             break;
 
-                        // TODO
+                            // TODO
                     }
                 }
 

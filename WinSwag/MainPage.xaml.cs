@@ -1,6 +1,8 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 using Windows.ApplicationModel.Core;
+using Windows.System;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -28,6 +30,14 @@ namespace WinSwag
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 
             Messenger.Default.Register<AppMessage>(this, OnAppMessage);
+
+            Window.Current.CoreWindow.KeyDown += OnKeyDown;
+        }
+
+        private void OnKeyDown(CoreWindow sender, KeyEventArgs args)
+        {
+            if (args.VirtualKey == VirtualKey.F5)
+                ViewModel.SelectedOperation.BeginSendRequest();
         }
 
         private void OnAppMessage(AppMessage message)

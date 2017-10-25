@@ -1,5 +1,5 @@
-﻿using System;
-using WinSwag.Models;
+﻿using NSwag;
+using System;
 
 namespace WinSwag
 {
@@ -13,9 +13,9 @@ namespace WinSwag
 
     public class SpecificationLoaded
     {
-        public SwaggerSpecification Specification { get; }
+        public SwaggerDocument Specification { get; }
 
-        public SpecificationLoaded(SwaggerSpecification specification)
+        public SpecificationLoaded(SwaggerDocument specification)
         {
             Specification = specification ?? throw new ArgumentNullException(nameof(specification));
         }
