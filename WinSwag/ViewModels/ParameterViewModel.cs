@@ -2,10 +2,12 @@
 using NSwag;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace WinSwag.ViewModels
 {
+    [DebuggerDisplay("{Model}")]
     public class ParameterViewModel : ObservableObject
     {
         private static readonly NamedValue NullEnumerationValue = new NamedValue("(null)", null);
@@ -23,6 +25,8 @@ namespace WinSwag.ViewModels
             get => _value;
             set => Set(ref _value, value);
         }
+
+        public bool IsBodyParameter => Model.Kind == SwaggerParameterKind.Body;
 
         public IReadOnlyList<NamedValue> EnumerationValues { get; }
 

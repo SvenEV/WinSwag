@@ -22,6 +22,7 @@ namespace WinSwag.ViewModels
         private readonly string _host;
         private ResponseViewModel _response;
         private bool _canSendRequest = true;
+        private string _selectedContentType;
 
         public SwaggerOperationDescription Model { get; }
 
@@ -52,6 +53,12 @@ namespace WinSwag.ViewModels
             private set => Set(ref _response, value);
         }
 
+        public string SelectedContentType
+        {
+            get => _selectedContentType;
+            set => Set(ref _selectedContentType, value);
+        }
+
         public bool CanSendRequest
         {
             get => _canSendRequest;
@@ -69,6 +76,7 @@ namespace WinSwag.ViewModels
             Model = model ?? throw new ArgumentNullException(nameof(model));
             _host = host ?? "";
             Parameters = model.Operation.Parameters.Select(p => new ParameterViewModel(p)).ToList();
+            _selectedContentType = model.Operation.ActualConsumes?.FirstOrDefault() ?? "application/json";
         }
 
         public async void BeginSendRequest()
@@ -111,7 +119,8 @@ namespace WinSwag.ViewModels
                             break;
 
                         case SwaggerParameterKind.Body:
-                            request.Content = new StringContent(parameter.Value, Encoding.UTF8, "application/json");
+                            if (!string.IsNullOrEmpty(parameter.Value))
+                                request.Content = new StringContent(parameter.Value, Encoding.UTF8, _selectedContentType);
                             break;
 
                             // TODO
