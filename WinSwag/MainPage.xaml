@@ -303,8 +303,14 @@
         <!-- Dashboard popup -->
         <controls:PopupWindow x:Name="DashboardPopup" Grid.RowSpan="99" Grid.ColumnSpan="99"
                               HorizontalContentAlignment="Stretch" IsOpen="True">
-            <Border>
-                <Border HorizontalAlignment="Center" Padding="60,20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                
+                <Border Grid.Column="1" HorizontalAlignment="Center" Padding="60,20">
                     <StackPanel>
                         <Grid>
                             <TextBlock Text="Dashboard"
@@ -323,9 +329,9 @@
                             </Grid.ColumnDefinitions>
 
                             <Button Click="{x:Bind DashboardVM.OpenFileAsync}">
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
                                     <SymbolIcon Symbol="OpenFile"/>
-                                    <TextBlock Margin="8,0,0,0" Text="Open File"/>
+                                    <TextBlock Text="Open File"/>
                                 </StackPanel>
                             </Button>
                             
@@ -337,32 +343,38 @@
 
                         </Grid>
 
-                        <GridView ItemsSource="{x:Bind DashboardVM.Favorites}"
+                        <ListView ItemsSource="{x:Bind DashboardVM.Favorites}"
                                   ItemClick="{x:Bind DashboardVM.LoadFavoriteAsync}"
                                   IsItemClickEnabled="True"
                                   SelectionMode="None">
-                            <GridView.ItemContainerStyle>
-                                <Style TargetType="GridViewItem">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                                 </Style>
-                            </GridView.ItemContainerStyle>
-                            <GridView.ItemTemplate>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="vm:ApiFavorite">
-                                    <Border Padding="12" Background="OrangeRed">
-                                        <StackPanel Spacing="4">
-                                            <TextBlock Text="{x:Bind DisplayName}" FontWeight="SemiBold"/>
-                                            <TextBlock Text="{x:Bind Url}" TextWrapping="Wrap"
-                                                       TextTrimming="CharacterEllipsis"
-                                                       FontSize="12" MaxLines="2"/>
-                                        </StackPanel>
-                                    </Border>
+                                    <Grid ColumnSpacing="16" ToolTipService.ToolTip="{x:Bind Url}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <TextBlock Text="{x:Bind DisplayName}"
+                                                   FontWeight="SemiBold"/>
+                                        
+                                        <TextBlock Text="{x:Bind Url}"
+                                                   Grid.Column="1"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="12"/>
+                                    </Grid>
                                 </DataTemplate>
-                            </GridView.ItemTemplate>
-                        </GridView>
+                            </ListView.ItemTemplate>
+                        </ListView>
                     </StackPanel>
                 </Border>
-            </Border>
+            </Grid>
         </controls:PopupWindow>
 
         <!-- Title bar (top right) -->

@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:WinSwag.ViewModels"
+    xmlns:controls="using:WinSwag.Controls"
     mc:Ignorable="d">
 
     <DataTemplate x:Key="FallbackParameterTemplate" x:DataType="vm:ParameterViewModel">
@@ -36,10 +37,36 @@
     </DataTemplate>
 
     <DataTemplate x:Key="DateTimeParameterTemplate" x:DataType="vm:ParameterViewModel">
-        <StackPanel Orientation="Horizontal" Spacing="12">
-            <DatePicker Date="{Binding Value, Mode=TwoWay}"/>
-            <TimePicker Time="{Binding Value, Mode=TwoWay}"/>
-        </StackPanel>
+        <Grid ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBox Text="{x:Bind Value, Mode=TwoWay}"/>
+
+            <Button Grid.Column="1">
+                <Button.Flyout>
+                    <Flyout>
+                        <Flyout.FlyoutPresenterStyle>
+                            <Style TargetType="FlyoutPresenter">
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Style>
+                        </Flyout.FlyoutPresenterStyle>
+                        
+                        <controls:DateTimeView DateTime="{x:Bind Value, Mode=TwoWay, Converter={StaticResource DateTimeConverter}}"/>
+                    </Flyout>
+                </Button.Flyout>
+
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="Calendar"/>
+                    <SymbolIcon Symbol="Clock" Margin="4,0,0,0"/>
+                    <TextBlock Text="Select" Margin="8,0,0,0"/>
+                </StackPanel>
+            </Button>
+        </Grid>
     </DataTemplate>
 
+    <vm:StringToDateTimeConverter x:Key="DateTimeConverter"/>
 </ResourceDictionary>
