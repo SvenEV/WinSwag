@@ -17,7 +17,7 @@ namespace WinSwag.ViewModels
 
             OperationGroups = model.Operations
                 .OrderBy(op => op.Path)
-                .Select(op => new OperationViewModel(op, Model.Host))
+                .Select(op => new OperationViewModel(op, Model.BaseUrl))
                 .GroupBy(op => op.Model.Operation.Tags.FirstOrDefault() ?? "(Default)")
                 .OrderBy(group => group.Key)
                 .ToList();

@@ -19,7 +19,7 @@ namespace WinSwag.ViewModels
         public static readonly SolidColorBrush DeleteBrush = new SolidColorBrush(Colors.OrangeRed);
         public static readonly SolidColorBrush DefaultBrush = new SolidColorBrush(Colors.Gray);
 
-        private readonly string _host;
+        private readonly string _baseUrl;
         private ResponseViewModel _response;
         private bool _canSendRequest = true;
         private string _selectedContentType;
@@ -71,10 +71,10 @@ namespace WinSwag.ViewModels
 
         public bool IsBusy => !CanSendRequest;
 
-        public OperationViewModel(SwaggerOperationDescription model, string host)
+        public OperationViewModel(SwaggerOperationDescription model, string baseUrl)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
-            _host = host ?? "";
+            _baseUrl = baseUrl ?? "";
             Parameters = model.Operation.Parameters.Select(p => new ParameterViewModel(p)).ToList();
             _selectedContentType = model.Operation.ActualConsumes?.FirstOrDefault() ?? "application/json";
         }
@@ -127,7 +127,7 @@ namespace WinSwag.ViewModels
                     }
                 }
 
-                var fullRequestUri = $"https://{_host}{requestUri}";
+                var fullRequestUri = $"{_baseUrl}{requestUri}";
                 request.RequestUri = new Uri(fullRequestUri);
 
                 var response = await http.SendAsync(request);

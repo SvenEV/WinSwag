@@ -19,7 +19,9 @@
 
         <vm:ParameterTemplateSelector
             x:Key="ParameterTemplateSelector"
+            BoolTemplate="{StaticResource BoolParameterTemplate}"
             EnumTemplate="{StaticResource EnumParameterTemplate}"
+            DateTimeTemplate="{StaticResource DateTimeParameterTemplate}"
             FallbackTemplate="{StaticResource FallbackParameterTemplate}"/>
     </Page.Resources>
 
@@ -339,9 +341,15 @@
                                   ItemClick="{x:Bind DashboardVM.LoadFavoriteAsync}"
                                   IsItemClickEnabled="True"
                                   SelectionMode="None">
+                            <GridView.ItemContainerStyle>
+                                <Style TargetType="GridViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                </Style>
+                            </GridView.ItemContainerStyle>
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="vm:ApiFavorite">
-                                    <Border Width="300" Height="84" Padding="12" Background="OrangeRed">
+                                    <Border Padding="12" Background="OrangeRed">
                                         <StackPanel Spacing="4">
                                             <TextBlock Text="{x:Bind DisplayName}" FontWeight="SemiBold"/>
                                             <TextBlock Text="{x:Bind Url}" TextWrapping="Wrap"

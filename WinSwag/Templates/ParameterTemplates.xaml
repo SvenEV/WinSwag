@@ -13,6 +13,11 @@
                  FontFamily="Consolas"/>
     </DataTemplate>
 
+    <DataTemplate x:Key="BoolParameterTemplate" x:DataType="vm:ParameterViewModel">
+        <ToggleSwitch IsOn="{Binding Value, Mode=TwoWay}"
+                      OnContent="True" OffContent="False"/>
+    </DataTemplate>
+
     <DataTemplate x:Key="EnumParameterTemplate" x:DataType="vm:ParameterViewModel">
         <ComboBox ItemsSource="{x:Bind EnumerationValues}"
                   SelectedItem="{x:Bind SelectedEnumerationValue, Mode=TwoWay}"
@@ -28,6 +33,13 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DateTimeParameterTemplate" x:DataType="vm:ParameterViewModel">
+        <StackPanel Orientation="Horizontal" Spacing="12">
+            <DatePicker Date="{Binding Value, Mode=TwoWay}"/>
+            <TimePicker Time="{Binding Value, Mode=TwoWay}"/>
+        </StackPanel>
     </DataTemplate>
 
 </ResourceDictionary>
