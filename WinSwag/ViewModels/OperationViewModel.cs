@@ -50,8 +50,14 @@ namespace WinSwag.ViewModels
         public ResponseViewModel Response
         {
             get => _response;
-            private set => Set(ref _response, value);
+            private set
+            {
+                if (Set(ref _response, value))
+                    RaisePropertyChanged(nameof(HasResponse));
+            }
         }
+
+        public bool HasResponse => Response != null;
 
         public string SelectedContentType
         {

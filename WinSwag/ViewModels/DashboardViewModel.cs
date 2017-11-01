@@ -37,23 +37,23 @@ namespace WinSwag.ViewModels
 
         private async Task LoadFromUrlAsync(string url)
         {
-            MessengerInstance.Send(AppMessage.CloseDashboard);
-            MessengerInstance.Send(AppMessage.ClearCurrentSpecification);
-            MessengerInstance.Send(AppMessage.BeginLoad);
+            App.CurrentMessenger.Send(AppMessage.CloseDashboard);
+            App.CurrentMessenger.Send(AppMessage.ClearCurrentSpecification);
+            App.CurrentMessenger.Send(AppMessage.BeginLoad);
             var spec = await SwaggerDocument.FromUrlAsync(url);
-            MessengerInstance.Send(AppMessage.EndLoad);
-            MessengerInstance.Send(new SpecificationLoaded(spec));
+            App.CurrentMessenger.Send(AppMessage.EndLoad);
+            App.CurrentMessenger.Send(new SpecificationLoaded(spec));
         }
 
         private async Task LoadFromFileAsync(StorageFile file)
         {
-            MessengerInstance.Send(AppMessage.CloseDashboard);
-            MessengerInstance.Send(AppMessage.ClearCurrentSpecification);
-            MessengerInstance.Send(AppMessage.BeginLoad);
+            App.CurrentMessenger.Send(AppMessage.CloseDashboard);
+            App.CurrentMessenger.Send(AppMessage.ClearCurrentSpecification);
+            App.CurrentMessenger.Send(AppMessage.BeginLoad);
             var json = await FileIO.ReadTextAsync(file);
             var spec = await SwaggerDocument.FromJsonAsync(json);
-            MessengerInstance.Send(AppMessage.EndLoad);
-            MessengerInstance.Send(new SpecificationLoaded(spec));
+            App.CurrentMessenger.Send(AppMessage.EndLoad);
+            App.CurrentMessenger.Send(new SpecificationLoaded(spec));
         }
 
         public async Task LoadFromQuerySubmissionAsync(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)

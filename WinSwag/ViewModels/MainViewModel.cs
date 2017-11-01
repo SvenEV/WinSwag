@@ -11,14 +11,28 @@ namespace WinSwag.ViewModels
         public SwaggerSpecificationViewModel Specification
         {
             get => _specification;
-            private set => Set(ref _specification, value);
+            private set
+            {
+                if (Set(ref _specification, value) && value == null)
+                    SelectedOperation = null;
+            }
         }
 
         public OperationViewModel SelectedOperation
         {
             get => _selectedOperation;
-            set => Set(ref _selectedOperation, value);
+            set
+            {
+                if (Set(ref _selectedOperation, value))
+                {
+                    RaisePropertyChanged(nameof(IsOperationSelected));
+                    RaisePropertyChanged(nameof(IsntOperationSelected));
+                }
+            }
         }
+
+        public bool IsOperationSelected => SelectedOperation != null;
+        public bool IsntOperationSelected => SelectedOperation == null;
 
         public bool IsBusy
         {
@@ -34,10 +48,10 @@ namespace WinSwag.ViewModels
 
         public MainViewModel()
         {
-            MessengerInstance.Register<SpecificationLoaded>(this, msg =>
+            App.CurrentMessenger.Register<SpecificationLoaded>(this, msg =>
                 Specification = new SwaggerSpecificationViewModel(msg.Specification));
 
-            MessengerInstance.Register<AppMessage>(this, msg =>
+            App.CurrentMessenger.Register<AppMessage>(this, msg =>
             {
                 switch (msg)
                 {

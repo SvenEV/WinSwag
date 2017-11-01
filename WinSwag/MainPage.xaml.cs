@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight.Messaging;
-using Windows.ApplicationModel.Core;
+﻿using Windows.ApplicationModel.Core;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Core;
@@ -22,14 +21,14 @@ namespace WinSwag
             DataContext = ViewModel;
 
             Window.Current.SetTitleBar(TitleBar);
-            CoreApplication.MainView.TitleBar.ExtendViewIntoTitleBar = true;
+            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
 
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
             titleBar.BackgroundColor = Colors.Transparent;
             titleBar.ButtonBackgroundColor = Colors.Transparent;
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 
-            Messenger.Default.Register<AppMessage>(this, OnAppMessage);
+            App.CurrentMessenger.Register<AppMessage>(this, OnAppMessage);
 
             Window.Current.CoreWindow.KeyDown += OnKeyDown;
         }

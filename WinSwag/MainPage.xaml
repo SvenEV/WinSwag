@@ -67,7 +67,7 @@
                     <ListView ItemsSource="{x:Bind Operations.View, Mode=OneWay}"
                               ScrollViewer.IsVerticalScrollChainingEnabled="True"
                               SelectedItem="{Binding SelectedOperation, Mode=TwoWay}"
-                              Visibility="{x:Bind ViewModel.IsIdle}"
+                              Visibility="{x:Bind ViewModel.IsIdle, Mode=OneWay}"
                               Padding="0,-12,0,4">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
@@ -169,7 +169,7 @@
 
         <!-- Selected operation request/response (right) -->
         <ScrollViewer Grid.Row="1" Grid.Column="1" Padding="20,0"
-                      Visibility="{x:Bind ViewModel.IsIdle}">
+                      Visibility="{x:Bind ViewModel.IsOperationSelected, Mode=OneWay}">
             <StackPanel>
                 <!-- Request part -->
                 <Border Padding="0,0,0,4" Margin="0,0,0,4" BorderThickness="0,0,0,1" BorderBrush="#44FFFFFF">
@@ -256,48 +256,56 @@
                     </StackPanel>
                 </Button>
 
-                <!-- Response part -->
+                <!-- Response part title -->
                 <Border Padding="0,0,0,4" Margin="0,0,0,4" BorderThickness="0,0,0,1" BorderBrush="#44FFFFFF">
                     <TextBlock Text="Response" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiBold"/>
                 </Border>
 
-                <Border Height="4">
-                    <ProgressBar IsIndeterminate="{x:Bind ViewModel.SelectedOperation.IsBusy, Mode=OneWay}"
-                                 Visibility="{x:Bind ViewModel.SelectedOperation.IsBusy, Mode=OneWay}"
-                                 BorderBrush="{x:Bind ViewModel.SelectedOperation.MethodBrush, Mode=OneWay}"/>
-                </Border>
+                <!-- Response part -->
+                <StackPanel Visibility="{x:Bind ViewModel.SelectedOperation.HasResponse, Mode=OneWay}">
+                    <Border Height="4">
+                        <ProgressBar IsIndeterminate="{x:Bind ViewModel.SelectedOperation.IsBusy, Mode=OneWay}"
+                                     Visibility="{x:Bind ViewModel.SelectedOperation.IsBusy, Mode=OneWay}"
+                                     BorderBrush="{x:Bind ViewModel.SelectedOperation.MethodBrush, Mode=OneWay}"/>
+                    </Border>
 
-                <TextBlock Text="{x:Bind ViewModel.SelectedOperation.Response.Status, Mode=OneWay}"
-                           FontWeight="SemiBold"/>
+                    <TextBlock Text="{x:Bind ViewModel.SelectedOperation.Response.Status, Mode=OneWay}"
+                               FontWeight="SemiBold"/>
 
-                <TextBlock Text="{x:Bind ViewModel.SelectedOperation.Response.RequestUri, Mode=OneWay}"
-                           TextWrapping="Wrap" FontFamily="Consolas" IsTextSelectionEnabled="True"
-                           Margin="0,12,0,0"/>
+                    <TextBlock Text="{x:Bind ViewModel.SelectedOperation.Response.RequestUri, Mode=OneWay}"
+                               TextWrapping="Wrap" FontFamily="Consolas" IsTextSelectionEnabled="True"
+                               Margin="0,12,0,0"/>
 
-                <!-- Response headers -->
-                <ItemsControl ItemsSource="{x:Bind ViewModel.SelectedOperation.Response.Model.Headers, Mode=OneWay}"
-                              Margin="0,12,0,0">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="250"/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock FontFamily="Consolas"><Run Text="{Binding Key}"/>:</TextBlock>
-                                <ItemsControl Grid.Column="1" ItemsSource="{Binding Value}" FontFamily="Consolas"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                    <!-- Response headers -->
+                    <ItemsControl ItemsSource="{x:Bind ViewModel.SelectedOperation.Response.Model.Headers, Mode=OneWay}"
+                                  Margin="0,12,0,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="250"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock FontFamily="Consolas"><Run Text="{Binding Key}"/>:</TextBlock>
+                                    <ItemsControl Grid.Column="1" ItemsSource="{Binding Value}" FontFamily="Consolas"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
 
-                <!-- Response content -->
-                <TextBlock Margin="0,12,0,0" IsTextSelectionEnabled="True"
-                           FontFamily="Consolas"
-                           Text="{x:Bind ViewModel.SelectedOperation.Response.Content, Mode=OneWay}"/>
+                    <!-- Response content -->
+                    <TextBlock Margin="0,12,0,0" IsTextSelectionEnabled="True"
+                               FontFamily="Consolas"
+                               Text="{x:Bind ViewModel.SelectedOperation.Response.Content, Mode=OneWay}"/>
+                </StackPanel>
 
             </StackPanel>
         </ScrollViewer>
+
+        <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Visibility="{x:Bind ViewModel.IsntOperationSelected, Mode=OneWay}">
+            No operation selected.
+        </TextBlock>
 
         <!-- Grid splitter (vertical) -->
         <tkc:GridSplitter Grid.Column="1" Grid.RowSpan="99" HorizontalAlignment="Left"
