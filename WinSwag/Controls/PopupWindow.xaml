@@ -21,7 +21,7 @@
 
             <Border Opacity=".92">
                 <Border.Background>
-                    <AcrylicBrush BackgroundSource="Backdrop" TintColor="#88BBBBBB"/>
+                    <AcrylicBrush BackgroundSource="Backdrop" TintColor="#A0000000"/>
                 </Border.Background>
             </Border>
 

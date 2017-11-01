@@ -8,6 +8,7 @@
     xmlns:tkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:vm="using:WinSwag.ViewModels"
     xmlns:controls="using:WinSwag.Controls"
+    xmlns:models="using:WinSwag.Models"
     mc:Ignorable="d"
     RequestedTheme="Dark">
 
@@ -39,7 +40,7 @@
         <Border Grid.RowSpan="99">
             <Border.Background>
                 <AcrylicBrush BackgroundSource="HostBackdrop"
-                              FallbackColor="#FF404040"
+                              FallbackColor="#FF101A21"
                               TintColor="#AA000000"/>
             </Border.Background>
         </Border>
@@ -260,9 +261,11 @@
                     <TextBlock Text="Response" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiBold"/>
                 </Border>
 
-                <ProgressBar IsIndeterminate="{x:Bind ViewModel.SelectedOperation.IsBusy, Mode=OneWay}"
-                             Visibility="{x:Bind ViewModel.SelectedOperation.IsBusy, Mode=OneWay}"
-                             BorderBrush="{x:Bind ViewModel.SelectedOperation.MethodBrush, Mode=OneWay}"/>
+                <Border Height="4">
+                    <ProgressBar IsIndeterminate="{x:Bind ViewModel.SelectedOperation.IsBusy, Mode=OneWay}"
+                                 Visibility="{x:Bind ViewModel.SelectedOperation.IsBusy, Mode=OneWay}"
+                                 BorderBrush="{x:Bind ViewModel.SelectedOperation.MethodBrush, Mode=OneWay}"/>
+                </Border>
 
                 <TextBlock Text="{x:Bind ViewModel.SelectedOperation.Response.Status, Mode=OneWay}"
                            FontWeight="SemiBold"/>
@@ -353,7 +356,7 @@
                                 </Style>
                             </ListView.ItemContainerStyle>
                             <ListView.ItemTemplate>
-                                <DataTemplate x:DataType="vm:ApiFavorite">
+                                <DataTemplate x:DataType="models:SwaggerSessionInfo">
                                     <Grid ColumnSpacing="16" ToolTipService.ToolTip="{x:Bind Url}">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>

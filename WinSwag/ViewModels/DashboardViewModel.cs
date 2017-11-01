@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Controls;
+using WinSwag.Models;
 
 namespace WinSwag.ViewModels
 {
@@ -14,15 +15,15 @@ namespace WinSwag.ViewModels
     {
         private string _url = "";
 
-        private readonly ObservableCollection<ApiFavorite> _favorites = new ObservableCollection<ApiFavorite>
+        private readonly ObservableCollection<SwaggerSessionInfo> _favorites = new ObservableCollection<SwaggerSessionInfo>
         {
-            new ApiFavorite("PetStore", "http://petstore.swagger.io/v2/swagger.json"),
-            new ApiFavorite("HiP-DataStore", "https://docker-hip.cs.upb.de/develop/datastore/swagger/v1/swagger.json"),
-            new ApiFavorite("HiP-UserStore", "https://docker-hip.cs.upb.de/develop/userstore/swagger/v1/swagger.json"),
-            new ApiFavorite("HiP-CmsWebApi", "https://docker-hip.cs.upb.de/develop/cms-api/swagger/v1/swagger.json")
+            new SwaggerSessionInfo("PetStore", "http://petstore.swagger.io/v2/swagger.json", Guid.NewGuid()),
+            new SwaggerSessionInfo("HiP-DataStore", "https://docker-hip.cs.upb.de/develop/datastore/swagger/v1/swagger.json", Guid.NewGuid()),
+            new SwaggerSessionInfo("HiP-UserStore", "https://docker-hip.cs.upb.de/develop/userstore/swagger/v1/swagger.json", Guid.NewGuid()),
+            new SwaggerSessionInfo("HiP-CmsWebApi", "https://docker-hip.cs.upb.de/develop/cms-api/swagger/v1/swagger.json", Guid.NewGuid())
         };
 
-        public IReadOnlyList<ApiFavorite> Favorites => _favorites;
+        public IReadOnlyList<SwaggerSessionInfo> Favorites => _favorites;
 
         public string Url
         {
@@ -77,22 +78,9 @@ namespace WinSwag.ViewModels
 
         public async Task LoadFavoriteAsync(object sender, ItemClickEventArgs e)
         {
-            var favorite = (ApiFavorite)e.ClickedItem;
+            var favorite = (SwaggerSessionInfo)e.ClickedItem;
             Url = favorite.Url;
             await LoadFromUrlAsync(favorite.Url);
-        }
-    }
-
-    public class ApiFavorite
-    {
-        public string DisplayName { get; }
-
-        public string Url { get; }
-
-        public ApiFavorite(string displayName, string url)
-        {
-            DisplayName = displayName ?? throw new ArgumentNullException(nameof(displayName));
-            Url = url ?? throw new ArgumentNullException(nameof(url));
         }
     }
 }

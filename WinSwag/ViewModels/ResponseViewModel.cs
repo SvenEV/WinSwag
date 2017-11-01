@@ -32,7 +32,7 @@ namespace WinSwag.ViewModels
             {
                 try
                 {
-                    var o = JObject.Parse(content);
+                    var o = JToken.Parse(content);
                     content = o.ToString(Formatting.Indented);
                 }
                 catch (JsonReaderException)
