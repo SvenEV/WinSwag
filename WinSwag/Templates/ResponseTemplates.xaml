@@ -28,6 +28,11 @@
                             <SymbolIcon Symbol="Copy"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
+                    <MenuFlyoutItem Text="Open with..." Click="{x:Bind OpenFile}">
+                        <MenuFlyoutItem.Icon>
+                            <SymbolIcon Symbol="OpenWith"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
                     <MenuFlyoutItem Text="Save as..." Click="{x:Bind SaveAsFile}">
                         <MenuFlyoutItem.Icon>
                             <SymbolIcon Symbol="Save"/>

@@ -1,10 +1,13 @@
-﻿using System;
+﻿using MimeTypes;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
+using Windows.System;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -57,6 +60,21 @@ namespace WinSwag.Models.Responses
                 using (var stream = await file.OpenStreamForWriteAsync())
                     await Response.Content.CopyToAsync(stream);
             }
+        }
+
+        public async void OpenFile()
+        {
+            var mediaType = Response.Content.Headers.ContentType.MediaType;
+            var filename = $"{Guid.NewGuid()}.{MimeTypeMap.GetExtension(mediaType)}";
+            var file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
+
+            using (var stream = await file.OpenStreamForWriteAsync())
+                await Response.Content.CopyToAsync(stream);
+
+            await Launcher.LaunchFileAsync(file, new LauncherOptions
+            {
+                DisplayApplicationPicker = true
+            });
         }
     }
 }
