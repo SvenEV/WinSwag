@@ -109,7 +109,12 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Arguments\BoolArgument.cs" />
+    <Compile Include="Models\Arguments\DateTimeArgument.cs" />
+    <Compile Include="Models\Arguments\EnumArgument.cs" />
+    <Compile Include="Models\Arguments\StringArgument.cs" />
     <Compile Include="Models\NSwagExtensions.cs" />
+    <Compile Include="Models\Arguments\SwaggerArgument.cs" />
     <Compile Include="Models\SwaggerSessionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Templates\ParameterTemplates.xaml.cs">
@@ -118,11 +123,10 @@
     <Compile Include="AppMessage.cs" />
     <Compile Include="Models\SwaggerSessionInfo.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />
-    <Compile Include="ViewModels\StringToDateTimeConverter.cs" />
+    <Compile Include="ViewModels\DateTimeToStringConverter.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\OperationViewModel.cs" />
     <Compile Include="ViewModels\ParameterTemplateSelector.cs" />
-    <Compile Include="ViewModels\ParameterViewModel.cs" />
     <Compile Include="ViewModels\ResponseViewModel.cs" />
     <Compile Include="Models\SwaggerSession.cs" />
     <Compile Include="ViewModels\SwaggerSpecificationViewModel.cs" />

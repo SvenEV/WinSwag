@@ -1,0 +1,68 @@
+﻿using NSwag;
+using System;
+using System.IO;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+
+namespace WinSwag.Models.Arguments
+{
+    public class BoolArgument : SwaggerArgument
+    {
+        private bool _value;
+
+        public bool Value
+        {
+            get => _value;
+            set => Set(ref _value, value);
+        }
+
+        public BoolArgument(SwaggerParameter parameter) : base(parameter)
+        {
+        }
+
+        public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri) =>
+            StringArgument.ApplyAsync(Parameter, _value.ToString(), request, requestUri);
+    }
+
+    public class FileArgument : SwaggerArgument
+    {
+        private StorageFile _file;
+
+        public StorageFile File
+        {
+            get => _file;
+            private set => Set(ref _file, value);
+        }
+
+        public FileArgument(SwaggerParameter parameter) : base(parameter)
+        {
+        }
+
+        public async void PickFile()
+        {
+            var picker = new FileOpenPicker();
+            picker.FileTypeFilter.Add("*");
+            File = await picker.PickSingleFileAsync() ?? File;
+        }
+
+        public void ClearFile()
+        {
+            File = null;
+        }
+
+        public override async Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri)
+        {
+            if (_file == null)
+                return;
+
+            if (Parameter.Kind != SwaggerParameterKind.Body)
+                throw new NotSupportedException("Files can only appear as request body");
+
+            var stream = await _file.OpenReadAsync();
+            request.Content = new StreamContent(stream.AsStream());
+        }
+    }
+}

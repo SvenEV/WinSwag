@@ -1,6 +1,6 @@
-﻿using NJsonSchema;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using WinSwag.Models.Arguments;
 
 namespace WinSwag.ViewModels
 {
@@ -10,6 +10,7 @@ namespace WinSwag.ViewModels
         public DataTemplate BoolTemplate { get; set; }
         public DataTemplate EnumTemplate { get; set; }
         public DataTemplate DateTimeTemplate { get; set; }
+        public DataTemplate FileTemplate { get; set; }
 
         public ParameterTemplateSelector()
         {
@@ -17,19 +18,17 @@ namespace WinSwag.ViewModels
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
-            if (!(item is ParameterViewModel param))
+            if (!(item is SwaggerArgument arg))
                 return null;
 
-            if (param.Model.Type == JsonObjectType.Boolean)
-                return BoolTemplate ?? FallbackTemplate;
-
-            if (param.Model.Format == "date-time")
-                return DateTimeTemplate ?? FallbackTemplate;
-
-            if (param.Model.ActualSchema.IsEnumeration)
-                return EnumTemplate ?? FallbackTemplate;
-
-            return FallbackTemplate;
+            switch (arg)
+            {
+                case BoolArgument _: return BoolTemplate;
+                case EnumArgument _: return EnumTemplate;
+                case DateTimeArgument _: return DateTimeTemplate;
+                case FileArgument _: return FileTemplate;
+                default: return FallbackTemplate;
+            }
         }
     }
 }

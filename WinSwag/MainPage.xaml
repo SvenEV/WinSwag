@@ -9,6 +9,7 @@
     xmlns:vm="using:WinSwag.ViewModels"
     xmlns:controls="using:WinSwag.Controls"
     xmlns:models="using:WinSwag.Models"
+    xmlns:arguments="using:WinSwag.Models.Arguments"
     mc:Ignorable="d"
     RequestedTheme="Dark">
 
@@ -23,6 +24,7 @@
             BoolTemplate="{StaticResource BoolParameterTemplate}"
             EnumTemplate="{StaticResource EnumParameterTemplate}"
             DateTimeTemplate="{StaticResource DateTimeParameterTemplate}"
+            FileTemplate="{StaticResource FileParameterTemplate}"
             FallbackTemplate="{StaticResource FallbackParameterTemplate}"/>
     </Page.Resources>
 
@@ -177,9 +179,9 @@
                 </Border>
 
                 <!-- Parameters -->
-                <ItemsControl ItemsSource="{x:Bind ViewModel.SelectedOperation.Parameters, Mode=OneWay}">
+                <ItemsControl ItemsSource="{x:Bind ViewModel.SelectedOperation.Arguments, Mode=OneWay}">
                     <ItemsControl.ItemTemplate>
-                        <DataTemplate x:DataType="vm:ParameterViewModel">
+                        <DataTemplate x:DataType="arguments:SwaggerArgument">
                             <Grid Margin="0,0,0,4" Padding="0,4,0,4"
                                   ColumnSpacing="12">
                                 <Grid.ColumnDefinitions>
@@ -198,12 +200,12 @@
 
                                             <TextBlock Grid.Column="2"
                                                    Opacity=".6"
-                                                   Text="{x:Bind Model.Description}"
+                                                   Text="{x:Bind Parameter.Description}"
                                                    FontSize="12"
                                                    TextWrapping="Wrap"/>
 
                                             <TextBlock Margin="0,8,0,0">
-                                                <Run Text="{x:Bind Model.Kind}"/> parameter
+                                                <Run Text="{x:Bind Parameter.Kind}"/> parameter
                                             </TextBlock>
                                         </StackPanel>
                                     </ToolTipService.ToolTip>
@@ -213,7 +215,7 @@
 
                                     <TextBlock Grid.Column="2"
                                                Opacity=".6"
-                                               Text="{x:Bind Model.Description}"
+                                               Text="{x:Bind Parameter.Description}"
                                                FontSize="12"
                                                MaxLines="3"
                                                TextWrapping="Wrap"

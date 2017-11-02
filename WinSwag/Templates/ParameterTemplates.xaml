@@ -6,25 +6,26 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:WinSwag.ViewModels"
     xmlns:controls="using:WinSwag.Controls"
+    xmlns:arguments="using:WinSwag.Models.Arguments"
     mc:Ignorable="d">
 
-    <DataTemplate x:Key="FallbackParameterTemplate" x:DataType="vm:ParameterViewModel">
+    <DataTemplate x:Key="FallbackParameterTemplate" x:DataType="arguments:StringArgument">
         <TextBox Text="{x:Bind Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  AcceptsReturn="True"
                  FontFamily="Consolas"/>
     </DataTemplate>
 
-    <DataTemplate x:Key="BoolParameterTemplate" x:DataType="vm:ParameterViewModel">
-        <ToggleSwitch IsOn="{Binding Value, Mode=TwoWay}"
+    <DataTemplate x:Key="BoolParameterTemplate" x:DataType="arguments:BoolArgument">
+        <ToggleSwitch IsOn="{x:Bind Value, Mode=TwoWay}"
                       OnContent="True" OffContent="False"/>
     </DataTemplate>
 
-    <DataTemplate x:Key="EnumParameterTemplate" x:DataType="vm:ParameterViewModel">
-        <ComboBox ItemsSource="{x:Bind EnumerationValues}"
-                  SelectedItem="{x:Bind SelectedEnumerationValue, Mode=TwoWay}"
+    <DataTemplate x:Key="EnumParameterTemplate" x:DataType="arguments:EnumArgument">
+        <ComboBox ItemsSource="{x:Bind Options}"
+                  SelectedItem="{x:Bind Value, Mode=TwoWay}"
                   HorizontalAlignment="Stretch">
             <ComboBox.ItemTemplate>
-                <DataTemplate x:DataType="vm:NamedValue">
+                <DataTemplate x:DataType="arguments:NamedValue">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{x:Bind Name}"/>
                         <TextBlock Text="(default)" FontStyle="Italic"
@@ -36,14 +37,14 @@
         </ComboBox>
     </DataTemplate>
 
-    <DataTemplate x:Key="DateTimeParameterTemplate" x:DataType="vm:ParameterViewModel">
+    <DataTemplate x:Key="DateTimeParameterTemplate" x:DataType="arguments:DateTimeArgument">
         <Grid ColumnSpacing="12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBox Text="{x:Bind Value, Mode=TwoWay}"/>
+            <TextBox Text="{x:Bind Value, Mode=TwoWay, Converter={StaticResource DateTimeConverter}}"/>
 
             <Button Grid.Column="1">
                 <Button.Flyout>
@@ -55,7 +56,7 @@
                             </Style>
                         </Flyout.FlyoutPresenterStyle>
                         
-                        <controls:DateTimeView DateTime="{x:Bind Value, Mode=TwoWay, Converter={StaticResource DateTimeConverter}}"/>
+                        <controls:DateTimeView DateTime="{x:Bind Value, Mode=TwoWay}"/>
                     </Flyout>
                 </Button.Flyout>
 
@@ -68,5 +69,35 @@
         </Grid>
     </DataTemplate>
 
-    <vm:StringToDateTimeConverter x:Key="DateTimeConverter"/>
+    <DataTemplate x:Key="FileParameterTemplate" x:DataType="arguments:FileArgument">
+        <Grid ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock VerticalAlignment="Center"
+                       Text="{x:Bind File.Name, Mode=OneWay}"
+                       IsTextSelectionEnabled="True"
+                       TextTrimming="CharacterEllipsis"/>
+
+            <Button Click="{x:Bind PickFile}" Grid.Column="1">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <SymbolIcon Symbol="OpenFile"/>
+                    <TextBlock Text="Select"/>
+                </StackPanel>
+            </Button>
+            
+            <Button Click="{x:Bind ClearFile}" Grid.Column="2">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <SymbolIcon Symbol="Clear"/>
+                    <TextBlock Text="Clear"/>
+                </StackPanel>
+            </Button>
+
+        </Grid>
+    </DataTemplate>
+
+    <vm:DateTimeToStringConverter x:Key="DateTimeConverter"/>
 </ResourceDictionary>

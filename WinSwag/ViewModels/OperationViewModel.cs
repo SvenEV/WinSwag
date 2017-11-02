@@ -8,6 +8,7 @@ using System.Text;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
 using WinSwag.Models;
+using WinSwag.Models.Arguments;
 
 namespace WinSwag.ViewModels
 {
@@ -45,7 +46,7 @@ namespace WinSwag.ViewModels
             }
         }
 
-        public IReadOnlyList<ParameterViewModel> Parameters { get; }
+        public IReadOnlyList<SwaggerArgument> Arguments { get; }
 
         public ResponseViewModel Response
         {
@@ -81,7 +82,7 @@ namespace WinSwag.ViewModels
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
             _baseUrl = baseUrl ?? "";
-            Parameters = model.Operation.Parameters.Select(p => new ParameterViewModel(p)).ToList();
+            Arguments = model.Operation.Parameters.Select(p => SwaggerArgument.FromParameter(p)).ToList();
             _selectedContentType = model.Operation.ActualConsumes?.FirstOrDefault() ?? "application/json";
         }
 
@@ -94,50 +95,25 @@ namespace WinSwag.ViewModels
 
             using (var http = new HttpClient())
             {
-                var requestUri = Model.Path;
-                var isFirstQueryParameter = true;
+                var requestUri = new StringBuilder(_baseUrl + Model.Path + '?');
 
                 var request = new HttpRequestMessage
                 {
                     Method = Model.Method.ToHttpMethod(),
                 };
 
-                foreach (var parameter in Parameters)
-                {
-                    switch (parameter.Model.Kind)
-                    {
-                        case SwaggerParameterKind.Path:
-                            requestUri = requestUri.Replace("{" + parameter.Model.Name + "}", parameter.Value ?? "");
-                            break;
+                foreach (var parameter in Arguments)
+                    await parameter.ApplyAsync(request, requestUri);
 
-                        case SwaggerParameterKind.Header:
-                            if (!string.IsNullOrEmpty(parameter.Value))
-                                request.Headers.Add(parameter.Model.Name, parameter.Value);
-                            break;
+                if (request.Content != null)
+                    request.Content.Headers.ContentType.MediaType = _selectedContentType;
 
-                        case SwaggerParameterKind.Query:
-                            if (!string.IsNullOrEmpty(parameter.Value))
-                            {
-                                var value = Uri.EscapeDataString(parameter.Value);
-                                requestUri += $"{(isFirstQueryParameter ? "?" : "&")}{parameter.Model.Name}={value}";
-                                isFirstQueryParameter = false;
-                            }
-                            break;
-
-                        case SwaggerParameterKind.Body:
-                            if (!string.IsNullOrEmpty(parameter.Value))
-                                request.Content = new StringContent(parameter.Value, Encoding.UTF8, _selectedContentType);
-                            break;
-
-                            // TODO
-                    }
-                }
-
-                var fullRequestUri = $"{_baseUrl}{requestUri}";
-                request.RequestUri = new Uri(fullRequestUri);
+                requestUri.Length--; // remove trailing '?' or '&'
+                var finalUri = requestUri.ToString();
+                request.RequestUri = new Uri(finalUri);
 
                 var response = await http.SendAsync(request);
-                Response = await ResponseViewModel.FromResponseAsync(response, fullRequestUri);
+                Response = await ResponseViewModel.FromResponseAsync(response, finalUri);
             }
 
             CanSendRequest = true;

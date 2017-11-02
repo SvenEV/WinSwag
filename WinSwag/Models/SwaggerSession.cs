@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WinSwag.Models.Arguments;
 using WinSwag.ViewModels;
 
 namespace WinSwag.Models
@@ -15,7 +16,7 @@ namespace WinSwag.Models
 
         public string SwaggerDocumentJson { get; set; }
 
-        public Dictionary<string, Dictionary<string, string>> Arguments { get; set; }
+        public Dictionary<string, Dictionary<string, SwaggerArgument>> Arguments { get; set; }
 
         public static SwaggerSession FromViewModel(SwaggerSpecificationViewModel vm)
         {
@@ -26,7 +27,7 @@ namespace WinSwag.Models
                     .SelectMany(g => g)
                     .ToDictionary(
                         op => op.Model.Operation.OperationId,
-                        op => op.Parameters.ToDictionary(p => p.Model.Name, p => p.Value))
+                        op => op.Arguments.ToDictionary(p => p.Parameter.Name, p => p))
             };
         }
 
@@ -45,9 +46,9 @@ namespace WinSwag.Models
                 {
                     foreach (var storedArg in storedOp.Value)
                     {
-                        var parameter = operation.Parameters.FirstOrDefault(p => p.Model.Name == storedArg.Key);
-                        if (parameter != null)
-                            parameter.Value = storedArg.Value;
+                        var parameter = operation.Arguments.FirstOrDefault(p => p.Parameter.Name == storedArg.Key);
+                        //if (parameter != null)
+                        //    parameter.Value = storedArg.Value;
                     }
                 }
             }
