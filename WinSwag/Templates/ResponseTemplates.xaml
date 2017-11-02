@@ -20,7 +20,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="ImageResponseTemplate" x:DataType="responses:ImageResponse">
-        <Image Source="{x:Bind Image}">
+        <Image Source="{x:Bind Image}" Tapped="OnImageTapped">
             <Image.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem Text="Copy" Click="{x:Bind CopyToClipboard}">

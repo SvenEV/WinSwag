@@ -14,5 +14,11 @@ namespace WinSwag.Templates
             var vm = (AudioResponse)media.DataContext;
             media.SetSource(vm.Stream, vm.MimeType);
         }
+
+        private void OnImageTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            var image = (Image)sender;
+            image.ContextFlyout.ShowAt(image);
+        }
     }
 }
