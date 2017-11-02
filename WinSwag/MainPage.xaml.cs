@@ -1,4 +1,5 @@
-﻿using Windows.ApplicationModel.Core;
+﻿using Windows.ApplicationModel;
+using Windows.ApplicationModel.Core;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Core;
@@ -14,6 +15,15 @@ namespace WinSwag
         public MainViewModel ViewModel { get; } = new MainViewModel();
 
         public DashboardViewModel DashboardVM { get; } = new DashboardViewModel();
+
+        public string AppVersion
+        {
+            get
+            {
+                var v = Package.Current.Id.Version;
+                return $"v{v.Major}.{v.Minor}.{v.Build}.{v.Revision}";
+            }
+        }
 
         public MainPage()
         {

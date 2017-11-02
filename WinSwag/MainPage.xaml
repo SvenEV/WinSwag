@@ -383,6 +383,8 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
+
+                        <TextBlock Text="{x:Bind AppVersion}" Opacity=".5" FontSize="9" Margin="0,12,0,0"/>
                     </StackPanel>
                 </Border>
             </Grid>
