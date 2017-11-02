@@ -112,9 +112,14 @@
     <Compile Include="Models\Arguments\BoolArgument.cs" />
     <Compile Include="Models\Arguments\DateTimeArgument.cs" />
     <Compile Include="Models\Arguments\EnumArgument.cs" />
+    <Compile Include="Models\Arguments\FileArgument.cs" />
     <Compile Include="Models\Arguments\StringArgument.cs" />
     <Compile Include="Models\NSwagExtensions.cs" />
     <Compile Include="Models\Arguments\SwaggerArgument.cs" />
+    <Compile Include="Models\Responses\AudioResponse.cs" />
+    <Compile Include="Models\Responses\ImageResponse.cs" />
+    <Compile Include="Models\Responses\JsonResponse.cs" />
+    <Compile Include="Models\Responses\StringResponse.cs" />
     <Compile Include="Models\SwaggerSessionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Templates\ParameterTemplates.xaml.cs">
@@ -122,12 +127,16 @@
     </Compile>
     <Compile Include="AppMessage.cs" />
     <Compile Include="Models\SwaggerSessionInfo.cs" />
+    <Compile Include="Templates\ResponseTemplates.xaml.cs">
+      <DependentUpon>ResponseTemplates.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\DashboardViewModel.cs" />
     <Compile Include="ViewModels\DateTimeToStringConverter.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\OperationViewModel.cs" />
     <Compile Include="ViewModels\ParameterTemplateSelector.cs" />
-    <Compile Include="ViewModels\ResponseViewModel.cs" />
+    <Compile Include="ViewModels\ResponseTemplateSelector.cs" />
+    <Compile Include="Models\Responses\ResponseViewModel.cs" />
     <Compile Include="Models\SwaggerSession.cs" />
     <Compile Include="ViewModels\SwaggerSpecificationViewModel.cs" />
   </ItemGroup>
@@ -204,6 +213,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Templates\ParameterTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\ResponseTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

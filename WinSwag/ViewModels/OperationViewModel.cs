@@ -9,6 +9,7 @@ using Windows.UI;
 using Windows.UI.Xaml.Media;
 using WinSwag.Models;
 using WinSwag.Models.Arguments;
+using WinSwag.Models.Responses;
 
 namespace WinSwag.ViewModels
 {

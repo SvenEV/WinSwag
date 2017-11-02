@@ -6,7 +6,12 @@
     RequestedTheme="Light">
 
     <Application.Resources>
-        <templates:ParameterTemplates/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <templates:ParameterTemplates/>
+                <templates:ResponseTemplates/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 
 </Application>

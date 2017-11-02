@@ -78,7 +78,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock VerticalAlignment="Center"
-                       Text="{x:Bind File.Name, Mode=OneWay}"
+                       Text="{x:Bind File.Name, Mode=OneWay, FallbackValue='(no file selected)'}"
                        IsTextSelectionEnabled="True"
                        TextTrimming="CharacterEllipsis"/>
 

@@ -21,11 +21,20 @@
 
         <vm:ParameterTemplateSelector
             x:Key="ParameterTemplateSelector"
+            FallbackTemplate="{StaticResource FallbackParameterTemplate}"
             BoolTemplate="{StaticResource BoolParameterTemplate}"
             EnumTemplate="{StaticResource EnumParameterTemplate}"
             DateTimeTemplate="{StaticResource DateTimeParameterTemplate}"
-            FileTemplate="{StaticResource FileParameterTemplate}"
-            FallbackTemplate="{StaticResource FallbackParameterTemplate}"/>
+            FileTemplate="{StaticResource FileParameterTemplate}"/>
+
+        <vm:ResponseTemplateSelector
+            x:Key="ResponseTemplateSelector"
+            FallbackTemplate="{StaticResource StringResponseTemplate}"
+            StringTemplate="{StaticResource StringResponseTemplate}"
+            JsonTemplate="{StaticResource JsonResponseTemplate}"
+            ImageTemplate="{StaticResource ImageResponseTemplate}"
+            AudioTemplate="{StaticResource AudioResponseTemplate}"/>
+
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -279,7 +288,7 @@
                                Margin="0,12,0,0"/>
 
                     <!-- Response headers -->
-                    <ItemsControl ItemsSource="{x:Bind ViewModel.SelectedOperation.Response.Model.Headers, Mode=OneWay}"
+                    <ItemsControl ItemsSource="{x:Bind ViewModel.SelectedOperation.Response.Response.Headers, Mode=OneWay}"
                                   Margin="0,12,0,0">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -295,10 +304,15 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
+                    <Button Content="Save As..." Click="{x:Bind ViewModel.SelectedOperation.Response.SaveAs}"/>
+
                     <!-- Response content -->
-                    <TextBlock Margin="0,12,0,0" IsTextSelectionEnabled="True"
-                               FontFamily="Consolas"
-                               Text="{x:Bind ViewModel.SelectedOperation.Response.Content, Mode=OneWay}"/>
+                    <ContentControl Content="{x:Bind ViewModel.SelectedOperation.Response, Mode=OneWay}"
+                                    ContentTemplateSelector="{StaticResource ResponseTemplateSelector}"
+                                    HorizontalContentAlignment="Stretch"
+                                    VerticalContentAlignment="Stretch"
+                                    Margin="0,12,0,0"/>
+                    
                 </StackPanel>
 
             </StackPanel>
