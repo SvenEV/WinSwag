@@ -1,4 +1,5 @@
-﻿using NSwag;
+﻿using Newtonsoft.Json.Linq;
+using NSwag;
 using System;
 using System.Net.Http;
 using System.Text;
@@ -47,5 +48,9 @@ namespace WinSwag.Models.Arguments
 
             return Task.CompletedTask;
         }
+
+        public override JToken GetSerializedValue() => Value == null ? null : JToken.FromObject(Value);
+
+        public override Task SetSerializedValueAsync(JToken o) => Task.FromResult(Value = o?.ToObject<string>());
     }
 }

@@ -67,8 +67,8 @@
         <!-- Command bar (top left) -->
         <CommandBar OverflowButtonVisibility="Auto" Background="Transparent">
             <AppBarButton Icon="Home" Label="Dashboard" Click="{x:Bind DashboardPopup.Show}"/>
-            <AppBarButton Icon="Favorite" Label="Add this API to favorites"/>
-            <AppBarButton Icon="Pin" Label="Pin this API to Start"/>
+            <AppBarButton Icon="Save" Label="Save Session" Click="{x:Bind ViewModel.SaveCurrentSessionAsync}"
+                          IsEnabled="{x:Bind ViewModel.IsIdle, Mode=OneWay}"/>
         </CommandBar>
 
         <!-- API list (left) -->
@@ -337,7 +337,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 
-                <Border Grid.Column="1" HorizontalAlignment="Center" Padding="60,20">
+                <Border Grid.Column="1" Padding="60,20">
                     <StackPanel>
                         <Grid>
                             <TextBlock Text="Dashboard"

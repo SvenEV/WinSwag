@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using Newtonsoft.Json.Linq;
 using NJsonSchema;
 using NSwag;
 using System;
@@ -46,5 +47,9 @@ namespace WinSwag.Models.Arguments
 
             return new StringArgument(param);
         }
+
+        public abstract JToken GetSerializedValue();
+
+        public abstract Task SetSerializedValueAsync(JToken o);
     }
 }

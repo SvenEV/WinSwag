@@ -1,77 +1,74 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using System.IO;
 
 namespace WinSwag.Models
 {
     public static class SwaggerSessionManager
     {
-        private const string IndexFileName = "StoredSessions.json";
         private const string SessionFolderName = "StoredSessions";
 
         private static Task _initTask;
         private static StorageFolder _folder;
-        private static StorageFile _indexFile;
-        private static List<SwaggerSessionInfo> _sessionIndex;
+        private static SettingsDictionary<SwaggerSessionInfo> _sessions;
 
-        static SwaggerSessionManager() => _initTask = Init();
+        static SwaggerSessionManager()
+        {
+            _sessions = new SettingsDictionary<SwaggerSessionInfo>(
+                ApplicationData.Current.LocalSettings.CreateContainer("Sessions", ApplicationDataCreateDisposition.Always));
+            _initTask = Init();
+        }
 
         private static async Task Init()
         {
             _folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(SessionFolderName, CreationCollisionOption.OpenIfExists);
-            _indexFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(IndexFileName, CreationCollisionOption.OpenIfExists);
-            await _initTask;
-        }
-
-        private static async Task LoadIndexFileAsync()
-        {
-            try
-            {
-                var json = await FileIO.ReadTextAsync(_indexFile);
-                _sessionIndex = JsonConvert.DeserializeObject<List<SwaggerSessionInfo>>(json);
-            }
-            catch
-            {
-                _sessionIndex = new List<SwaggerSessionInfo>();
-            }
-        }
-
-        private static async Task SaveIndexFileAsync()
-        {
-            try
-            {
-                var json = JsonConvert.SerializeObject(_sessionIndex);
-                await FileIO.WriteTextAsync(_indexFile, json);
-            }
-            catch
-            {
-            }
         }
 
         public static async Task<IReadOnlyList<SwaggerSessionInfo>> GetAllAsync()
         {
             await _initTask;
-            return _sessionIndex;
+            return _sessions.Values.ToList();
         }
 
-        public static async Task<SwaggerSession> LoadAsync(Guid sessionGuid)
+        public static async Task<SwaggerSession> LoadAsync(string url)
         {
             await _initTask;
-            var sessionFile = await _folder.GetFileAsync($"{sessionGuid}.json");
+
+            if (!_sessions.TryGetValue(url, out var info))
+                throw new ArgumentException($"No stored session exists for URL '{url}'");
+
+            var sessionFile = await _folder.GetFileAsync($"{info.Guid.ToString()}.json");
             var json = await FileIO.ReadTextAsync(sessionFile);
             var session = JsonConvert.DeserializeObject<SwaggerSession>(json);
-            session.Id = sessionGuid;
             return session;
         }
 
         public static async Task StoreAsync(SwaggerSession session)
         {
             await _initTask;
-            var sessionFile = await _folder.CreateFileAsync($"{session.Id}.json", CreationCollisionOption.ReplaceExisting);
+
+            if (!_sessions.TryGetValue(session.Url, out var info))
+            {
+                info = new SwaggerSessionInfo("Stored Session", session.Url, Guid.NewGuid());
+                _sessions.Add(session.Url, info);
+            }
+
+            var sessionFile = await _folder.CreateFileAsync($"{info.Guid}.json", CreationCollisionOption.ReplaceExisting);
             var json = JsonConvert.SerializeObject(session);
             await FileIO.WriteTextAsync(sessionFile, json);
+        }
+
+        public static async Task DeleteAsync(string url)
+        {
+            if (_sessions.Remove(url, out var info))
+            {
+                var file = await _folder.GetFileAsync($"{info.Guid}.json");
+                await file.DeleteAsync();
+            }
         }
     }
 }

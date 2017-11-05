@@ -1,4 +1,5 @@
-﻿using NSwag;
+﻿using Newtonsoft.Json.Linq;
+using NSwag;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -45,6 +46,17 @@ namespace WinSwag.Models.Arguments
 
             var stream = await _file.OpenReadAsync();
             request.Content = new StreamContent(stream.AsStream());
+        }
+
+        public override JToken GetSerializedValue() => File == null ? null : JToken.FromObject(File.Path);
+
+        public override async Task SetSerializedValueAsync(JToken o)
+        {
+            if (o == null)
+                return;
+
+            var path = o.ToObject<string>();
+            File = path == null ? null : await StorageFile.GetFileFromPathAsync(path);
         }
     }
 }

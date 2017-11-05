@@ -120,6 +120,7 @@
     <Compile Include="Models\Responses\ImageResponse.cs" />
     <Compile Include="Models\Responses\JsonResponse.cs" />
     <Compile Include="Models\Responses\StringResponse.cs" />
+    <Compile Include="Models\SettingsDictionary.cs" />
     <Compile Include="Models\SwaggerSessionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Templates\ParameterTemplates.xaml.cs">

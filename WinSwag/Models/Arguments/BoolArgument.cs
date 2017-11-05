@@ -1,4 +1,5 @@
-﻿using NSwag;
+﻿using Newtonsoft.Json.Linq;
+using NSwag;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,5 +22,9 @@ namespace WinSwag.Models.Arguments
 
         public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri) =>
             StringArgument.ApplyAsync(Parameter, _value.ToString(), request, requestUri);
+
+        public override JToken GetSerializedValue() => JToken.FromObject(Value);
+
+        public override Task SetSerializedValueAsync(JToken o) => Task.FromResult(Value = o.ToObject<bool>());
     }
 }

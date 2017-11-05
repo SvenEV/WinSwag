@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using WinSwag.Models;
 
 namespace WinSwag.ViewModels
 {
@@ -49,7 +50,10 @@ namespace WinSwag.ViewModels
         public MainViewModel()
         {
             App.CurrentMessenger.Register<SpecificationLoaded>(this, msg =>
-                Specification = new SwaggerSpecificationViewModel(msg.Specification));
+                Specification = new SwaggerSpecificationViewModel(msg.Specification, msg.Url));
+
+            App.CurrentMessenger.Register<SessionLoaded>(this, async msg =>
+                Specification = await SwaggerSession.ToViewModelAsync(msg.Session));
 
             App.CurrentMessenger.Register<AppMessage>(this, msg =>
             {
@@ -60,6 +64,14 @@ namespace WinSwag.ViewModels
                     case AppMessage.EndLoad: IsBusy = false; break;
                 }
             });
+        }
+
+        public async void SaveCurrentSessionAsync()
+        {
+            App.CurrentMessenger.Send(AppMessage.BeginLoad);
+            await SwaggerSessionManager.StoreAsync(SwaggerSession.FromViewModel(Specification));
+            App.CurrentMessenger.Send(AppMessage.EndLoad);
+            App.CurrentMessenger.Send(AppMessage.StoredSessionsChanged);
         }
     }
 }

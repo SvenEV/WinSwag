@@ -1,4 +1,5 @@
-﻿using NSwag;
+﻿using Newtonsoft.Json.Linq;
+using NSwag;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,9 +43,14 @@ namespace WinSwag.Models.Arguments
 
         public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri) =>
             StringArgument.ApplyAsync(Parameter, _value?.Value?.ToString(), request, requestUri);
+
+
+        public override JToken GetSerializedValue() => Value == null ? null : JToken.FromObject(Value);
+
+        public override Task SetSerializedValueAsync(JToken o) => Task.FromResult(Value = o?.ToObject<NamedValue>());
     }
 
-    public class NamedValue
+    public class NamedValue : IEquatable<NamedValue>
     {
         public string Name { get; }
         public object Value { get; }
@@ -56,5 +62,13 @@ namespace WinSwag.Models.Arguments
             Value = value;
             IsDefault = isDefault;
         }
+
+        public override bool Equals(object obj) => obj is NamedValue other && Equals(other);
+
+        public override int GetHashCode() => (Name, Value, IsDefault).GetHashCode();
+
+        public bool Equals(NamedValue other) => Equals(
+            (Name, Value, IsDefault),
+            (other.Name, other.Value, other.IsDefault));
     }
 }

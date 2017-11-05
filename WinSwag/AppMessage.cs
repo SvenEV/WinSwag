@@ -1,5 +1,6 @@
 ﻿using NSwag;
 using System;
+using WinSwag.Models;
 
 namespace WinSwag
 {
@@ -8,16 +9,30 @@ namespace WinSwag
         CloseDashboard,
         ClearCurrentSpecification,
         BeginLoad,
-        EndLoad
+        EndLoad,
+        StoredSessionsChanged
     }
 
     public class SpecificationLoaded
     {
         public SwaggerDocument Specification { get; }
 
-        public SpecificationLoaded(SwaggerDocument specification)
+        public string Url { get; }
+
+        public SpecificationLoaded(SwaggerDocument specification, string url)
         {
             Specification = specification ?? throw new ArgumentNullException(nameof(specification));
+            Url = url ?? throw new ArgumentNullException(nameof(url));
+        }
+    }
+
+    public class SessionLoaded
+    {
+        public SwaggerSession Session { get; }
+
+        public SessionLoaded(SwaggerSession session)
+        {
+            Session = session ?? throw new ArgumentNullException(nameof(session));
         }
     }
 }
