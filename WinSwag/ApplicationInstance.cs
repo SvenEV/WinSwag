@@ -17,6 +17,8 @@ namespace WinSwag
 
         public static ApplicationInstance Current => _instances[ApplicationView.GetForCurrentView().Id];
 
+        public static IReadOnlyCollection<ApplicationInstance> All => _instances.Values;
+
         public IServiceProvider Services => _services.ServiceProvider;
 
         public CoreApplicationView CoreView { get; }

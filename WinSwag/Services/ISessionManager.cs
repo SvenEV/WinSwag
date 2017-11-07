@@ -13,6 +13,10 @@ namespace WinSwag.Services
 
         SwaggerDocumentViewModel CurrentDocument { get; }
 
+        bool IsCurrentSessionFavorite { get; }
+
+        bool IsntCurrentSessionFavorite { get; }
+
         Task CreateSessionAsync(string url);
 
         Task CreateSessionAsync(StorageFile file);
@@ -21,6 +25,10 @@ namespace WinSwag.Services
 
         Task LoadSessionAsync(SwaggerSessionInfo sessionInfo);
 
-        Task SaveSessionAsync();
+        Task SaveCurrentSessionAsync(string displayName);
+
+        Task DeleteCurrentSessionAsync();
+
+        Task UnloadCurrentSessionAsync();
     }
 }

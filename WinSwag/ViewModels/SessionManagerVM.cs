@@ -4,6 +4,7 @@ using NSwag;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using WinSwag.Models;
@@ -26,8 +27,19 @@ namespace WinSwag.ViewModels
         public SwaggerDocumentViewModel CurrentDocument
         {
             get => _currentDocument;
-            private set => Set(ref _currentDocument, value);
+            private set
+            {
+                if (Set(ref _currentDocument, value))
+                {
+                    RaisePropertyChanged(nameof(IsCurrentSessionFavorite));
+                    RaisePropertyChanged(nameof(IsntCurrentSessionFavorite));
+                }
+            }
         }
+
+        public bool IsCurrentSessionFavorite => _storedSessions.Any(s => s.Url == _currentDocument?.Url);
+
+        public bool IsntCurrentSessionFavorite => !IsCurrentSessionFavorite;
 
         public SessionManagerVM(IMessenger messenger, IOperationManagerVM operationManager, IViewStateManagerVM viewStateManager)
         {
@@ -51,6 +63,7 @@ namespace WinSwag.ViewModels
                     await _initTask;
                     _messenger.Send(CloseDashboard.Instance);
                     var doc = await SwaggerDocument.FromUrlAsync(url);
+                    await UnloadCurrentSessionAsync();
                     CurrentDocument = new SwaggerDocumentViewModel(doc, url);
                     _operationManager.SelectedOperation = null;
                 }
@@ -71,6 +84,7 @@ namespace WinSwag.ViewModels
                     _messenger.Send(CloseDashboard.Instance);
                     var json = await FileIO.ReadTextAsync(file);
                     var doc = await SwaggerDocument.FromJsonAsync(json);
+                    await UnloadCurrentSessionAsync();
                     CurrentDocument = new SwaggerDocumentViewModel(doc, "file://" + file.Path);
                     _operationManager.SelectedOperation = null;
                 }
@@ -104,6 +118,7 @@ namespace WinSwag.ViewModels
                     await _initTask;
                     _messenger.Send(CloseDashboard.Instance);
                     var session = await SwaggerSessionManager.LoadAsync(sessionInfo.Url);
+                    await UnloadCurrentSessionAsync();
                     CurrentDocument = await SwaggerSession.ToViewModelAsync(session);
                     _operationManager.SelectedOperation = null;
                 }
@@ -114,14 +129,37 @@ namespace WinSwag.ViewModels
             }
         }
 
-        public async Task SaveSessionAsync()
+        public async Task SaveCurrentSessionAsync(string displayName)
         {
             using (_viewStateManager.BeginTask("Saving Session..."))
             {
                 await _initTask;
-                var session = SwaggerSession.FromViewModel(CurrentDocument);
+                var session = SwaggerSession.FromViewModel(CurrentDocument, displayName);
                 await SwaggerSessionManager.StoreAsync(session);
                 await RefreshStoredSessionsAsync();
+            }
+        }
+
+        public async Task DeleteCurrentSessionAsync()
+        {
+            try
+            {
+                await _initTask;
+                await SwaggerSessionManager.DeleteAsync(_currentDocument.Url);
+                await RefreshStoredSessionsAsync();
+            }
+            catch (Exception e)
+            {
+                await _viewStateManager.ShowMessageAsync(e.ToString(), "Failed to Delete Session");
+            }
+        }
+
+        public async Task UnloadCurrentSessionAsync()
+        {
+            if (_storedSessions.Any(s => s.Url == _currentDocument?.Url))
+            {
+                // Store current session before switching to another one
+                await SaveCurrentSessionAsync(_currentDocument.DisplayName);
             }
         }
 
@@ -130,6 +168,9 @@ namespace WinSwag.ViewModels
             _storedSessions.Clear();
             foreach (var info in await SwaggerSessionManager.GetAllAsync())
                 _storedSessions.Add(info);
+
+            RaisePropertyChanged(nameof(IsCurrentSessionFavorite));
+            RaisePropertyChanged(nameof(IsntCurrentSessionFavorite));
         }
     }
 }

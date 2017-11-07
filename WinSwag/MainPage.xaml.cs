@@ -52,7 +52,7 @@ namespace WinSwag
 
         private void OnKeyDown(CoreWindow sender, KeyEventArgs args)
         {
-            if (args.VirtualKey == VirtualKey.F5)
+            if (args.VirtualKey == VirtualKey.F5 && OperationManagerVM.IsOperationSelected)
                 OperationManagerVM.SelectedOperation.BeginSendRequest();
         }
 
@@ -88,6 +88,21 @@ namespace WinSwag
         {
             var sessionInfo = (SwaggerSessionInfo)((Button)sender).DataContext;
             await SessionManagerVM.DeleteSessionAsync(sessionInfo);
+        }
+
+        private async void AddToFavoritesButtonClick(object sender, RoutedEventArgs e)
+        {
+            var displayName = CurrentDocumentDisplayNameTextBox.Text;
+
+            if (string.IsNullOrWhiteSpace(displayName))
+            {
+                // animation
+                return;
+            }
+
+            await SessionManagerVM.SaveCurrentSessionAsync(displayName);
+            CurrentDocumentDisplayNameTextBox.Text = "";
+            AddToFavoritesFlyout.Hide();
         }
     }
 }

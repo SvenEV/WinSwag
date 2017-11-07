@@ -11,12 +11,15 @@ namespace WinSwag.ViewModels
 
         public string Url { get; }
 
+        public string DisplayName { get; }
+
         public IReadOnlyList<IGrouping<string, SwaggerOperationViewModel>> OperationGroups { get; }
 
-        public SwaggerDocumentViewModel(SwaggerDocument model, string url)
+        public SwaggerDocumentViewModel(SwaggerDocument model, string url, string displayName = null)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
             Url = url ?? throw new ArgumentNullException(nameof(url));
+            DisplayName = displayName;
 
             OperationGroups = model.Operations
                 .OrderBy(op => op.Path)

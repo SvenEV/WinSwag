@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:WinSwag.Templates">
+    xmlns:local="using:WinSwag.Templates"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls">
 
     <Style TargetType="AppBarButton" BasedOn="{StaticResource AppBarButtonRevealStyle}"/>
 
@@ -39,6 +40,32 @@
         <Setter Property="BorderBrush" Value="{ThemeResource ButtonRevealBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="8,6,8,6" />
+    </Style>
+
+    <Style TargetType="FlyoutPresenter">
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="#FF3F3F46"/>
+        <Setter Property="Background" Value="#FF1E1E1E"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="FlyoutPresenter">
+                    <controls:DropShadowPanel Color="Black" BlurRadius="50">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              ContentTransitions="{TemplateBinding ContentTransitions}"
+                                              Margin="{TemplateBinding Padding}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+
+                        </Border>
+                    </controls:DropShadowPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
 </ResourceDictionary>

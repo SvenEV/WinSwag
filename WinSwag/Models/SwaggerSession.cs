@@ -11,13 +11,16 @@ namespace WinSwag.Models
     {
         public string Url { get; set; }
 
+        public string DisplayName { get; set; }
+
         public Dictionary<string, StoredOperation> Operations { get; set; }
 
-        public static SwaggerSession FromViewModel(SwaggerDocumentViewModel vm)
+        public static SwaggerSession FromViewModel(SwaggerDocumentViewModel vm, string displayName)
         {
             return new SwaggerSession
             {
                 Url = vm.Url,
+                DisplayName = displayName,
                 Operations = vm.OperationGroups
                     .SelectMany(g => g)
                     .ToDictionary(
@@ -33,7 +36,7 @@ namespace WinSwag.Models
         public static async Task<SwaggerDocumentViewModel> ToViewModelAsync(SwaggerSession session)
         {
             var doc = await SwaggerDocument.FromUrlAsync(session.Url);
-            var vm = new SwaggerDocumentViewModel(doc, session.Url);
+            var vm = new SwaggerDocumentViewModel(doc, session.Url, session.DisplayName);
 
             foreach (var storedOp in session.Operations)
             {

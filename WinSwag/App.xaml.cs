@@ -64,7 +64,14 @@ namespace WinSwag
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Save application state and stop any background activity
+            
+            // Save all open favored sessions
+            foreach (var instance in ApplicationInstance.All)
+            {
+                var sessionManager = instance.Services.GetService<ISessionManagerVM>();
+                sessionManager.UnloadCurrentSessionAsync();
+            }
+
             deferral.Complete();
         }
     }

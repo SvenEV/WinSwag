@@ -25,7 +25,7 @@
                 </Border.Background>
             </Border>
 
-            <controls:DropShadowPanel Color="Black" BlurRadius="20"
+            <controls:DropShadowPanel Color="Black" BlurRadius="50"
                                       HorizontalAlignment="{x:Bind HorizontalContentAlignment, Mode=OneWay}"
                                       VerticalAlignment="{x:Bind VerticalContentAlignment, Mode=OneWay}"
                                       HorizontalContentAlignment="{x:Bind HorizontalContentAlignment, Mode=OneWay}"
