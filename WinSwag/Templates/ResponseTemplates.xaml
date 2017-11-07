@@ -29,22 +29,28 @@
     </DataTemplate>
 
     <DataTemplate x:Key="ImageResponseTemplate" x:DataType="responses:ImageResponse">
-        <Image Source="{x:Bind Image}" Tapped="OnImageTapped">
+        <Image Source="{x:Bind Image}" Tapped="OnImageTapped" CanDrag="True">
             <Image.ContextFlyout>
                 <MenuFlyout>
+                    <MenuFlyoutItem Text="Open" Click="{x:Bind OpenFile}"/>
+                    <MenuFlyoutItem Text="Open with..." Click="{x:Bind OpenFileWith}">
+                        <MenuFlyoutItem.Icon>
+                            <SymbolIcon Symbol="OpenWith"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
                     <MenuFlyoutItem Text="Copy" Click="{x:Bind CopyToClipboard}">
                         <MenuFlyoutItem.Icon>
                             <SymbolIcon Symbol="Copy"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
-                    <MenuFlyoutItem Text="Open with..." Click="{x:Bind OpenFile}">
-                        <MenuFlyoutItem.Icon>
-                            <SymbolIcon Symbol="OpenWith"/>
-                        </MenuFlyoutItem.Icon>
-                    </MenuFlyoutItem>
                     <MenuFlyoutItem Text="Save as..." Click="{x:Bind SaveAsFile}">
                         <MenuFlyoutItem.Icon>
                             <SymbolIcon Symbol="Save"/>
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                    <MenuFlyoutItem Text="Share..." Click="{x:Bind ShareFile}">
+                        <MenuFlyoutItem.Icon>
+                            <SymbolIcon Symbol="Share"/>
                         </MenuFlyoutItem.Icon>
                     </MenuFlyoutItem>
                 </MenuFlyout>

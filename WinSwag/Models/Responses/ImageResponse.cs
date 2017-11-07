@@ -29,13 +29,8 @@ namespace WinSwag.Models.Responses
 
         public async void CopyToClipboard()
         {
-            var stream = await Response.Content.ReadAsStreamAsync();
-
-            var package = new DataPackage();
-            package.SetBitmap(RandomAccessStreamReference.CreateFromStream(stream.AsRandomAccessStream()));
-
-            Clipboard.SetContent(package);
-            Clipboard.Flush();
+            var content = await GetResponseContentAsync();
+            await DataTransferHelper.CopyToClipboardAsync(content.stream, content.contentType);
         }
 
         public async void SaveAsFile()
@@ -62,19 +57,25 @@ namespace WinSwag.Models.Responses
             }
         }
 
+        public async void ShareFile()
+        {
+            var content = await GetResponseContentAsync();
+            DataTransferHelper.Share(content.stream, content.contentType);
+        }
+
         public async void OpenFile()
         {
-            var mediaType = Response.Content.Headers.ContentType.MediaType;
-            var filename = $"{Guid.NewGuid()}.{MimeTypeMap.GetExtension(mediaType)}";
-            var file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(filename, CreationCollisionOption.ReplaceExisting);
-
-            using (var stream = await file.OpenStreamForWriteAsync())
-                await Response.Content.CopyToAsync(stream);
-
-            await Launcher.LaunchFileAsync(file, new LauncherOptions
-            {
-                DisplayApplicationPicker = true
-            });
+            var content = await GetResponseContentAsync();
+            await DataTransferHelper.OpenAsync(content.stream, content.contentType);
         }
+
+        public async void OpenFileWith()
+        {
+            var content = await GetResponseContentAsync();
+            await DataTransferHelper.OpenWithAsync(content.stream, content.contentType);
+        }
+
+        private async Task<(IRandomAccessStream stream, string contentType)> GetResponseContentAsync() =>
+            ((await Response.Content.ReadAsStreamAsync()).AsRandomAccessStream(), Response.Content.Headers.ContentType.MediaType);
     }
 }

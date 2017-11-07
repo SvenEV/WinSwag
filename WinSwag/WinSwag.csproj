@@ -128,6 +128,7 @@
     <Compile Include="Services\ISessionManager.cs" />
     <Compile Include="Services\IOperationManagerVM.cs" />
     <Compile Include="Services\IViewStateManagerVM.cs" />
+    <Compile Include="DataTransferHelper.cs" />
     <Compile Include="ViewModels\ViewStateManagerVM.cs" />
     <Compile Include="Templates\ParameterTemplates.xaml.cs">
       <DependentUpon>ParameterTemplates.xaml</DependentUpon>
