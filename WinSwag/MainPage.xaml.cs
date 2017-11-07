@@ -1,7 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using Windows.ApplicationModel;
+using System.Linq;
 using Windows.ApplicationModel.Core;
 using Windows.Storage.Pickers;
 using Windows.System;
@@ -76,6 +76,12 @@ namespace WinSwag
         private async void OnUrlBoxQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             await SessionManagerVM.CreateSessionAsync(args.QueryText);
+        }
+
+        private void OnContentTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (OperationManagerVM.SelectedOperation != null)
+                OperationManagerVM.SelectedOperation.SelectedContentType = (string)e.AddedItems.FirstOrDefault();
         }
     }
 }

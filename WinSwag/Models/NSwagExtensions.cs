@@ -19,7 +19,7 @@ namespace WinSwag.Models
             { SwaggerOperationMethod.Delete, HttpMethod.Delete },
             { SwaggerOperationMethod.Options, HttpMethod.Options },
             { SwaggerOperationMethod.Head, HttpMethod.Head },
-            { SwaggerOperationMethod.Patch, null }
+            { SwaggerOperationMethod.Patch, new HttpMethod("PATCH") }
         };
 
         public static HttpMethod ToHttpMethod(this SwaggerOperationMethod method) => _methodMappings[method];
