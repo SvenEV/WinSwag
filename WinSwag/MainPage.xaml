@@ -18,23 +18,6 @@
                               x:Name="Operations"
                               IsSourceGrouped="True"
                               Source="{x:Bind SessionManagerVM.CurrentDocument.OperationGroups, Mode=OneWay}"/>
-
-        <vm:ParameterTemplateSelector
-            x:Key="ParameterTemplateSelector"
-            FallbackTemplate="{StaticResource FallbackParameterTemplate}"
-            BoolTemplate="{StaticResource BoolParameterTemplate}"
-            EnumTemplate="{StaticResource EnumParameterTemplate}"
-            DateTimeTemplate="{StaticResource DateTimeParameterTemplate}"
-            FileTemplate="{StaticResource FileParameterTemplate}"/>
-
-        <vm:ResponseTemplateSelector
-            x:Key="ResponseTemplateSelector"
-            FallbackTemplate="{StaticResource StringResponseTemplate}"
-            StringTemplate="{StaticResource StringResponseTemplate}"
-            JsonTemplate="{StaticResource JsonResponseTemplate}"
-            ImageTemplate="{StaticResource ImageResponseTemplate}"
-            AudioTemplate="{StaticResource AudioResponseTemplate}"/>
-
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -240,7 +223,7 @@
 
                                 <!-- Value input (right column) -->
                                 <StackPanel Grid.Column="1">
-                                    <ContentControl Content="{x:Bind}"
+                                    <ContentControl Content="{x:Bind}" IsTabStop="False"
                                                     ContentTemplateSelector="{StaticResource ParameterTemplateSelector}"
                                                     HorizontalContentAlignment="Stretch"
                                                     VerticalContentAlignment="Top"/>
@@ -352,8 +335,7 @@
                 <Border Grid.Column="1" Padding="60,20">
                     <StackPanel>
                         <Grid>
-                            <TextBlock Text="Dashboard"
-                                       Style="{StaticResource TitleTextBlockStyle}"/>
+                            <TextBlock Text="Dashboard" Style="{StaticResource TitleTextBlockStyle}"/>
 
                             <Button Click="{x:Bind DashboardPopup.Hide}" HorizontalAlignment="Right"
                                     BorderThickness="0" Background="Transparent" Height="32">

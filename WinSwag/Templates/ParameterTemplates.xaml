@@ -9,6 +9,14 @@
     xmlns:arguments="using:WinSwag.Models.Arguments"
     mc:Ignorable="d">
 
+    <vm:ParameterTemplateSelector
+        x:Key="ParameterTemplateSelector"
+        FallbackTemplate="{StaticResource FallbackParameterTemplate}"
+        BoolTemplate="{StaticResource BoolParameterTemplate}"
+        EnumTemplate="{StaticResource EnumParameterTemplate}"
+        DateTimeTemplate="{StaticResource DateTimeParameterTemplate}"
+        FileTemplate="{StaticResource FileParameterTemplate}"/>
+
     <DataTemplate x:Key="FallbackParameterTemplate" x:DataType="arguments:StringArgument">
         <TextBox Text="{x:Bind Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  AcceptsReturn="True"
@@ -46,7 +54,7 @@
 
             <TextBox Text="{x:Bind Value, Mode=TwoWay, Converter={StaticResource DateTimeConverter}}"/>
 
-            <Button Grid.Column="1">
+            <Button Grid.Column="1" Style="{StaticResource MyButtonRevealStyle}">
                 <Button.Flyout>
                     <Flyout>
                         <Flyout.FlyoutPresenterStyle>
@@ -72,24 +80,30 @@
     <DataTemplate x:Key="FileParameterTemplate" x:DataType="arguments:FileArgument">
         <Grid ColumnSpacing="12">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock VerticalAlignment="Center"
+            <Image Source="{x:Bind FileThumbnail, Mode=OneWay}" Height="24"/>
+
+            <TextBlock Grid.Column="1"
+                       VerticalAlignment="Center"
                        Text="{x:Bind File.Name, Mode=OneWay, FallbackValue='(no file selected)'}"
                        IsTextSelectionEnabled="True"
                        TextTrimming="CharacterEllipsis"/>
 
-            <Button Click="{x:Bind PickFile}" Grid.Column="1">
+            <Button Click="{x:Bind PickFile}" Grid.Column="2"
+                    Style="{StaticResource MyButtonRevealStyle}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <SymbolIcon Symbol="OpenFile"/>
                     <TextBlock Text="Select"/>
                 </StackPanel>
             </Button>
-            
-            <Button Click="{x:Bind ClearFile}" Grid.Column="2">
+
+            <Button Click="{x:Bind ClearFile}" Grid.Column="3"
+                    Style="{StaticResource MyButtonRevealStyle}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <SymbolIcon Symbol="Clear"/>
                     <TextBlock Text="Clear"/>

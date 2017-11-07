@@ -5,8 +5,17 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:responses="using:WinSwag.Models.Responses"
+    xmlns:vm="using:WinSwag.ViewModels"
     mc:Ignorable="d">
 
+    <vm:ResponseTemplateSelector
+        x:Key="ResponseTemplateSelector"
+        FallbackTemplate="{StaticResource StringResponseTemplate}"
+        StringTemplate="{StaticResource StringResponseTemplate}"
+        JsonTemplate="{StaticResource JsonResponseTemplate}"
+        ImageTemplate="{StaticResource ImageResponseTemplate}"
+        AudioTemplate="{StaticResource AudioResponseTemplate}"/>
+    
     <DataTemplate x:Key="StringResponseTemplate" x:DataType="responses:StringResponse">
         <TextBlock Margin="0,12,0,0" IsTextSelectionEnabled="True"
                    TextWrapping="Wrap" FontFamily="Consolas"

@@ -7,7 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace WinSwag.Models.Arguments
 {
@@ -15,11 +17,22 @@ namespace WinSwag.Models.Arguments
     {
         private string _futureAccessToken;
         private StorageFile _file;
+        private BitmapImage _fileThumbnail;
 
         public StorageFile File
         {
             get => _file;
-            private set => Set(ref _file, value);
+            private set
+            {
+                if (Set(ref _file, value))
+                    UpdateFileThumbnailAsync();
+            }
+        }
+
+        public BitmapImage FileThumbnail
+        {
+            get => _fileThumbnail;
+            private set => Set(ref _fileThumbnail, value);
         }
 
         public FileArgument(SwaggerParameter parameter) : base(parameter)
@@ -92,6 +105,19 @@ namespace WinSwag.Models.Arguments
             if (token != null && StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
             {
                 File = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(token, AccessCacheOptions.DisallowUserInput);
+            }
+        }
+
+        private async Task UpdateFileThumbnailAsync()
+        {
+            if (_file == null)
+            {
+                FileThumbnail = null;
+            }
+            else
+            {
+                FileThumbnail = new BitmapImage();
+                FileThumbnail.SetSource(await _file.GetThumbnailAsync(ThumbnailMode.ListView));
             }
         }
     }
