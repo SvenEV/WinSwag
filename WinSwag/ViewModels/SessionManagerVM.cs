@@ -117,8 +117,8 @@ namespace WinSwag.ViewModels
                 {
                     await _initTask;
                     _messenger.Send(CloseDashboard.Instance);
+                    await UnloadCurrentSessionAsync(); // unload before loading new session (important when loading the same session again)
                     var session = await SwaggerSessionManager.LoadAsync(sessionInfo.Url);
-                    await UnloadCurrentSessionAsync();
                     CurrentDocument = await SwaggerSession.ToViewModelAsync(session);
                     _operationManager.SelectedOperation = null;
                 }
