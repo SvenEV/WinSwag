@@ -9,13 +9,13 @@
 
     <DataTemplate x:Key="StringResponseTemplate" x:DataType="responses:StringResponse">
         <TextBlock Margin="0,12,0,0" IsTextSelectionEnabled="True"
-                   FontFamily="Consolas"
+                   TextWrapping="Wrap" FontFamily="Consolas"
                    Text="{x:Bind Value}"/>
     </DataTemplate>
 
     <DataTemplate x:Key="JsonResponseTemplate" x:DataType="responses:JsonResponse">
         <TextBlock Margin="0,12,0,0" IsTextSelectionEnabled="True"
-                   FontFamily="Consolas"
+                   TextWrapping="Wrap" FontFamily="Consolas"
                    Text="{x:Bind Json}"/>
     </DataTemplate>
 
