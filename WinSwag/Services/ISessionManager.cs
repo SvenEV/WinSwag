@@ -17,6 +17,8 @@ namespace WinSwag.Services
 
         Task CreateSessionAsync(StorageFile file);
 
+        Task DeleteSessionAsync(SwaggerSessionInfo sessionInfo);
+
         Task LoadSessionAsync(SwaggerSessionInfo sessionInfo);
 
         Task SaveSessionAsync();

@@ -379,16 +379,26 @@
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition/>
+                                            <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         
                                         <TextBlock Text="{x:Bind DisplayName}"
-                                                   FontWeight="SemiBold"/>
+                                                   FontWeight="SemiBold"
+                                                   VerticalAlignment="Center"/>
                                         
                                         <TextBlock Text="{x:Bind Url}"
                                                    Grid.Column="1"
                                                    TextTrimming="CharacterEllipsis"
                                                    VerticalAlignment="Center"
                                                    FontSize="12"/>
+
+                                        <Button Style="{StaticResource MyButtonRevealStyle}"
+                                                ToolTipService.ToolTip="Delete Session"
+                                                Click="DeleteSessionButtonClick"
+                                                BorderThickness="0"
+                                                Grid.Column="2">
+                                            <SymbolIcon Symbol="Delete"/>
+                                        </Button>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>

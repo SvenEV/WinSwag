@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using NSwag;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,18 +11,22 @@ namespace WinSwag.Models
     {
         public string Url { get; set; }
 
-        public Dictionary<string, Dictionary<string, JToken>> Arguments { get; set; }
+        public Dictionary<string, StoredOperation> Operations { get; set; }
 
         public static SwaggerSession FromViewModel(SwaggerDocumentViewModel vm)
         {
             return new SwaggerSession
             {
                 Url = vm.Url,
-                Arguments = vm.OperationGroups
+                Operations = vm.OperationGroups
                     .SelectMany(g => g)
                     .ToDictionary(
                         op => op.Model.Operation.OperationId,
-                        op => op.Arguments.ToDictionary(p => p.Parameter.Name, p => p.GetSerializedValue()))
+                        op => new StoredOperation
+                        {
+                            ContentType = op.SelectedContentType,
+                            Arguments = op.Arguments.ToDictionary(p => p.Parameter.Name, p => p.GetSerializedValue())
+                        })
             };
         }
 
@@ -32,7 +35,7 @@ namespace WinSwag.Models
             var doc = await SwaggerDocument.FromUrlAsync(session.Url);
             var vm = new SwaggerDocumentViewModel(doc, session.Url);
 
-            foreach (var storedOp in session.Arguments)
+            foreach (var storedOp in session.Operations)
             {
                 var operation = vm.OperationGroups
                     .SelectMany(g => g)
@@ -40,7 +43,9 @@ namespace WinSwag.Models
 
                 if (operation != null)
                 {
-                    foreach (var storedArg in storedOp.Value)
+                    operation.SelectedContentType = storedOp.Value.ContentType;
+
+                    foreach (var storedArg in storedOp.Value.Arguments)
                     {
                         var parameter = operation.Arguments.FirstOrDefault(p => p.Parameter.Name == storedArg.Key);
                         await parameter.SetSerializedValueAsync(storedArg.Value);
@@ -51,14 +56,10 @@ namespace WinSwag.Models
             return vm;
         }
 
-        public string ToJson()
+        public class StoredOperation
         {
-            return JsonConvert.SerializeObject(this);
-        }
-
-        public static SwaggerSession FromJson(string json)
-        {
-            return JsonConvert.DeserializeObject<SwaggerSession>(json);
+            public string ContentType { get; set; }
+            public Dictionary<string, JToken> Arguments { get; set; }
         }
     }
 }

@@ -83,5 +83,11 @@ namespace WinSwag
             if (OperationManagerVM.SelectedOperation != null)
                 OperationManagerVM.SelectedOperation.SelectedContentType = (string)e.AddedItems.FirstOrDefault();
         }
+
+        private async void DeleteSessionButtonClick(object sender, RoutedEventArgs e)
+        {
+            var sessionInfo = (SwaggerSessionInfo)((Button)sender).DataContext;
+            await SessionManagerVM.DeleteSessionAsync(sessionInfo);
+        }
     }
 }

@@ -81,6 +81,20 @@ namespace WinSwag.ViewModels
             }
         }
 
+        public async Task DeleteSessionAsync(SwaggerSessionInfo sessionInfo)
+        {
+            try
+            {
+                await _initTask;
+                await SwaggerSessionManager.DeleteAsync(sessionInfo.Url);
+                await RefreshStoredSessionsAsync();
+            }
+            catch (Exception e)
+            {
+                await _viewStateManager.ShowMessageAsync(e.ToString(), "Failed to Delete Session");
+            }
+        }
+
         public async Task LoadSessionAsync(SwaggerSessionInfo sessionInfo)
         {
             try
