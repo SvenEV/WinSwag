@@ -10,6 +10,7 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using WinSwag.Models;
 using WinSwag.Services;
 
@@ -96,13 +97,19 @@ namespace WinSwag
 
             if (string.IsNullOrWhiteSpace(displayName))
             {
-                // animation
+                await ViewStateManagerVM.ShowMessageAsync("Please enter a name for this API.", "Add to Favorites");
                 return;
             }
 
             await SessionManagerVM.SaveCurrentSessionAsync(displayName);
             CurrentDocumentDisplayNameTextBox.Text = "";
             AddToFavoritesFlyout.Hide();
+        }
+
+        private void OnCurrentDocumentDisplayNameTextBoxKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Enter)
+                AddToFavoritesButtonClick(sender, null);
         }
     }
 }

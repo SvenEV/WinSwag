@@ -58,9 +58,10 @@
                 <AppBarButton.Flyout>
                     <Flyout x:Name="AddToFavoritesFlyout">
                         <StackPanel Width="300" Spacing="12">
-                            <TextBox PlaceholderText="Name this API!"
-                                     Header="Display Name"
-                                     x:Name="CurrentDocumentDisplayNameTextBox"/>
+                            <TextBox x:Name="CurrentDocumentDisplayNameTextBox"
+                                     KeyDown="OnCurrentDocumentDisplayNameTextBoxKeyDown"
+                                     PlaceholderText="Name this API!"
+                                     Header="Display Name"/>
                             <Button Content="Add to Favorites"
                                     Click="AddToFavoritesButtonClick"
                                     HorizontalContentAlignment="Stretch"/>
@@ -434,7 +435,7 @@
                             </StackPanel>
                             <Button.Flyout>
                                 <Flyout>
-                                    <StackPanel Spacing="12" Width="400">
+                                    <StackPanel Spacing="12" Width="550">
                                         <TextBlock TextWrapping="WrapWholeWords">
                                             Connecting to 'localhost' is prohibited by default for modern Windows apps.
                                             If you need to connect to a web service running on your local machine, exempt
