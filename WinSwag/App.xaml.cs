@@ -1,34 +1,37 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
+using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+using WinSwag.Services;
+using WinSwag.ViewModels;
 
 namespace WinSwag
 {
     sealed partial class App : Application
     {
-        private static readonly Dictionary<int, Messenger> _messengers = new Dictionary<int, Messenger>();
-
-        public static Messenger CurrentMessenger
-        {
-            get
-            {
-                var viewId = ApplicationView.GetApplicationViewIdForWindow(Window.Current.CoreWindow);
-                return _messengers.TryGetValue(viewId, out var m) ? m : _messengers[viewId] = new Messenger();
-            }
-        }
+        private IServiceProvider _services;
 
         public App()
         {
             InitializeComponent();
             Suspending += OnSuspending;
+
+            var services = new ServiceCollection();
+            ConfigureServices(services);
+            _services = services.BuildServiceProvider();
+        }
+
+        private void ConfigureServices(IServiceCollection services)
+        {
+            services
+                .AddSingleton<ApplicationInfo>()
+                .AddScoped<IMessenger, Messenger>()
+                .AddScoped<ISessionManagerVM, SessionManagerVM>()
+                .AddScoped<IOperationManagerVM, OperationManagerVM>()
+                .AddScoped<IViewStateManagerVM, ViewStateManagerVM>();
         }
 
         /// <summary>
@@ -40,66 +43,15 @@ namespace WinSwag
         {
             Frame rootFrame = Window.Current.Content as Frame;
 
-            // Do not repeat app initialization when the Window already has content,
-            // just ensure that the window is active
+            // TODO: Properly handle suspend/resume and prelaunch
             if (rootFrame == null)
             {
-                // Create a Frame to act as the navigation context and navigate to the first page
-                rootFrame = new Frame();
-
-                rootFrame.NavigationFailed += OnNavigationFailed;
-
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    //TODO: Load state from previously suspended application
-                }
-
-                // Place the frame in the current Window
-                Window.Current.Content = rootFrame;
-
-                // TODO: Think about that!
-                if (e.PrelaunchActivated == false)
-                {
-                    if (rootFrame.Content == null)
-                    {
-                        // When the navigation stack isn't restored navigate to the first page,
-                        // configuring the new page by passing required information as a navigation
-                        // parameter
-                        rootFrame.Navigate(typeof(MainPage), e.Arguments);
-                    }
-                    // Ensure the current window is active
-                    Window.Current.Activate();
-                }
+                ApplicationInstance.InitializeForCurrentView(_services);
             }
             else
             {
-                var view = CoreApplication.CreateNewView();
-                var windowId = 0;
-
-                await view.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-                {
-                    windowId = ApplicationView.GetApplicationViewIdForWindow(CoreWindow.GetForCurrentThread());
-                    var frame = new Frame();
-                    frame.Navigate(typeof(MainPage), null);
-                    Window.Current.Content = frame;
-                    Window.Current.Activate();
-                });
-
-                //ApplicationViewSwitcher.DisableSystemViewActivationPolicy();
-                var b = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(windowId);
+                await ApplicationInstance.LaunchNewAsync(_services);
             }
-
-
-        }
-
-        /// <summary>
-        /// Invoked when Navigation to a certain page fails
-        /// </summary>
-        /// <param name="sender">The Frame which failed navigation</param>
-        /// <param name="e">Details about the navigation failure</param>
-        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
-        {
-            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
         /// <summary>

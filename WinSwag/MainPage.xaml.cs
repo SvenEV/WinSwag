@@ -1,34 +1,41 @@
-﻿using Windows.ApplicationModel;
+﻿using GalaSoft.MvvmLight.Messaging;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
+using Windows.Storage.Pickers;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using WinSwag.ViewModels;
+using WinSwag.Models;
+using WinSwag.Services;
 
 namespace WinSwag
 {
     public sealed partial class MainPage : Page
     {
-        public MainViewModel ViewModel { get; } = new MainViewModel();
+        private readonly IMessenger _messenger;
 
-        public DashboardViewModel DashboardVM { get; } = new DashboardViewModel();
+        public ApplicationInfo AppInfoVM { get; }
 
-        public string AppVersion
-        {
-            get
-            {
-                var v = Package.Current.Id.Version;
-                return $"v{v.Major}.{v.Minor}.{v.Build}.{v.Revision}";
-            }
-        }
+        public ISessionManagerVM SessionManagerVM { get; }
+
+        public IOperationManagerVM OperationManagerVM { get; }
+
+        public IViewStateManagerVM ViewStateManagerVM { get; }
 
         public MainPage()
         {
+            _messenger = ApplicationInstance.Current.Services.GetService<IMessenger>();
+            AppInfoVM = ApplicationInstance.Current.Services.GetService<ApplicationInfo>();
+            SessionManagerVM = ApplicationInstance.Current.Services.GetService<ISessionManagerVM>();
+            OperationManagerVM = ApplicationInstance.Current.Services.GetService<IOperationManagerVM>();
+            ViewStateManagerVM = ApplicationInstance.Current.Services.GetService<IViewStateManagerVM>();
+
             InitializeComponent();
-            DataContext = ViewModel;
 
             Window.Current.SetTitleBar(TitleBar);
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
@@ -38,7 +45,7 @@ namespace WinSwag
             titleBar.ButtonBackgroundColor = Colors.Transparent;
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 
-            App.CurrentMessenger.Register<AppMessage>(this, OnAppMessage);
+            _messenger.Register<CloseDashboard>(this, _ => DashboardPopup.Hide());
 
             Window.Current.CoreWindow.KeyDown += OnKeyDown;
         }
@@ -46,15 +53,29 @@ namespace WinSwag
         private void OnKeyDown(CoreWindow sender, KeyEventArgs args)
         {
             if (args.VirtualKey == VirtualKey.F5)
-                ViewModel.SelectedOperation.BeginSendRequest();
+                OperationManagerVM.SelectedOperation.BeginSendRequest();
         }
 
-        private void OnAppMessage(AppMessage message)
+        private async void OpenFileButtonClick(object sender, RoutedEventArgs e)
         {
-            switch (message)
-            {
-                case AppMessage.CloseDashboard: DashboardPopup.Hide(); break;
-            }
+            var picker = new FileOpenPicker();
+            picker.FileTypeFilter.Add(".json");
+
+            var file = await picker.PickSingleFileAsync();
+
+            if (file != null)
+                await SessionManagerVM.CreateSessionAsync(file);
+        }
+
+        private async void StoredSessionClick(object sender, ItemClickEventArgs e)
+        {
+            var favorite = (SwaggerSessionInfo)e.ClickedItem;
+            await SessionManagerVM.LoadSessionAsync(favorite);
+        }
+
+        private async void OnUrlBoxQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            await SessionManagerVM.CreateSessionAsync(args.QueryText);
         }
     }
 }

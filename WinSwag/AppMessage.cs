@@ -4,13 +4,10 @@ using WinSwag.Models;
 
 namespace WinSwag
 {
-    public enum AppMessage
+    public class CloseDashboard
     {
-        CloseDashboard,
-        ClearCurrentSpecification,
-        BeginLoad,
-        EndLoad,
-        StoredSessionsChanged
+        public static readonly CloseDashboard Instance = new CloseDashboard();
+        private CloseDashboard() { }
     }
 
     public class SpecificationLoaded

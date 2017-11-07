@@ -13,7 +13,7 @@ using WinSwag.Models.Responses;
 
 namespace WinSwag.ViewModels
 {
-    public class OperationViewModel : ObservableObject
+    public class SwaggerOperationViewModel : ObservableObject
     {
         public static readonly SolidColorBrush GetBrush = new SolidColorBrush(Colors.SkyBlue);
         public static readonly SolidColorBrush PostBrush = new SolidColorBrush(Colors.YellowGreen);
@@ -79,7 +79,7 @@ namespace WinSwag.ViewModels
 
         public bool IsBusy => !CanSendRequest;
 
-        public OperationViewModel(SwaggerOperationDescription model, string baseUrl)
+        public SwaggerOperationViewModel(SwaggerOperationDescription model, string baseUrl)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
             _baseUrl = baseUrl ?? "";

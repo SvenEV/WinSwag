@@ -5,22 +5,22 @@ using System.Linq;
 
 namespace WinSwag.ViewModels
 {
-    public class SwaggerSpecificationViewModel
+    public class SwaggerDocumentViewModel
     {
         public SwaggerDocument Model { get; }
 
         public string Url { get; }
 
-        public IReadOnlyList<IGrouping<string, OperationViewModel>> OperationGroups { get; }
+        public IReadOnlyList<IGrouping<string, SwaggerOperationViewModel>> OperationGroups { get; }
 
-        public SwaggerSpecificationViewModel(SwaggerDocument model, string url)
+        public SwaggerDocumentViewModel(SwaggerDocument model, string url)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
             Url = url ?? throw new ArgumentNullException(nameof(url));
 
             OperationGroups = model.Operations
                 .OrderBy(op => op.Path)
-                .Select(op => new OperationViewModel(op, Model.BaseUrl))
+                .Select(op => new SwaggerOperationViewModel(op, Model.BaseUrl))
                 .GroupBy(op => op.Model.Operation.Tags.FirstOrDefault() ?? "(Default)")
                 .OrderBy(group => group.Key)
                 .ToList();

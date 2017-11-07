@@ -14,7 +14,7 @@ namespace WinSwag.Models
 
         public Dictionary<string, Dictionary<string, JToken>> Arguments { get; set; }
 
-        public static SwaggerSession FromViewModel(SwaggerSpecificationViewModel vm)
+        public static SwaggerSession FromViewModel(SwaggerDocumentViewModel vm)
         {
             return new SwaggerSession
             {
@@ -27,10 +27,10 @@ namespace WinSwag.Models
             };
         }
 
-        public static async Task<SwaggerSpecificationViewModel> ToViewModelAsync(SwaggerSession session)
+        public static async Task<SwaggerDocumentViewModel> ToViewModelAsync(SwaggerSession session)
         {
             var doc = await SwaggerDocument.FromUrlAsync(session.Url);
-            var vm = new SwaggerSpecificationViewModel(doc, session.Url);
+            var vm = new SwaggerDocumentViewModel(doc, session.Url);
 
             foreach (var storedOp in session.Arguments)
             {

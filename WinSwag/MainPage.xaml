@@ -17,7 +17,7 @@
         <CollectionViewSource x:Key="Operations"
                               x:Name="Operations"
                               IsSourceGrouped="True"
-                              Source="{x:Bind ViewModel.Specification.OperationGroups, Mode=OneWay}"/>
+                              Source="{x:Bind SessionManagerVM.CurrentDocument.OperationGroups, Mode=OneWay}"/>
 
         <vm:ParameterTemplateSelector
             x:Key="ParameterTemplateSelector"
@@ -67,18 +67,17 @@
         <!-- Command bar (top left) -->
         <CommandBar OverflowButtonVisibility="Auto" Background="Transparent">
             <AppBarButton Icon="Home" Label="Dashboard" Click="{x:Bind DashboardPopup.Show}"/>
-            <AppBarButton Icon="Save" Label="Save Session" Click="{x:Bind ViewModel.SaveCurrentSessionAsync}"
-                          IsEnabled="{x:Bind ViewModel.IsIdle, Mode=OneWay}"/>
+            <AppBarButton Icon="Favorite" Label="Save Session" Click="{x:Bind SessionManagerVM.SaveSessionAsync}"
+                          IsEnabled="{x:Bind ViewStateManagerVM.IsIdle, Mode=OneWay}"/>
         </CommandBar>
 
         <!-- API list (left) -->
         <Grid Grid.Row="1">
-            <SemanticZoom>
+            <SemanticZoom Visibility="{x:Bind ViewStateManagerVM.IsIdle, Mode=OneWay}">
                 <SemanticZoom.ZoomedInView>
                     <ListView ItemsSource="{x:Bind Operations.View, Mode=OneWay}"
                               ScrollViewer.IsVerticalScrollChainingEnabled="True"
-                              SelectedItem="{Binding SelectedOperation, Mode=TwoWay}"
-                              Visibility="{x:Bind ViewModel.IsIdle, Mode=OneWay}"
+                              SelectedItem="{Binding OperationManagerVM.SelectedOperation, Mode=TwoWay, ElementName=Root}"
                               Padding="0,-12,0,4">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
@@ -118,7 +117,7 @@
                             </Style>
                         </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="vm:OperationViewModel">
+                            <DataTemplate x:DataType="vm:SwaggerOperationViewModel">
                                 <Grid ColumnSpacing="12">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="50"/>
@@ -161,9 +160,16 @@
                 </SemanticZoom.ZoomedOutView>
             </SemanticZoom>
 
-            <ProgressRing Width="40" Height="40" Foreground="OrangeRed"
-                          HorizontalAlignment="Center" VerticalAlignment="Center"
-                          IsActive="{x:Bind ViewModel.IsBusy, Mode=OneWay}"/>
+            <!-- Busy indicator -->
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12"
+                        Visibility="{x:Bind ViewStateManagerVM.IsBusy, Mode=OneWay}">
+                <ProgressRing Width="40" Height="40" Foreground="OrangeRed"
+                              HorizontalAlignment="Center"
+                              IsActive="{x:Bind ViewStateManagerVM.IsBusy, Mode=OneWay}"/>
+
+                <ItemsControl ItemsSource="{x:Bind ViewStateManagerVM.ActiveTasks}"
+                              DisplayMemberPath="Description"/>
+            </StackPanel>
         </Grid>
 
         <!-- Selected operation title (top right) -->
@@ -171,16 +177,16 @@
             <TextBlock VerticalAlignment="Center" Margin="18,0,140,0"
                        Style="{StaticResource SubtitleTextBlockStyle}"
                        TextWrapping="NoWrap" FontFamily="Consolas">
-                <Run Text="{x:Bind ViewModel.SelectedOperation.Method, Mode=OneWay}"
-                     Foreground="{x:Bind ViewModel.SelectedOperation.MethodBrush, Mode=OneWay}"
+                <Run Text="{x:Bind OperationManagerVM.SelectedOperation.Method, Mode=OneWay}"
+                     Foreground="{x:Bind OperationManagerVM.SelectedOperation.MethodBrush, Mode=OneWay}"
                      FontWeight="SemiBold"/>
-                <Run Text="{x:Bind ViewModel.SelectedOperation.Model.Path, Mode=OneWay}"/>
+                <Run Text="{x:Bind OperationManagerVM.SelectedOperation.Model.Path, Mode=OneWay}"/>
             </TextBlock>
         </Grid>
 
         <!-- Selected operation request/response (right) -->
         <ScrollViewer Grid.Row="1" Grid.Column="1" Padding="20,0"
-                      Visibility="{x:Bind ViewModel.IsOperationSelected, Mode=OneWay}">
+                      Visibility="{x:Bind OperationManagerVM.IsOperationSelected, Mode=OneWay}">
             <StackPanel>
                 <!-- Request part -->
                 <Border Padding="0,0,0,4" Margin="0,0,0,4" BorderThickness="0,0,0,1" BorderBrush="#44FFFFFF">
@@ -188,7 +194,7 @@
                 </Border>
 
                 <!-- Parameters -->
-                <ItemsControl ItemsSource="{x:Bind ViewModel.SelectedOperation.Arguments, Mode=OneWay}">
+                <ItemsControl ItemsSource="{x:Bind OperationManagerVM.SelectedOperation.Arguments, Mode=OneWay}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="arguments:SwaggerArgument">
                             <Grid Margin="0,0,0,4" Padding="0,4,0,4"
@@ -258,9 +264,9 @@
 
                 <!-- Send request button -->
                 <Button HorizontalAlignment="Right" Foreground="Black" Padding="12,8" Margin="0,4,0,0"
-                        Background="{x:Bind ViewModel.SelectedOperation.MethodBrush, Mode=OneWay}"
-                        Click="{x:Bind ViewModel.SelectedOperation.BeginSendRequest, Mode=OneWay}"
-                        IsEnabled="{x:Bind ViewModel.SelectedOperation.CanSendRequest, Mode=OneWay}">
+                        Background="{x:Bind OperationManagerVM.SelectedOperation.MethodBrush, Mode=OneWay}"
+                        Click="{x:Bind OperationManagerVM.SelectedOperation.BeginSendRequest, Mode=OneWay}"
+                        IsEnabled="{x:Bind OperationManagerVM.SelectedOperation.CanSendRequest, Mode=OneWay}">
                     <StackPanel Orientation="Horizontal">
                         <SymbolIcon Symbol="Play"/>
                         <TextBlock Margin="8,0,0,0" Text="Send Request"/>
@@ -273,22 +279,22 @@
                 </Border>
 
                 <!-- Response part -->
-                <StackPanel Visibility="{x:Bind ViewModel.SelectedOperation.HasResponse, Mode=OneWay}">
+                <StackPanel Visibility="{x:Bind OperationManagerVM.SelectedOperation.HasResponse, Mode=OneWay}">
                     <Border Height="4">
-                        <ProgressBar IsIndeterminate="{x:Bind ViewModel.SelectedOperation.IsBusy, Mode=OneWay}"
-                                     Visibility="{x:Bind ViewModel.SelectedOperation.IsBusy, Mode=OneWay}"
-                                     BorderBrush="{x:Bind ViewModel.SelectedOperation.MethodBrush, Mode=OneWay}"/>
+                        <ProgressBar IsIndeterminate="{x:Bind OperationManagerVM.SelectedOperation.IsBusy, Mode=OneWay}"
+                                     Visibility="{x:Bind OperationManagerVM.SelectedOperation.IsBusy, Mode=OneWay}"
+                                     BorderBrush="{x:Bind OperationManagerVM.SelectedOperation.MethodBrush, Mode=OneWay}"/>
                     </Border>
 
-                    <TextBlock Text="{x:Bind ViewModel.SelectedOperation.Response.Status, Mode=OneWay}"
+                    <TextBlock Text="{x:Bind OperationManagerVM.SelectedOperation.Response.Status, Mode=OneWay}"
                                FontWeight="SemiBold"/>
 
-                    <TextBlock Text="{x:Bind ViewModel.SelectedOperation.Response.RequestUri, Mode=OneWay}"
+                    <TextBlock Text="{x:Bind OperationManagerVM.SelectedOperation.Response.RequestUri, Mode=OneWay}"
                                TextWrapping="Wrap" FontFamily="Consolas" IsTextSelectionEnabled="True"
                                Margin="0,12,0,0"/>
 
                     <!-- Response headers -->
-                    <ItemsControl ItemsSource="{x:Bind ViewModel.SelectedOperation.Response.Response.Headers, Mode=OneWay}"
+                    <ItemsControl ItemsSource="{x:Bind OperationManagerVM.SelectedOperation.Response.Response.Headers, Mode=OneWay}"
                                   Margin="0,12,0,0">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -304,10 +310,10 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
-                    <Button Content="Save As..." Click="{x:Bind ViewModel.SelectedOperation.Response.SaveAs}"/>
+                    <Button Content="Save As..." Click="{x:Bind OperationManagerVM.SelectedOperation.Response.SaveAs}"/>
 
                     <!-- Response content -->
-                    <ContentControl Content="{x:Bind ViewModel.SelectedOperation.Response, Mode=OneWay}"
+                    <ContentControl Content="{x:Bind OperationManagerVM.SelectedOperation.Response, Mode=OneWay}"
                                     ContentTemplateSelector="{StaticResource ResponseTemplateSelector}"
                                     HorizontalContentAlignment="Stretch"
                                     VerticalContentAlignment="Stretch"
@@ -319,7 +325,7 @@
         </ScrollViewer>
 
         <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"
-                   Visibility="{x:Bind ViewModel.IsntOperationSelected, Mode=OneWay}">
+                   Visibility="{x:Bind OperationManagerVM.IsntOperationSelected, Mode=OneWay}">
             No operation selected.
         </TextBlock>
 
@@ -355,7 +361,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <Button Click="{x:Bind DashboardVM.OpenFileAsync}">
+                            <Button Click="OpenFileButtonClick">
                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                     <SymbolIcon Symbol="OpenFile"/>
                                     <TextBlock Text="Open File"/>
@@ -363,15 +369,15 @@
                             </Button>
                             
                             <AutoSuggestBox Grid.Column="1"
-                                            Text="{x:Bind DashboardVM.Url, Mode=TwoWay}"
+                                            Text="{x:Bind SessionManagerVM.CurrentDocument.Url, Mode=OneWay}"
                                             PlaceholderText="URL to a Swagger specification file (swagger.json)"
-                                            QuerySubmitted="{x:Bind DashboardVM.LoadFromQuerySubmissionAsync}"
+                                            QuerySubmitted="OnUrlBoxQuerySubmitted"
                                             QueryIcon="Forward" Margin="0,12"/>
 
                         </Grid>
 
-                        <ListView ItemsSource="{x:Bind DashboardVM.Favorites}"
-                                  ItemClick="{x:Bind DashboardVM.LoadFavoriteAsync}"
+                        <ListView ItemsSource="{x:Bind SessionManagerVM.StoredSessions}"
+                                  ItemClick="StoredSessionClick"
                                   IsItemClickEnabled="True"
                                   SelectionMode="None">
                             <ListView.ItemContainerStyle>
@@ -400,7 +406,7 @@
                             </ListView.ItemTemplate>
                         </ListView>
 
-                        <TextBlock Text="{x:Bind AppVersion}" Opacity=".5" FontSize="9" Margin="0,12,0,0"/>
+                        <TextBlock Text="{x:Bind AppInfoVM.Version}" Opacity=".5" FontSize="9" Margin="0,12,0,0"/>
                     </StackPanel>
                 </Border>
             </Grid>
