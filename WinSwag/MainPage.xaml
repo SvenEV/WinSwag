@@ -335,7 +335,8 @@
                 <Border Grid.Column="1" Padding="60,20">
                     <StackPanel>
                         <Grid>
-                            <TextBlock Text="Dashboard" Style="{StaticResource TitleTextBlockStyle}"/>
+                            <TextBlock Text="Dashboard" Style="{StaticResource TitleTextBlockStyle}"
+                                       Margin="11,0,0,0"/>
 
                             <Button Click="{x:Bind DashboardPopup.Hide}" HorizontalAlignment="Right"
                                     BorderThickness="0" Background="Transparent" Height="32">
@@ -349,7 +350,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <Button Click="OpenFileButtonClick">
+                            <Button Click="OpenFileButtonClick" Style="{StaticResource MyButtonRevealStyle}">
                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                     <SymbolIcon Symbol="OpenFile"/>
                                     <TextBlock Text="Open File"/>
@@ -403,6 +404,42 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
+
+                        <Button Foreground="Gold" Background="Transparent" Margin="0,12,0,0">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <SymbolIcon Symbol="Flag"/>
+                                <TextBlock Text="Configure Localhost Support"/>
+                            </StackPanel>
+                            <Button.Flyout>
+                                <Flyout>
+                                    <StackPanel Spacing="12" Width="400">
+                                        <TextBlock TextWrapping="WrapWholeWords">
+                                            Connecting to 'localhost' is prohibited by default for modern Windows apps.
+                                            If you need to connect to a web service running on your local machine, exempt
+                                            WinSwag from this limitation by running the following command:
+                                        </TextBlock>
+                                        <Border Background="Black" Padding="4">
+                                            <TextBlock Text="checknetisolation loopbackexempt -a -n=WinSwag_vsewgyk842gz2"
+                                                       IsTextSelectionEnabled="True"
+                                                       TextWrapping="WrapWholeWords"
+                                                       FontFamily="Consolas"/>
+                                        </Border>
+                                        <TextBlock TextWrapping="WrapWholeWords">
+                                            You can remove the exemption and block 'localhost'-access again with the following command:
+                                        </TextBlock>
+                                        <Border Background="Black" Padding="4">
+                                            <TextBlock Text="checknetisolation loopbackexempt -d -n=WinSwag_vsewgyk842gz2"
+                                                       IsTextSelectionEnabled="True"
+                                                       TextWrapping="WrapWholeWords"
+                                                       FontFamily="Consolas"/>
+                                        </Border>
+                                        <TextBlock TextWrapping="WrapWholeWords">
+                                            (You may need to restart the app for the changes to take effect.)
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
 
                         <TextBlock Text="{x:Bind AppInfoVM.Version}" Opacity=".5" FontSize="9" Margin="0,12,0,0"/>
                     </StackPanel>
