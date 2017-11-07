@@ -137,7 +137,6 @@
     <Compile Include="Templates\ResponseTemplates.xaml.cs">
       <DependentUpon>ResponseTemplates.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\DashboardViewModel.cs" />
     <Compile Include="ViewModels\DateTimeToStringConverter.cs" />
     <Compile Include="ViewModels\ForModels\SwaggerOperationViewModel.cs" />
     <Compile Include="ViewModels\OperationManagerVM.cs" />
