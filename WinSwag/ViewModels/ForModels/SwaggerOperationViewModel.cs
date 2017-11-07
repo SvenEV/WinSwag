@@ -2,8 +2,10 @@
 using NSwag;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
@@ -25,6 +27,7 @@ namespace WinSwag.ViewModels
         private ResponseViewModel _response;
         private bool _canSendRequest = true;
         private string _selectedContentType;
+        private string _requestError;
 
         public SwaggerOperationDescription Model { get; }
 
@@ -61,6 +64,18 @@ namespace WinSwag.ViewModels
 
         public bool HasResponse => Response != null;
 
+        public string RequestError
+        {
+            get => _requestError;
+            private set
+            {
+                if (Set(ref _requestError, value))
+                    RaisePropertyChanged(nameof(HasRequestError));
+            }
+        }
+
+        public bool HasRequestError => RequestError != null;
+
         public string SelectedContentType
         {
             get => _selectedContentType;
@@ -93,6 +108,7 @@ namespace WinSwag.ViewModels
                 return;
 
             CanSendRequest = false;
+            RequestError = null;
 
             using (var http = new HttpClient())
             {
@@ -107,14 +123,24 @@ namespace WinSwag.ViewModels
                     await parameter.ApplyAsync(request, requestUri);
 
                 if (request.Content != null)
-                    request.Content.Headers.ContentType.MediaType = _selectedContentType;
+                    request.Content.Headers.ContentType = new MediaTypeHeaderValue(_selectedContentType);
 
                 requestUri.Length--; // remove trailing '?' or '&'
                 var finalUri = requestUri.ToString();
                 request.RequestUri = new Uri(finalUri);
 
-                var response = await http.SendAsync(request);
-                Response = await ResponseViewModel.FromResponseAsync(response, finalUri);
+                try
+                {
+                    var response = await http.SendAsync(request);
+                    Response = await ResponseViewModel.FromResponseAsync(response, finalUri);
+                }
+                catch (HttpRequestException e)
+                {
+                    RequestError = $"Failed to send request: {e.Message} ({e.GetType()})";
+
+                    if (Debugger.IsAttached)
+                        RequestError += $"\r\n{e.StackTrace}";
+                }
             }
 
             CanSendRequest = true;

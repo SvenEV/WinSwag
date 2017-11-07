@@ -280,12 +280,17 @@
                 </Border>
 
                 <!-- Response part -->
+                <Border Height="4">
+                    <ProgressBar IsIndeterminate="{x:Bind OperationManagerVM.SelectedOperation.IsBusy, Mode=OneWay}"
+                                 Visibility="{x:Bind OperationManagerVM.SelectedOperation.IsBusy, Mode=OneWay}"
+                                 BorderBrush="{x:Bind OperationManagerVM.SelectedOperation.MethodBrush, Mode=OneWay}"/>
+                </Border>
+
+                <TextBlock Visibility="{x:Bind OperationManagerVM.SelectedOperation.HasRequestError, Mode=OneWay}"
+                           Text="{x:Bind OperationManagerVM.SelectedOperation.RequestError, Mode=OneWay}"
+                           TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
+
                 <StackPanel Visibility="{x:Bind OperationManagerVM.SelectedOperation.HasResponse, Mode=OneWay}">
-                    <Border Height="4">
-                        <ProgressBar IsIndeterminate="{x:Bind OperationManagerVM.SelectedOperation.IsBusy, Mode=OneWay}"
-                                     Visibility="{x:Bind OperationManagerVM.SelectedOperation.IsBusy, Mode=OneWay}"
-                                     BorderBrush="{x:Bind OperationManagerVM.SelectedOperation.MethodBrush, Mode=OneWay}"/>
-                    </Border>
 
                     <TextBlock Text="{x:Bind OperationManagerVM.SelectedOperation.Response.Status, Mode=OneWay}"
                                FontWeight="SemiBold"/>

@@ -6,12 +6,14 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
 
 namespace WinSwag.Models.Arguments
 {
     public class FileArgument : SwaggerArgument
     {
+        private string _futureAccessToken;
         private StorageFile _file;
 
         public StorageFile File
@@ -28,12 +30,30 @@ namespace WinSwag.Models.Arguments
         {
             var picker = new FileOpenPicker();
             picker.FileTypeFilter.Add("*");
-            File = await picker.PickSingleFileAsync() ?? File;
+            var newFile = await picker.PickSingleFileAsync();
+
+            if (newFile != null)
+            {
+                // Remove current file from FutureAccessList
+                if (!string.IsNullOrEmpty(_futureAccessToken))
+                    StorageApplicationPermissions.FutureAccessList.Remove(_futureAccessToken);
+
+                File = newFile;
+
+                // Add new file to FutureAccessList
+                var operation = (SwaggerOperation)Parameter.Parent;
+                _futureAccessToken = StorageApplicationPermissions.FutureAccessList.Add(newFile);
+            }
         }
 
         public void ClearFile()
         {
+            // Remove current file from FutureAccessList
+            if (!string.IsNullOrEmpty(_futureAccessToken))
+                StorageApplicationPermissions.FutureAccessList.Remove(_futureAccessToken);
+
             File = null;
+            _futureAccessToken = null;
         }
 
         public override async Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri)
@@ -41,22 +61,38 @@ namespace WinSwag.Models.Arguments
             if (_file == null)
                 return;
 
-            if (Parameter.Kind != SwaggerParameterKind.Body)
-                throw new NotSupportedException("Files can only appear as request body");
+            if (Parameter.Kind != SwaggerParameterKind.FormData)
+                throw new NotSupportedException("Files can only appear as form data");
 
-            var stream = await _file.OpenReadAsync();
-            request.Content = new StreamContent(stream.AsStream());
+            // The following streaming approach doesn't work
+            // (request just times out):
+            //
+            //var stream = await _file.OpenStreamForReadAsync();
+            //request.Content = new StreamContent(stream);
+
+            // Workaround: Load file into memory
+            using (var stream = await _file.OpenStreamForReadAsync())
+            using (var memStream = new MemoryStream())
+            {
+                stream.CopyTo(memStream);
+                request.Content = new ByteArrayContent(memStream.ToArray());
+            }
         }
 
-        public override JToken GetSerializedValue() => File == null ? null : JToken.FromObject(File.Path);
+        public override JToken GetSerializedValue() => _futureAccessToken == null ? null : JToken.FromObject(_futureAccessToken);
 
         public override async Task SetSerializedValueAsync(JToken o)
         {
             if (o == null)
                 return;
 
-            var path = o.ToObject<string>();
-            File = path == null ? null : await StorageFile.GetFileFromPathAsync(path);
+            var token = o.ToObject<string>();
+            var operation = (SwaggerOperation)Parameter.Parent;
+
+            if (token != null && StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
+            {
+                File = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(token, AccessCacheOptions.DisallowUserInput);
+            }
         }
     }
 }
