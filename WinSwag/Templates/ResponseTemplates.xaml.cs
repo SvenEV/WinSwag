@@ -20,5 +20,13 @@ namespace WinSwag.Templates
             var image = (Image)sender;
             image.ContextFlyout.ShowAt(image);
         }
+
+        private async void OnImageDragStarting(UIElement sender, DragStartingEventArgs args)
+        {
+            var response = (ImageResponse)((Image)sender).DataContext;
+            var content = await response.GetResponseContentAsync();
+            var file = await DataTransferHelper.CreateTemporaryFileAsync(content.stream, content.contentType);
+            args.Data.SetStorageItems(new[] { file });
+        }
     }
 }

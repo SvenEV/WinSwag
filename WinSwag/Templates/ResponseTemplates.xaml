@@ -29,7 +29,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="ImageResponseTemplate" x:DataType="responses:ImageResponse">
-        <Image Source="{x:Bind Image}" Tapped="OnImageTapped" CanDrag="True">
+        <Image Source="{x:Bind Image}" Tapped="OnImageTapped" CanDrag="True" DragStarting="OnImageDragStarting">
             <Image.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem Text="Open" Click="{x:Bind OpenFile}"/>

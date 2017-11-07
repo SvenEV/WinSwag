@@ -11,7 +11,7 @@ namespace WinSwag
 {
     public static class DataTransferHelper
     {
-        private static async Task<StorageFile> CreateTemporaryFileAsync(IRandomAccessStream stream, string contentType)
+        public static async Task<StorageFile> CreateTemporaryFileAsync(IRandomAccessStream stream, string contentType)
         {
             stream.Seek(0);
             var filename = $"{Guid.NewGuid()}{MimeTypeMap.GetExtension(contentType)}";
@@ -23,7 +23,7 @@ namespace WinSwag
             return file;
         }
 
-        private static async Task<DataPackage> CreateDataPackageAsync(IRandomAccessStream stream, string contentType)
+        public static async Task<DataPackage> CreateDataPackageAsync(IRandomAccessStream stream, string contentType)
         {
             var file = await CreateTemporaryFileAsync(stream, contentType);
 

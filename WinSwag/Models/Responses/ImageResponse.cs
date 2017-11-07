@@ -1,13 +1,9 @@
-﻿using MimeTypes;
-using System;
+﻿using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
-using Windows.System;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -75,7 +71,7 @@ namespace WinSwag.Models.Responses
             await DataTransferHelper.OpenWithAsync(content.stream, content.contentType);
         }
 
-        private async Task<(IRandomAccessStream stream, string contentType)> GetResponseContentAsync() =>
+        public async Task<(IRandomAccessStream stream, string contentType)> GetResponseContentAsync() =>
             ((await Response.Content.ReadAsStreamAsync()).AsRandomAccessStream(), Response.Content.Headers.ContentType.MediaType);
     }
 }
