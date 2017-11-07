@@ -35,7 +35,7 @@ namespace WinSwag.Models.Responses
 
         public static async Task<ResponseViewModel> FromResponseAsync(HttpResponseMessage response, string requestUri)
         {
-            var mediaType = response.Content.Headers.ContentType.MediaType;
+            var mediaType = response.Content?.Headers?.ContentType?.MediaType ?? "text/plain";
 
             if (mediaType.StartsWith("image/"))
                 return await ImageResponse.FromResponseAsync(response, requestUri);
