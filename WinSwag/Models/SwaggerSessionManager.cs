@@ -52,7 +52,7 @@ namespace WinSwag.Models
 
             if (!_sessions.TryGetValue(session.Url, out var info))
             {
-                info = new SwaggerSessionInfo("Stored Session", session.Url, Guid.NewGuid());
+                info = new SwaggerSessionInfo(session.DisplayName, session.Url, Guid.NewGuid());
                 _sessions.Add(session.Url, info);
             }
 
