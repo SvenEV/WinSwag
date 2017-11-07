@@ -173,7 +173,7 @@
         </Grid>
 
         <!-- Selected operation title (top right) -->
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="1" Visibility="{x:Bind ViewStateManagerVM.IsIdle, Mode=OneWay}">
             <TextBlock VerticalAlignment="Center" Margin="18,0,140,0"
                        Style="{StaticResource SubtitleTextBlockStyle}"
                        TextWrapping="NoWrap" FontFamily="Consolas">
@@ -186,8 +186,8 @@
 
         <!-- Selected operation request/response (right) -->
         <ScrollViewer Grid.Row="1" Grid.Column="1" Padding="20,0"
-                      Visibility="{x:Bind OperationManagerVM.IsOperationSelected, Mode=OneWay}">
-            <StackPanel>
+                      Visibility="{x:Bind ViewStateManagerVM.IsIdle, Mode=OneWay}">
+            <StackPanel Visibility="{x:Bind OperationManagerVM.IsOperationSelected, Mode=OneWay}">
                 <!-- Request part -->
                 <Border Padding="0,0,0,4" Margin="0,0,0,4" BorderThickness="0,0,0,1" BorderBrush="#44FFFFFF">
                     <TextBlock Text="Request" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiBold"/>
