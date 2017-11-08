@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using Microsoft.Extensions.DependencyInjection;
 using NSwag;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using Windows.UI.Xaml.Media;
 using WinSwag.Models;
 using WinSwag.Models.Arguments;
 using WinSwag.Models.Responses;
+using WinSwag.Services;
 
 namespace WinSwag.ViewModels
 {
@@ -117,6 +119,10 @@ namespace WinSwag.ViewModels
                 var request = new HttpRequestMessage
                 {
                     Method = Model.Method.ToHttpMethod(),
+                    Headers =
+                    {
+                        UserAgent = { new ProductInfoHeaderValue("WinSwag", ApplicationInstance.Current.Services.GetService<ApplicationInfo>().Version) }
+                    }
                 };
 
                 foreach (var parameter in Arguments)
