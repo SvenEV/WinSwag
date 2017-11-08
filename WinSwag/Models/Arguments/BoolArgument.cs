@@ -16,6 +16,8 @@ namespace WinSwag.Models.Arguments
             set => Set(ref _value, value);
         }
 
+        public override bool HasValue => true; // TODO: Make value of type bool? and serialize only if not null
+
         public BoolArgument(SwaggerParameter parameter) : base(parameter)
         {
         }

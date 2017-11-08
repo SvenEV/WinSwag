@@ -17,6 +17,8 @@ namespace WinSwag.Models.Arguments
             set => Set(ref _value, value);
         }
 
+        public override bool HasValue => _value != null;
+
         public DateTimeArgument(SwaggerParameter parameter) : base(parameter)
         {
         }

@@ -35,6 +35,8 @@ namespace WinSwag.Models.Arguments
             private set => Set(ref _fileThumbnail, value);
         }
 
+        public override bool HasValue => _file != null;
+
         public FileArgument(SwaggerParameter parameter) : base(parameter)
         {
         }

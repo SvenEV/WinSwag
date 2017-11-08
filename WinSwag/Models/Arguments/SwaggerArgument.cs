@@ -21,6 +21,8 @@ namespace WinSwag.Models.Arguments
 
         public bool IsBodyParameter => Parameter.Kind == SwaggerParameterKind.Body;
 
+        public abstract bool HasValue { get; }
+
         public SwaggerArgument(SwaggerParameter parameter)
         {
             Parameter = parameter ?? throw new ArgumentNullException(nameof(parameter));

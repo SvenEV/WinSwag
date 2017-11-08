@@ -20,8 +20,10 @@ namespace WinSwag.Models.Arguments
         public NamedValue Value
         {
             get => _value;
-            set => Set(ref _value, value);
+            set => Set(ref _value, value ?? NullEnumerationValue);
         }
+
+        public override bool HasValue => _value != NullEnumerationValue;
 
         public EnumArgument(SwaggerParameter parameter) : base(parameter)
         {

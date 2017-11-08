@@ -23,6 +23,7 @@ namespace WinSwag.ViewModels
         public static readonly SolidColorBrush GetBrush = new SolidColorBrush(Colors.SkyBlue);
         public static readonly SolidColorBrush PostBrush = new SolidColorBrush(Colors.YellowGreen);
         public static readonly SolidColorBrush PutBrush = new SolidColorBrush(Colors.Gold);
+        public static readonly SolidColorBrush PatchBrush = new SolidColorBrush(Colors.MediumPurple);
         public static readonly SolidColorBrush DeleteBrush = new SolidColorBrush(Colors.OrangeRed);
         public static readonly SolidColorBrush DefaultBrush = new SolidColorBrush(Colors.Gray);
 
@@ -49,6 +50,7 @@ namespace WinSwag.ViewModels
                     case SwaggerOperationMethod.Get: return GetBrush;
                     case SwaggerOperationMethod.Post: return PostBrush;
                     case SwaggerOperationMethod.Put: return PutBrush;
+                    case SwaggerOperationMethod.Patch: return PatchBrush;
                     case SwaggerOperationMethod.Delete: return DeleteBrush;
                     default: return DefaultBrush;
                 }

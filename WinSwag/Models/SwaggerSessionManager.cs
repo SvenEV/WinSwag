@@ -43,7 +43,7 @@ namespace WinSwag.Models
 
             var sessionFile = await _folder.GetFileAsync($"{info.Guid.ToString()}.json");
             var json = await FileIO.ReadTextAsync(sessionFile);
-            var session = JsonConvert.DeserializeObject<SwaggerSession>(json);
+            var session = SwaggerSession.FromJson(json);
             return session;
         }
 
@@ -58,7 +58,7 @@ namespace WinSwag.Models
             }
 
             var sessionFile = await _folder.CreateFileAsync($"{info.Guid}.json", CreationCollisionOption.ReplaceExisting);
-            var json = JsonConvert.SerializeObject(session);
+            var json = session.ToJson();
             await FileIO.WriteTextAsync(sessionFile, json);
         }
 

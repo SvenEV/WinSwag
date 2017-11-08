@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NSwag;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,9 @@ namespace WinSwag.Models
                         op => new StoredOperation
                         {
                             ContentType = op.SelectedContentType,
-                            Arguments = op.Arguments.ToDictionary(p => p.ParameterId, p => p.GetSerializedValue())
+                            Arguments = op.Arguments
+                                .Where(p => p.HasValue)
+                                .ToDictionary(p => p.ParameterId, p => p.GetSerializedValue())
                         })
             };
         }
@@ -58,6 +61,10 @@ namespace WinSwag.Models
 
             return vm;
         }
+
+        public string ToJson() => JsonConvert.SerializeObject(this);
+
+        public static SwaggerSession FromJson(string json) => JsonConvert.DeserializeObject<SwaggerSession>(json);
 
         public class StoredOperation
         {
