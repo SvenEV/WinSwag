@@ -53,8 +53,18 @@ namespace WinSwag
 
         private void OnKeyDown(CoreWindow sender, KeyEventArgs args)
         {
-            if (args.VirtualKey == VirtualKey.F5 && OperationManagerVM.IsOperationSelected)
-                OperationManagerVM.SelectedOperation.BeginSendRequest();
+            switch (args.VirtualKey)
+            {
+                case VirtualKey.F5 when OperationManagerVM.IsOperationSelected:
+                    OperationManagerVM.SelectedOperation.BeginSendRequest();
+                    args.Handled = true;
+                    break;
+
+                case VirtualKey.Escape when !args.Handled:
+                    DashboardPopup.IsOpen = !DashboardPopup.IsOpen;
+                    args.Handled = true;
+                    break;
+            }
         }
 
         private async void OpenFileButtonClick(object sender, RoutedEventArgs e)

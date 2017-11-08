@@ -49,7 +49,8 @@
 
         <!-- Command bar (top left) -->
         <CommandBar OverflowButtonVisibility="Auto" Background="Transparent">
-            <AppBarButton Icon="Home" Label="Dashboard" Click="{x:Bind DashboardPopup.Show}"/>
+            <AppBarButton Icon="Home" Label="Dashboard" Click="{x:Bind DashboardPopup.Show}"
+                          ToolTipService.ToolTip="Open Dashboard (ESC)"/>
             
             <AppBarButton Icon="Favorite" Label="Add to Favorites"
                           AllowFocusOnInteraction="True"
@@ -272,7 +273,8 @@
                 <Button HorizontalAlignment="Right" Foreground="Black" Padding="12,8" Margin="0,4,0,0"
                         Background="{x:Bind OperationManagerVM.SelectedOperation.MethodBrush, Mode=OneWay}"
                         Click="{x:Bind OperationManagerVM.SelectedOperation.BeginSendRequest, Mode=OneWay}"
-                        IsEnabled="{x:Bind OperationManagerVM.SelectedOperation.CanSendRequest, Mode=OneWay}">
+                        IsEnabled="{x:Bind OperationManagerVM.SelectedOperation.CanSendRequest, Mode=OneWay}"
+                        ToolTipService.ToolTip="Send HTTP Request (F5)">
                     <StackPanel Orientation="Horizontal">
                         <SymbolIcon Symbol="Play"/>
                         <TextBlock Margin="8,0,0,0" Text="Send Request"/>
@@ -361,7 +363,8 @@
                                        Margin="11,0,0,0"/>
 
                             <Button Click="{x:Bind DashboardPopup.Hide}" HorizontalAlignment="Right"
-                                    BorderThickness="0" Background="Transparent" Height="32">
+                                    BorderThickness="0" Background="Transparent" Height="32"
+                                    ToolTipService.ToolTip="Close Dashboard (ESC)">
                                 <SymbolIcon Symbol="Cancel"/>
                             </Button>
                         </Grid>
