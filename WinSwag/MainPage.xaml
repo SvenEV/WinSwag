@@ -142,7 +142,7 @@
 
                                         <TextBlock FontSize="12" TextWrapping="Wrap"
                                                    Margin="0,2,0,0" Opacity=".8"
-                                                   Text="{x:Bind Model.Operation.Description}"
+                                                   Text="{x:Bind Description}"
                                                    MaxLines="2" TextTrimming="WordEllipsis"
                                                    Visibility="{x:Bind HasDescription}"/>
                                     </StackPanel>

@@ -37,7 +37,9 @@ namespace WinSwag.ViewModels
 
         public string OperationId => $"{Model.Method.ToString().ToUpper()} {Model.Path}";
 
-        public bool HasDescription => !string.IsNullOrWhiteSpace(Model.Operation.Description);
+        public string Description => string.IsNullOrWhiteSpace(Model.Operation.Summary) ? Model.Operation.Description : Model.Operation.Summary;
+
+        public bool HasDescription => !string.IsNullOrWhiteSpace(Model.Operation.Description) || !string.IsNullOrWhiteSpace(Model.Operation.Summary);
 
         public string Method => Model.Method.ToString().ToUpper();
 
