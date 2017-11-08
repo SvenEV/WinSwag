@@ -145,6 +145,7 @@ namespace WinSwag.ViewModels
             using (_viewStateManager.BeginTask("Saving Session..."))
             {
                 await _initTask;
+                CurrentDocument.DisplayName = displayName;
                 var session = SwaggerSession.FromViewModel(CurrentDocument, displayName);
                 await SwaggerSessionManager.StoreAsync(session);
                 await RefreshStoredSessionsAsync();

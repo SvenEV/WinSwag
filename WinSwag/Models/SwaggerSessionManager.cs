@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -65,8 +66,14 @@ namespace WinSwag.Models
         {
             if (_sessions.Remove(url, out var info))
             {
-                var file = await _folder.GetFileAsync($"{info.Guid}.json");
-                await file.DeleteAsync();
+                try
+                {
+                    var file = await _folder.GetFileAsync($"{info.Guid}.json");
+                    await file.DeleteAsync();
+                }
+                catch (FileNotFoundException) // If file already deleted, that's fine
+                {
+                }
             }
         }
     }

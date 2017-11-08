@@ -11,7 +11,7 @@ namespace WinSwag.ViewModels
 
         public string Url { get; }
 
-        public string DisplayName { get; }
+        public string DisplayName { get; set; }
 
         public IReadOnlyList<IGrouping<string, SwaggerOperationViewModel>> OperationGroups { get; }
 

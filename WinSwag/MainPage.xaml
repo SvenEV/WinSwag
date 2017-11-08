@@ -372,7 +372,8 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <Button Click="OpenFileButtonClick" Style="{StaticResource MyButtonRevealStyle}">
+                            <Button Click="OpenFileButtonClick" Style="{StaticResource MyButtonRevealStyle}"
+                                    Visibility="Collapsed">
                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                     <SymbolIcon Symbol="OpenFile"/>
                                     <TextBlock Text="Open File"/>
