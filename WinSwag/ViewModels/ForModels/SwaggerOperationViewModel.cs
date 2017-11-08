@@ -136,6 +136,7 @@ namespace WinSwag.ViewModels
                 }
                 catch (HttpRequestException e)
                 {
+                    Response = null;
                     RequestError = $"Failed to send request: {e.Message} ({e.GetType()})";
 
                     if (Debugger.IsAttached)
