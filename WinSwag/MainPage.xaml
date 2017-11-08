@@ -26,8 +26,8 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="200"/>
-            <ColumnDefinition Width="2*" MinWidth="400"/>
+            <ColumnDefinition MinWidth="150"/>
+            <ColumnDefinition Width="2*" MinWidth="200"/>
         </Grid.ColumnDefinitions>
 
         <!-- Acrylic background (left) -->
