@@ -17,6 +17,7 @@ using WinSwag.Services;
 
 namespace WinSwag.ViewModels
 {
+    [DebuggerDisplay("{OperationId}")]
     public class SwaggerOperationViewModel : ObservableObject
     {
         public static readonly SolidColorBrush GetBrush = new SolidColorBrush(Colors.SkyBlue);
@@ -32,6 +33,8 @@ namespace WinSwag.ViewModels
         private string _requestError;
 
         public SwaggerOperationDescription Model { get; }
+
+        public string OperationId => $"{Model.Method.ToString().ToUpper()} {Model.Path}";
 
         public bool HasDescription => !string.IsNullOrWhiteSpace(Model.Operation.Description);
 

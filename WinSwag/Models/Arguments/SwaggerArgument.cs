@@ -15,6 +15,8 @@ namespace WinSwag.Models.Arguments
     {
         public SwaggerParameter Parameter { get; }
 
+        public string ParameterId => $"{Parameter.Name}:{Parameter.Kind}";
+
         public string DisplayName => Parameter.Name + (Parameter.IsRequired ? "*" : "");
 
         public bool IsBodyParameter => Parameter.Kind == SwaggerParameterKind.Body;

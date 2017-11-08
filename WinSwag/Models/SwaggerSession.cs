@@ -24,11 +24,11 @@ namespace WinSwag.Models
                 Operations = vm.OperationGroups
                     .SelectMany(g => g)
                     .ToDictionary(
-                        op => op.Model.Operation.OperationId,
+                        op => op.OperationId,
                         op => new StoredOperation
                         {
                             ContentType = op.SelectedContentType,
-                            Arguments = op.Arguments.ToDictionary(p => p.Parameter.Name, p => p.GetSerializedValue())
+                            Arguments = op.Arguments.ToDictionary(p => p.ParameterId, p => p.GetSerializedValue())
                         })
             };
         }
@@ -42,7 +42,7 @@ namespace WinSwag.Models
             {
                 var operation = vm.OperationGroups
                     .SelectMany(g => g)
-                    .FirstOrDefault(op => op.Model.Operation.OperationId == storedOp.Key);
+                    .FirstOrDefault(op => op.OperationId == storedOp.Key);
 
                 if (operation != null)
                 {
@@ -50,7 +50,7 @@ namespace WinSwag.Models
 
                     foreach (var storedArg in storedOp.Value.Arguments)
                     {
-                        var parameter = operation.Arguments.FirstOrDefault(p => p.Parameter.Name == storedArg.Key);
+                        var parameter = operation.Arguments.FirstOrDefault(p => p.ParameterId == storedArg.Key);
                         await parameter.SetSerializedValueAsync(storedArg.Value);
                     }
                 }
