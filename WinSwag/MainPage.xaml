@@ -362,11 +362,26 @@
                                        FontWeight="Bold"
                                        Margin="11,0,0,0"/>
 
-                            <Button Click="{x:Bind DashboardPopup.Hide}" HorizontalAlignment="Right"
-                                    BorderThickness="0" Background="Transparent" Height="32"
-                                    ToolTipService.ToolTip="Close Dashboard (ESC)">
-                                <SymbolIcon Symbol="Cancel"/>
-                            </Button>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,12,0">
+                                <Button Style="{StaticResource MyButtonRevealStyle}"
+                                        ToolTipService.ToolTip="About WinSwag">
+                                    <SymbolIcon Symbol="Setting"/>
+                                    <Button.Flyout>
+                                        <Flyout>
+                                            <StackPanel>
+                                                <TextBlock FontWeight="SemiBold">WinSwag <Run Text="{x:Bind AppInfoVM.Version}"/></TextBlock>
+                                                <TextBlock>Copyright © 2017 Sven Vinkemeier</TextBlock>
+                                                <HyperlinkButton Click="{x:Bind AppInfoVM.OpenGitHubWebsite}">WinSwag on GitHub</HyperlinkButton>
+                                            </StackPanel>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                                <Button Click="{x:Bind DashboardPopup.Hide}"
+                                        Style="{StaticResource MyButtonRevealStyle}"
+                                        ToolTipService.ToolTip="Close Dashboard (ESC)">
+                                    <SymbolIcon Symbol="Cancel"/>
+                                </Button>
+                            </StackPanel>
                         </Grid>
 
                         <Grid ColumnSpacing="12">
@@ -467,8 +482,6 @@
                                 </Flyout>
                             </Button.Flyout>
                         </Button>
-
-                        <TextBlock Text="{x:Bind AppInfoVM.Version}" Opacity=".5" FontSize="9" Margin="11,12,0,0"/>
                     </StackPanel>
                 </Border>
             </Grid>
