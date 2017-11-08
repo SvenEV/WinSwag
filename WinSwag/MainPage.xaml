@@ -357,12 +357,52 @@
                 <Border Grid.Column="1" Padding="60,20">
                     <StackPanel>
                         <Grid>
+                            <!-- Dashboard title (top left) -->
                             <TextBlock Style="{StaticResource TitleTextBlockStyle}"
                                        Text="Dashboard"
                                        FontWeight="Bold"
-                                       Margin="11,0,0,0"/>
+                                       Margin="12,0,0,0"/>
 
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,12,0">
+                            <!-- Dashboard buttons (top right) -->
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                                        Margin="0,0,12,0" Spacing="12">
+                                <Button Foreground="Gold" Background="Transparent"
+                                        Style="{StaticResource MyButtonRevealStyle}">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <SymbolIcon Symbol="Flag"/>
+                                        <TextBlock Text="Configure Localhost Support"/>
+                                    </StackPanel>
+                                    <Button.Flyout>
+                                        <Flyout>
+                                            <StackPanel Spacing="12" Width="550">
+                                                <TextBlock TextWrapping="WrapWholeWords">
+                                                    Connecting to 'localhost' is prohibited by default for modern Windows apps.
+                                                    If you need to connect to a web service running on your local machine, exempt
+                                                    WinSwag from this limitation by running the following command:
+                                                </TextBlock>
+                                                <Border Background="Black" Padding="4">
+                                                    <TextBlock Text="checknetisolation loopbackexempt -a -n=WinSwag_vsewgyk842gz2"
+                                                       IsTextSelectionEnabled="True"
+                                                       TextWrapping="WrapWholeWords"
+                                                       FontFamily="Consolas"/>
+                                                </Border>
+                                                <TextBlock TextWrapping="WrapWholeWords">
+                                                    You can remove the exemption and block 'localhost'-access again with the following command:
+                                                </TextBlock>
+                                                <Border Background="Black" Padding="4">
+                                                    <TextBlock Text="checknetisolation loopbackexempt -d -n=WinSwag_vsewgyk842gz2"
+                                                       IsTextSelectionEnabled="True"
+                                                       TextWrapping="WrapWholeWords"
+                                                       FontFamily="Consolas"/>
+                                                </Border>
+                                                <TextBlock TextWrapping="WrapWholeWords">
+                                                    (You may need to restart the app for the changes to take effect.)
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                                
                                 <Button Style="{StaticResource MyButtonRevealStyle}"
                                         ToolTipService.ToolTip="About WinSwag">
                                     <SymbolIcon Symbol="Setting"/>
@@ -376,6 +416,7 @@
                                         </Flyout>
                                     </Button.Flyout>
                                 </Button>
+                                
                                 <Button Click="{x:Bind DashboardPopup.Hide}"
                                         Style="{StaticResource MyButtonRevealStyle}"
                                         ToolTipService.ToolTip="Close Dashboard (ESC)">
@@ -384,6 +425,7 @@
                             </StackPanel>
                         </Grid>
 
+                        <!-- Dashboard URL box -->
                         <Grid ColumnSpacing="12">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -402,10 +444,11 @@
                                             Text="{x:Bind SessionManagerVM.CurrentDocument.Url, Mode=OneWay}"
                                             PlaceholderText="URL to a Swagger document (swagger.json)"
                                             QuerySubmitted="OnUrlBoxQuerySubmitted"
-                                            QueryIcon="Forward" Margin="0,12"/>
+                                            QueryIcon="Forward" Margin="0,12,20,8"/>
 
                         </Grid>
 
+                        <!-- Dashboard favorites -->
                         <ListView ItemsSource="{x:Bind SessionManagerVM.StoredSessions}"
                                   ItemClick="StoredSessionClick"
                                   IsItemClickEnabled="True"
@@ -423,11 +466,11 @@
                                             <ColumnDefinition/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        
+
                                         <TextBlock Text="{x:Bind DisplayName}"
                                                    FontWeight="SemiBold"
                                                    VerticalAlignment="Center"/>
-                                        
+
                                         <TextBlock Text="{x:Bind Url}"
                                                    Grid.Column="1"
                                                    TextTrimming="CharacterEllipsis"
@@ -445,43 +488,6 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-
-                        <Button Foreground="Gold" Background="Transparent" Margin="0,12,0,0"
-                                Style="{StaticResource MyButtonRevealStyle}">
-                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                <SymbolIcon Symbol="Flag"/>
-                                <TextBlock Text="Configure Localhost Support"/>
-                            </StackPanel>
-                            <Button.Flyout>
-                                <Flyout>
-                                    <StackPanel Spacing="12" Width="550">
-                                        <TextBlock TextWrapping="WrapWholeWords">
-                                            Connecting to 'localhost' is prohibited by default for modern Windows apps.
-                                            If you need to connect to a web service running on your local machine, exempt
-                                            WinSwag from this limitation by running the following command:
-                                        </TextBlock>
-                                        <Border Background="Black" Padding="4">
-                                            <TextBlock Text="checknetisolation loopbackexempt -a -n=WinSwag_vsewgyk842gz2"
-                                                       IsTextSelectionEnabled="True"
-                                                       TextWrapping="WrapWholeWords"
-                                                       FontFamily="Consolas"/>
-                                        </Border>
-                                        <TextBlock TextWrapping="WrapWholeWords">
-                                            You can remove the exemption and block 'localhost'-access again with the following command:
-                                        </TextBlock>
-                                        <Border Background="Black" Padding="4">
-                                            <TextBlock Text="checknetisolation loopbackexempt -d -n=WinSwag_vsewgyk842gz2"
-                                                       IsTextSelectionEnabled="True"
-                                                       TextWrapping="WrapWholeWords"
-                                                       FontFamily="Consolas"/>
-                                        </Border>
-                                        <TextBlock TextWrapping="WrapWholeWords">
-                                            (You may need to restart the app for the changes to take effect.)
-                                        </TextBlock>
-                                    </StackPanel>
-                                </Flyout>
-                            </Button.Flyout>
-                        </Button>
                     </StackPanel>
                 </Border>
             </Grid>
