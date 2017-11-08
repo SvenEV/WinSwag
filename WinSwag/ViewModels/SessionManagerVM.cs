@@ -39,7 +39,7 @@ namespace WinSwag.ViewModels
 
         public bool IsCurrentSessionFavorite => _storedSessions.Any(s => s.Url == _currentDocument?.Url);
 
-        public bool IsntCurrentSessionFavorite => !IsCurrentSessionFavorite;
+        public bool IsntCurrentSessionFavorite => !IsCurrentSessionFavorite && CurrentDocument != null;
 
         public SessionManagerVM(IMessenger messenger, IOperationManagerVM operationManager, IViewStateManagerVM viewStateManager)
         {
@@ -58,13 +58,24 @@ namespace WinSwag.ViewModels
         {
             try
             {
+                var storedSession = _storedSessions.FirstOrDefault(s => s.Url == url);
+
+                if (storedSession != null)
+                {
+                    // If the desired URL is one of the favorites, load it with all the stored arguments!
+                    // (instead of creating a blank session, overwriting the stored session later on)
+                    await LoadSessionAsync(storedSession);
+                    return;
+                }
+
                 using (_viewStateManager.BeginTask("Creating Session..."))
                 {
                     await _initTask;
                     _messenger.Send(CloseDashboard.Instance);
                     await UnloadCurrentSessionAsync();
                     var doc = await SwaggerDocument.FromUrlAsync(url);
-                    CurrentDocument = new SwaggerDocumentViewModel(doc, url);
+                    var displayName = _storedSessions.FirstOrDefault(s => s.Url == url)?.DisplayName;
+                    CurrentDocument = new SwaggerDocumentViewModel(doc, url, displayName);
                     _operationManager.SelectedOperation = null;
                 }
             }

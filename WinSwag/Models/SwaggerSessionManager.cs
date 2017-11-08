@@ -30,7 +30,7 @@ namespace WinSwag.Models
         public static async Task<IReadOnlyList<SwaggerSessionInfo>> GetAllAsync()
         {
             await _initTask;
-            return _sessions.Values.ToList();
+            return _sessions.Values.OrderBy(s => s.DisplayName).ToList();
         }
 
         public static async Task<SwaggerSession> LoadAsync(string url)
