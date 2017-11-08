@@ -62,8 +62,8 @@ namespace WinSwag.ViewModels
                 {
                     await _initTask;
                     _messenger.Send(CloseDashboard.Instance);
-                    var doc = await SwaggerDocument.FromUrlAsync(url);
                     await UnloadCurrentSessionAsync();
+                    var doc = await SwaggerDocument.FromUrlAsync(url);
                     CurrentDocument = new SwaggerDocumentViewModel(doc, url);
                     _operationManager.SelectedOperation = null;
                 }
@@ -82,9 +82,9 @@ namespace WinSwag.ViewModels
                 {
                     await _initTask;
                     _messenger.Send(CloseDashboard.Instance);
+                    await UnloadCurrentSessionAsync();
                     var json = await FileIO.ReadTextAsync(file);
                     var doc = await SwaggerDocument.FromJsonAsync(json);
-                    await UnloadCurrentSessionAsync();
                     CurrentDocument = new SwaggerDocumentViewModel(doc, "file://" + file.Path);
                     _operationManager.SelectedOperation = null;
                 }

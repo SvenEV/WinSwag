@@ -19,20 +19,7 @@ namespace WinSwag.Models.Responses
             Response = response ?? throw new ArgumentNullException(nameof(response));
             RequestUri = requestUri ?? throw new ArgumentNullException(nameof(requestUri));
         }
-
-        public async void SaveAs()
-        {
-            var picker = new FileSavePicker();
-            picker.FileTypeChoices.Add("Text file", new[] { ".txt" });
-            var file = await picker.PickSaveFileAsync();
-
-            if (file != null)
-            {
-                using (var stream = await file.OpenStreamForWriteAsync())
-                    await Response.Content.CopyToAsync(stream);
-            }
-        }
-
+        
         public static async Task<ResponseViewModel> FromResponseAsync(HttpResponseMessage response, string requestUri)
         {
             var mediaType = response.Content?.Headers?.ContentType?.MediaType ?? "text/plain";
