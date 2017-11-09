@@ -110,7 +110,7 @@ namespace WinSwag.Models.Arguments
             }
         }
 
-        private async Task UpdateFileThumbnailAsync()
+        private async void UpdateFileThumbnailAsync()
         {
             if (_file == null)
             {
@@ -118,8 +118,15 @@ namespace WinSwag.Models.Arguments
             }
             else
             {
-                FileThumbnail = new BitmapImage();
-                FileThumbnail.SetSource(await _file.GetThumbnailAsync(ThumbnailMode.ListView));
+                try
+                {
+                    FileThumbnail = new BitmapImage();
+                    FileThumbnail.SetSource(await _file.GetThumbnailAsync(ThumbnailMode.ListView));
+                }
+                catch
+                {
+                    FileThumbnail = null;
+                }
             }
         }
     }

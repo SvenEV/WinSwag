@@ -17,6 +17,7 @@ namespace WinSwag.ViewModels
         private readonly IMessenger _messenger;
         private readonly IOperationManagerVM _operationManager;
         private readonly IViewStateManagerVM _viewStateManager;
+        private readonly SwaggerSessionManager _sessionManager;
 
         private ObservableCollection<SwaggerSessionInfo> _storedSessions = new ObservableCollection<SwaggerSessionInfo>();
         private SwaggerDocumentViewModel _currentDocument;
@@ -41,11 +42,13 @@ namespace WinSwag.ViewModels
 
         public bool IsntCurrentSessionFavorite => !IsCurrentSessionFavorite && CurrentDocument != null;
 
-        public SessionManagerVM(IMessenger messenger, IOperationManagerVM operationManager, IViewStateManagerVM viewStateManager)
+        public SessionManagerVM(IMessenger messenger, IOperationManagerVM operationManager,
+            IViewStateManagerVM viewStateManager, SwaggerSessionManager sessionManager)
         {
             _messenger = messenger;
             _operationManager = operationManager;
             _viewStateManager = viewStateManager;
+            _sessionManager = sessionManager;
             _initTask = Init();
 
             async Task Init()
@@ -111,7 +114,7 @@ namespace WinSwag.ViewModels
             try
             {
                 await _initTask;
-                await SwaggerSessionManager.DeleteAsync(sessionInfo.Url);
+                await _sessionManager.DeleteAsync(sessionInfo.Url);
                 await RefreshStoredSessionsAsync();
             }
             catch (Exception e)
@@ -129,7 +132,7 @@ namespace WinSwag.ViewModels
                     await _initTask;
                     _messenger.Send(CloseDashboard.Instance);
                     await UnloadCurrentSessionAsync(); // unload before loading new session (important when loading the same session again)
-                    var session = await SwaggerSessionManager.LoadAsync(sessionInfo.Url);
+                    var session = await _sessionManager.LoadAsync(sessionInfo.Url);
                     CurrentDocument = await SwaggerSession.ToViewModelAsync(session);
                     _operationManager.SelectedOperation = null;
                 }
@@ -147,7 +150,7 @@ namespace WinSwag.ViewModels
                 await _initTask;
                 CurrentDocument.DisplayName = displayName;
                 var session = SwaggerSession.FromViewModel(CurrentDocument, displayName);
-                await SwaggerSessionManager.StoreAsync(session);
+                await _sessionManager.StoreAsync(session);
                 await RefreshStoredSessionsAsync();
             }
         }
@@ -157,7 +160,7 @@ namespace WinSwag.ViewModels
             try
             {
                 await _initTask;
-                await SwaggerSessionManager.DeleteAsync(_currentDocument.Url);
+                await _sessionManager.DeleteAsync(_currentDocument.Url);
                 await RefreshStoredSessionsAsync();
             }
             catch (Exception e)
@@ -178,7 +181,7 @@ namespace WinSwag.ViewModels
         private async Task RefreshStoredSessionsAsync()
         {
             _storedSessions.Clear();
-            foreach (var info in await SwaggerSessionManager.GetAllAsync())
+            foreach (var info in await _sessionManager.GetAllAsync())
                 _storedSessions.Add(info);
 
             RaisePropertyChanged(nameof(IsCurrentSessionFavorite));

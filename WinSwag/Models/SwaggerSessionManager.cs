@@ -1,63 +1,77 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using WinSwag.Services;
 
 namespace WinSwag.Models
 {
-    public static class SwaggerSessionManager
+    public class SwaggerSessionManager
     {
         private const string SessionFolderName = "StoredSessions";
-        private const string FirstTimeAppStartKey = "AppStartedOnce";
 
-        private static Task _initTask;
-        private static StorageFolder _folder;
-        private static SettingsDictionary<SwaggerSessionInfo> _sessions;
+        private readonly ApplicationInfo _appInfo;
 
-        static SwaggerSessionManager()
+        private Task _initTask;
+        private StorageFolder _folder;
+        private SettingsDictionary<SwaggerSessionInfo> _sessions;
+
+        public SwaggerSessionManager(ApplicationInfo appInfo)
         {
+            _appInfo = appInfo;
             _sessions = new SettingsDictionary<SwaggerSessionInfo>(
                 ApplicationData.Current.LocalSettings.CreateContainer("Sessions", ApplicationDataCreateDisposition.Always));
             _initTask = Init();
         }
 
-        private static async Task Init()
+        private async Task Init()
         {
             _folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(SessionFolderName, CreationCollisionOption.OpenIfExists);
 
             // Add sample session on first-time app start
-            var settings = ApplicationData.Current.LocalSettings.Values;
-            if (!settings.ContainsKey(FirstTimeAppStartKey) &&
-                _sessions.TryAdd(SampleApi.SessionInfo.Url, SampleApi.SessionInfo))
+            if (_appInfo.IsLaunchedFirstTime && _sessions.TryAdd(SampleApi.SessionInfo.Url, SampleApi.SessionInfo))
             {
                 var sessionFile = await StorageFile.GetFileFromApplicationUriAsync(SampleApi.SessionFileUri);
                 await sessionFile.CopyAsync(_folder, $"{SampleApi.SessionInfo.Guid}.json");
-                settings.Add(FirstTimeAppStartKey, true);
             }
         }
 
-        public static async Task<IReadOnlyList<SwaggerSessionInfo>> GetAllAsync()
+        public async Task<IReadOnlyList<SwaggerSessionInfo>> GetAllAsync()
         {
             await _initTask;
             return _sessions.Values.OrderBy(s => s.DisplayName).ToList();
         }
 
-        public static async Task<SwaggerSession> LoadAsync(string url)
+        public async Task<SwaggerSession> LoadAsync(string url)
         {
             await _initTask;
 
             if (!_sessions.TryGetValue(url, out var info))
                 throw new ArgumentException($"No stored session exists for URL '{url}'");
 
-            var sessionFile = await _folder.GetFileAsync($"{info.Guid.ToString()}.json");
-            var json = await FileIO.ReadTextAsync(sessionFile);
-            var session = SwaggerSession.FromJson(json);
-            return session;
+            try
+            {
+                var sessionFile = await _folder.GetFileAsync($"{info.Guid.ToString()}.json");
+                var json = await FileIO.ReadTextAsync(sessionFile);
+                return SwaggerSession.FromJson(json);
+            }
+            catch (FileNotFoundException)
+            {
+                // In case someone deleted the session file, just load the session without
+                // filling in any parameter values
+                return new SwaggerSession
+                {
+                    Url = url,
+                    DisplayName = info.DisplayName,
+                    Operations = new Dictionary<string, SwaggerSession.StoredOperation>()
+                };
+            }
         }
 
-        public static async Task StoreAsync(SwaggerSession session)
+        public async Task StoreAsync(SwaggerSession session)
         {
             await _initTask;
 
@@ -72,7 +86,7 @@ namespace WinSwag.Models
             await FileIO.WriteTextAsync(sessionFile, json);
         }
 
-        public static async Task DeleteAsync(string url)
+        public async Task DeleteAsync(string url)
         {
             if (_sessions.Remove(url, out var info))
             {
