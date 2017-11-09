@@ -16,7 +16,7 @@
 
     <RevealBackgroundBrush x:Key="ButtonRevealBackgroundPointerOver" TargetTheme="Dark"
                            Color="Transparent"
-                           FallbackColor="Blue"/>
+                           FallbackColor="#33FFFFFF"/>
 
     <Style TargetType="TextBox">
         <Setter Property="BorderThickness" Value="0,0,0,1"/>
