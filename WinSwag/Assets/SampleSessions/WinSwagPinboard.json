@@ -1,0 +1,27 @@
+﻿{
+    "Url": "http://winswagsampleapi.azurewebsites.net/swagger/v1/swagger.json",
+    "DisplayName": "WinSwag Pinboard (Sample API)",
+    "Operations": {
+        "POST /api/Pinboard": {
+            "ContentType": "application/json",
+            "Arguments": {
+                "text:Query": "Hi, I'm from <YOUR COUNTRY HERE>!"
+            }
+        },
+        "DELETE /api/Pinboard": {
+            "ContentType": "application/json",
+            "Arguments": {}
+        },
+        "GET /api/Pinboard": {
+            "ContentType": "application/json",
+            "Arguments": {}
+        },
+        "GET /api/Pinboard/Image": {
+            "ContentType": "application/json",
+            "Arguments": {
+                "fontFamily:Query": "Segoe Print",
+                "fontSize:Query": "40"
+            }
+        }
+    }
+}

@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,6 +10,7 @@ namespace WinSwag.Models
     public static class SwaggerSessionManager
     {
         private const string SessionFolderName = "StoredSessions";
+        private const string FirstTimeAppStartKey = "AppStartedOnce";
 
         private static Task _initTask;
         private static StorageFolder _folder;
@@ -26,6 +26,16 @@ namespace WinSwag.Models
         private static async Task Init()
         {
             _folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(SessionFolderName, CreationCollisionOption.OpenIfExists);
+
+            // Add sample session on first-time app start
+            var settings = ApplicationData.Current.LocalSettings.Values;
+            if (!settings.ContainsKey(FirstTimeAppStartKey) &&
+                _sessions.TryAdd(SampleApi.SessionInfo.Url, SampleApi.SessionInfo))
+            {
+                var sessionFile = await StorageFile.GetFileFromApplicationUriAsync(SampleApi.SessionFileUri);
+                await sessionFile.CopyAsync(_folder, $"{SampleApi.SessionInfo.Guid}.json");
+                settings.Add(FirstTimeAppStartKey, true);
+            }
         }
 
         public static async Task<IReadOnlyList<SwaggerSessionInfo>> GetAllAsync()
@@ -76,5 +86,14 @@ namespace WinSwag.Models
                 }
             }
         }
+    }
+
+    static class SampleApi
+    {
+        public static readonly SwaggerSessionInfo SessionInfo =
+            new SwaggerSessionInfo("WinSwag Pinboard (Sample API)", "http://winswagsampleapi.azurewebsites.net/swagger/v1/swagger.json", Guid.Empty);
+
+        public static readonly Uri SessionFileUri =
+            new Uri("ms-appx:///Assets/SampleSessions/WinSwagPinboard.json");
     }
 }
