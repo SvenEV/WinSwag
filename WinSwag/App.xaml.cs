@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Services.Store.Engagement;
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -25,7 +26,7 @@ namespace WinSwag
             _services = services.BuildServiceProvider();
         }
 
-        private void ConfigureServices(IServiceCollection services)
+        private async void ConfigureServices(IServiceCollection services)
         {
             services
                 .AddSingleton<ApplicationInfo>()
@@ -34,6 +35,9 @@ namespace WinSwag
                 .AddScoped<ISessionManagerVM, SessionManagerVM>()
                 .AddScoped<IOperationManagerVM, OperationManagerVM>()
                 .AddScoped<IViewStateManagerVM, ViewStateManagerVM>();
+
+            var engagementManager = StoreServicesEngagementManager.GetDefault();
+            await engagementManager.RegisterNotificationChannelAsync();
         }
 
         /// <summary>
