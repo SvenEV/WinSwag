@@ -350,13 +350,18 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="3.5*" MinWidth="500"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 
-                <Border Grid.Column="1" Padding="60,20">
+                <Border Grid.Column="1" Padding="0,20">
                     <StackPanel>
-                        <Grid>
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            
                             <!-- Dashboard title (top left) -->
                             <TextBlock Style="{StaticResource TitleTextBlockStyle}"
                                        Text="Dashboard"
@@ -364,7 +369,8 @@
                                        Margin="12,0,0,0"/>
 
                             <!-- Dashboard buttons (top right) -->
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                            <StackPanel Orientation="Horizontal" Grid.Column="1"
+                                        HorizontalAlignment="Right"
                                         Margin="0,0,12,0" Spacing="12">
                                 <Button Foreground="Gold" Background="Transparent"
                                         Style="{StaticResource MyButtonRevealStyle}">
@@ -374,26 +380,28 @@
                                     </StackPanel>
                                     <Button.Flyout>
                                         <Flyout>
-                                            <StackPanel Spacing="12" Width="550">
+                                            <StackPanel Spacing="12" Width="700">
                                                 <TextBlock TextWrapping="WrapWholeWords">
                                                     Connecting to 'localhost' is prohibited by default for modern Windows apps.
                                                     If you need to connect to a web service running on your local machine, exempt
                                                     WinSwag from this limitation by running the following command:
                                                 </TextBlock>
                                                 <Border Background="Black" Padding="4">
-                                                    <TextBlock Text="checknetisolation loopbackexempt -a -n=WinSwag_vsewgyk842gz2"
-                                                       IsTextSelectionEnabled="True"
-                                                       TextWrapping="WrapWholeWords"
-                                                       FontFamily="Consolas"/>
+                                                    <TextBlock IsTextSelectionEnabled="True"
+                                                               TextWrapping="WrapWholeWords"
+                                                               FontFamily="Consolas">
+                                                        checknetisolation loopbackexempt -a -n=<Run Text="{x:Bind AppInfoVM.PackageFamilyName}"/>
+                                                    </TextBlock>
                                                 </Border>
                                                 <TextBlock TextWrapping="WrapWholeWords">
                                                     You can remove the exemption and block 'localhost'-access again with the following command:
                                                 </TextBlock>
                                                 <Border Background="Black" Padding="4">
-                                                    <TextBlock Text="checknetisolation loopbackexempt -d -n=WinSwag_vsewgyk842gz2"
-                                                       IsTextSelectionEnabled="True"
-                                                       TextWrapping="WrapWholeWords"
-                                                       FontFamily="Consolas"/>
+                                                    <TextBlock IsTextSelectionEnabled="True"
+                                                               TextWrapping="WrapWholeWords"
+                                                               FontFamily="Consolas">
+                                                        checknetisolation loopbackexempt -d -n=<Run Text="{x:Bind AppInfoVM.PackageFamilyName}"/>
+                                                    </TextBlock>
                                                 </Border>
                                                 <TextBlock TextWrapping="WrapWholeWords">
                                                     (You may need to restart the app for the changes to take effect.)

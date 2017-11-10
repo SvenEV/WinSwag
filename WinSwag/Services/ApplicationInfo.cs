@@ -19,6 +19,8 @@ namespace WinSwag.Services
             }
         }
 
+        public string PackageFamilyName => Package.Current.Id.FamilyName;
+
         /// <summary>
         /// Indicates whether the app was launched for the first time after being installed.
         /// </summary>
