@@ -354,7 +354,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 
-                <Border Grid.Column="1" Padding="0,20">
+                <Border Grid.Column="1" Padding="8,20">
                     <StackPanel>
                         <Grid ColumnSpacing="12">
                             <Grid.ColumnDefinitions>
@@ -370,9 +370,8 @@
 
                             <!-- Dashboard buttons (top right) -->
                             <StackPanel Orientation="Horizontal" Grid.Column="1"
-                                        HorizontalAlignment="Right"
-                                        Margin="0,0,12,0" Spacing="12">
-                                <Button Foreground="Gold" Background="Transparent"
+                                        HorizontalAlignment="Right">
+                                <Button Foreground="Gold" Background="Transparent" Padding="12,8"
                                         Style="{StaticResource MyButtonRevealStyle}">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <SymbolIcon Symbol="Flag"/>
@@ -410,8 +409,8 @@
                                         </Flyout>
                                     </Button.Flyout>
                                 </Button>
-                                
-                                <Button Style="{StaticResource MyButtonRevealStyle}"
+
+                                <Button Style="{StaticResource MyButtonRevealStyle}" Padding="12,8"
                                         ToolTipService.ToolTip="About WinSwag">
                                     <SymbolIcon Symbol="Setting"/>
                                     <Button.Flyout>
@@ -424,8 +423,8 @@
                                         </Flyout>
                                     </Button.Flyout>
                                 </Button>
-                                
-                                <Button Click="{x:Bind DashboardPopup.Hide}"
+
+                                <Button Click="{x:Bind DashboardPopup.Hide}" Padding="12,8"
                                         Style="{StaticResource MyButtonRevealStyle}"
                                         ToolTipService.ToolTip="Close Dashboard (ESC)">
                                     <SymbolIcon Symbol="Cancel"/>
@@ -452,7 +451,7 @@
                                             Text="{x:Bind SessionManagerVM.CurrentDocument.Url, Mode=OneWay}"
                                             PlaceholderText="URL to a Swagger document (swagger.json)"
                                             QuerySubmitted="OnUrlBoxQuerySubmitted"
-                                            QueryIcon="Forward" Margin="0,12,20,8"/>
+                                            QueryIcon="Forward" Margin="0,12,12,8"/>
 
                         </Grid>
 
@@ -489,6 +488,8 @@
                                                 ToolTipService.ToolTip="Delete Session"
                                                 Click="DeleteSessionButtonClick"
                                                 BorderThickness="0"
+                                                Padding="12"
+                                                Margin="0,0,-12,0"
                                                 Grid.Column="2">
                                             <SymbolIcon Symbol="Delete"/>
                                         </Button>
