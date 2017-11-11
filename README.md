@@ -9,9 +9,5 @@ WinSwag requires Windows 10 Fall Creators Update.
 *(**Note:** due to a [bug with .NET Native compilation](https://social.msdn.microsoft.com/Forums/en-US/15f89674-8c49-43d5-920b-d0997bb607f5/rs31709systemnethttphttpclient-possibly-causing-unresolved-pinvoke-crash?forum=wpdevelop), the Store version does not work at the moment)*
 
 ### Install from Web
-**[Install WinSwag directly](http://sven.vinkemeier.de/Apps/WinSwag)** using Windows App Installer.
-
-App Installer might report that some dependencies are missing. In this case, try installing one of the following first:
-* [Microsoft.VCLibs.140.00 (x86)](http://svenvinkemeier.azurewebsites.net/Downloads/UWP/Microsoft.VCLibs.x86.14.00.appx)
-* [Microsoft.VCLibs.140.00 (x64)](http://svenvinkemeier.azurewebsites.net/Downloads/UWP/Microsoft.VCLibs.x64.14.00.appx)
-* [Microsoft.VCLibs.140.00 (ARM)](http://svenvinkemeier.azurewebsites.net/Downloads/UWP/Microsoft.VCLibs.ARM.14.00.appx)
+1. **[Install the certificate](http://sven.vinkemeier.de/Downloads/WinSwag/WinSwag_0.3.3.0_x86_x64_arm.cer)** into "LocalMachine/Trusted People"
+1. **[Install WinSwag](http://sven.vinkemeier.de/Apps/WinSwag)** using Windows App Installer
