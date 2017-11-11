@@ -44,7 +44,14 @@ namespace WinSwag
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
             titleBar.BackgroundColor = Colors.Transparent;
             titleBar.ButtonBackgroundColor = Colors.Transparent;
+            titleBar.ButtonHoverBackgroundColor = Colors.Gray;
+            titleBar.ButtonPressedBackgroundColor = Colors.DimGray;
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+            titleBar.ForegroundColor = Colors.White;
+            titleBar.ButtonForegroundColor = Colors.White;
+            titleBar.ButtonHoverForegroundColor = Colors.White;
+            titleBar.ButtonPressedForegroundColor = Colors.White;
+            titleBar.ButtonInactiveForegroundColor = Colors.Gray;
 
             _messenger.Register<CloseDashboard>(this, _ => DashboardPopup.Hide());
 
