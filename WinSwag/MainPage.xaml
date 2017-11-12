@@ -63,6 +63,7 @@
 
                     <Button Style="{StaticResource MyButtonRevealStyle}"
                             Click="{x:Bind OperationManagerVM.ClearSelectedOperation}"
+                            Visibility="{x:Bind SessionManagerVM.IsSessionLoaded, Mode=OneWay}"
                             Height="48" Padding="12,0">
                         <StackPanel Orientation="Horizontal" Spacing="12">
                             <SymbolIcon Symbol="Library"/>
@@ -99,9 +100,14 @@
                           Visibility="{x:Bind SessionManagerVM.IsCurrentSessionFavorite, Mode=OneWay}">
                 <AppBarButton.Flyout>
                     <Flyout x:Name="RemoveFromFavoritesFlyout">
-                        <Button Content="Remove from Favorites"
-                                IsEnabled="{x:Bind SessionManagerVM.IsCurrentSessionFavorite, Mode=OneWay}"
-                                Click="RemoveFromFavoritesButtonClick"/>
+                        <StackPanel Spacing="12" Width="240">
+                            <TextBlock Text="Are you sure you want to remove the API from your favorites?"
+                                       TextWrapping="WrapWholeWords"/>
+
+                            <Button Content="Remove this API" HorizontalAlignment="Right"
+                                    IsEnabled="{x:Bind SessionManagerVM.IsCurrentSessionFavorite, Mode=OneWay}"
+                                    Click="RemoveFromFavoritesButtonClick"/>
+                        </StackPanel>
                     </Flyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
@@ -189,7 +195,7 @@
                             <GroupStyle>
                                 <GroupStyle.HeaderTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Key}"/>
+                                        <TextBlock Text="{Binding Key, Mode=OneTime}"/>
                                     </DataTemplate>
                                 </GroupStyle.HeaderTemplate>
                             </GroupStyle>
@@ -206,7 +212,7 @@
             <StackPanel Grid.RowSpan="99" Spacing="12"
                         HorizontalAlignment="Center" VerticalAlignment="Center"
                         Visibility="{x:Bind ViewStateManagerVM.IsBusy, Mode=OneWay}">
-                <ProgressRing Width="40" Height="40" Foreground="OrangeRed"
+                <ProgressRing Width="40" Height="40" Foreground="Gold"
                               HorizontalAlignment="Center"
                               IsActive="{x:Bind ViewStateManagerVM.IsBusy, Mode=OneWay}"/>
 
@@ -518,30 +524,35 @@
                             </ListView.ItemContainerStyle>
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="models:SwaggerSessionInfo">
-                                    <Grid ColumnSpacing="16" ToolTipService.ToolTip="{x:Bind Url}">
+                                    <Grid ColumnSpacing="12" ToolTipService.ToolTip="{x:Bind Url}">
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
 
+                                        <SymbolIcon Symbol="Favorite" Foreground="Gold"/>
+
                                         <TextBlock Text="{x:Bind DisplayName}"
+                                                   Grid.Column="1"
                                                    FontWeight="SemiBold"
                                                    VerticalAlignment="Center"/>
 
                                         <TextBlock Text="{x:Bind Url}"
-                                                   Grid.Column="1"
+                                                   Grid.Column="2"
                                                    TextTrimming="CharacterEllipsis"
                                                    VerticalAlignment="Center"
+                                                   Opacity=".7"
                                                    FontSize="12"/>
 
                                         <Button Style="{StaticResource MyButtonRevealStyle}"
                                                 ToolTipService.ToolTip="Delete Session"
                                                 Click="DeleteSessionButtonClick"
                                                 BorderThickness="0"
-                                                Padding="12"
+                                                Grid.Column="3"
                                                 Margin="0,0,-12,0"
-                                                Grid.Column="2">
+                                                Padding="12">
                                             <SymbolIcon Symbol="Delete"/>
                                         </Button>
                                     </Grid>

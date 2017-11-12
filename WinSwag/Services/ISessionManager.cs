@@ -13,6 +13,8 @@ namespace WinSwag.Services
 
         SwaggerDocumentViewModel CurrentDocument { get; }
 
+        bool IsSessionLoaded { get; }
+
         bool IsCurrentSessionFavorite { get; }
 
         bool IsntCurrentSessionFavorite { get; }

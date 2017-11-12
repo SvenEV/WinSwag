@@ -32,11 +32,14 @@ namespace WinSwag.ViewModels
             {
                 if (Set(ref _currentDocument, value))
                 {
+                    RaisePropertyChanged(nameof(IsSessionLoaded));
                     RaisePropertyChanged(nameof(IsCurrentSessionFavorite));
                     RaisePropertyChanged(nameof(IsntCurrentSessionFavorite));
                 }
             }
         }
+
+        public bool IsSessionLoaded => CurrentDocument != null;
 
         public bool IsCurrentSessionFavorite => _storedSessions.Any(s => s.Url == _currentDocument?.Url);
 
