@@ -168,7 +168,7 @@ namespace WinSwag.ViewModels
                 await _viewStateManager.ShowMessageAsync(e.ToString(), "Failed to Delete Session");
             }
         }
-
+        
         public async Task UnloadCurrentSessionAsync()
         {
             if (_storedSessions.Any(s => s.Url == _currentDocument?.Url))

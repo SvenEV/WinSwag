@@ -19,7 +19,7 @@ namespace WinSwag.ViewModels
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
             Url = url ?? throw new ArgumentNullException(nameof(url));
-            DisplayName = displayName;
+            DisplayName = displayName ?? model.Info.Title;
 
             OperationGroups = model.Operations
                 .OrderBy(op => op.Path)

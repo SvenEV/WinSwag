@@ -10,5 +10,7 @@ namespace WinSwag.Services
         bool IsOperationSelected { get; }
 
         bool IsntOperationSelected { get; }
+
+        void ClearSelectedOperation();
     }
 }

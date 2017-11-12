@@ -49,10 +49,31 @@
 
         <!-- Command bar (top left) -->
         <CommandBar OverflowButtonVisibility="Auto" Background="Transparent">
-            <AppBarButton Icon="Home" Label="Dashboard" Click="{x:Bind DashboardPopup.Show}"
-                          ToolTipService.ToolTip="Open Dashboard (ESC)"/>
             
-            <AppBarButton Icon="Favorite" Label="Add to Favorites"
+            <!-- Buttons "Dashboard" & "API Info" -->
+            <CommandBar.Content>
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource MyButtonRevealStyle}"
+                            Click="{x:Bind DashboardPopup.Show}"
+                            VerticalAlignment="Stretch"
+                            Padding="12,0"
+                            ToolTipService.ToolTip="Open Dashboard (ESC)">
+                        <SymbolIcon Symbol="Home"/>
+                    </Button>
+
+                    <Button Style="{StaticResource MyButtonRevealStyle}"
+                            Click="{x:Bind OperationManagerVM.ClearSelectedOperation}"
+                            Height="48" Padding="12,0">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <SymbolIcon Symbol="Library"/>
+                            <TextBlock Text="{x:Bind SessionManagerVM.CurrentDocument.DisplayName, Mode=OneWay}"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </CommandBar.Content>
+            
+            <!-- Buttons "Add to favorites" and more -->
+            <AppBarButton Icon="OutlineStar" Label="Add to Favorites"
                           AllowFocusOnInteraction="True"
                           IsEnabled="{x:Bind ViewStateManagerVM.IsIdle, Mode=OneWay}"
                           Visibility="{x:Bind SessionManagerVM.IsntCurrentSessionFavorite, Mode=OneWay}">
@@ -60,7 +81,9 @@
                     <Flyout x:Name="AddToFavoritesFlyout">
                         <StackPanel Width="300" Spacing="12">
                             <TextBox x:Name="CurrentDocumentDisplayNameTextBox"
-                                     KeyDown="OnCurrentDocumentDisplayNameTextBoxKeyDown"
+                                     Text="{x:Bind SessionManagerVM.CurrentDocument.DisplayName, Mode=OneWay}"
+                                     KeyDown="CurrentDocumentDisplayNameTextBoxKeyDown"
+                                     GotFocus="CurrentDocumentDisplayNameTextBoxGotFocus"
                                      PlaceholderText="Name this API!"
                                      Header="Display Name"/>
                             <Button Content="Add to Favorites"
@@ -70,21 +93,34 @@
                     </Flyout>
                 </AppBarButton.Flyout>
             </AppBarButton>
-            
-            <AppBarButton Icon="UnFavorite" Label="Remove from Favorites"
+
+            <AppBarButton Icon="UnFavorite" Label="Remove from Favorites" Foreground="Gold"
                           IsEnabled="{x:Bind ViewStateManagerVM.IsIdle, Mode=OneWay}"
-                          Click="{x:Bind SessionManagerVM.DeleteCurrentSessionAsync}"
-                          Visibility="{x:Bind SessionManagerVM.IsCurrentSessionFavorite, Mode=OneWay}"/>
+                          Visibility="{x:Bind SessionManagerVM.IsCurrentSessionFavorite, Mode=OneWay}">
+                <AppBarButton.Flyout>
+                    <Flyout x:Name="RemoveFromFavoritesFlyout">
+                        <Button Content="Remove from Favorites"
+                                IsEnabled="{x:Bind SessionManagerVM.IsCurrentSessionFavorite, Mode=OneWay}"
+                                Click="RemoveFromFavoritesButtonClick"/>
+                    </Flyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+
         </CommandBar>
 
         <!-- API list (left) -->
         <Grid Grid.Row="1">
-            <SemanticZoom Visibility="{x:Bind ViewStateManagerVM.IsIdle, Mode=OneWay}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <SemanticZoom Grid.Row="1" Visibility="{x:Bind ViewStateManagerVM.IsIdle, Mode=OneWay}">
                 <SemanticZoom.ZoomedInView>
                     <ListView ItemsSource="{x:Bind Operations.View, Mode=OneWay}"
                               ScrollViewer.IsVerticalScrollChainingEnabled="True"
                               SelectedItem="{Binding OperationManagerVM.SelectedOperation, Mode=TwoWay, ElementName=Root}"
-                              Padding="0,-12,0,4">
+                              Padding="0,0,0,4">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -167,7 +203,8 @@
             </SemanticZoom>
 
             <!-- Busy indicator -->
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12"
+            <StackPanel Grid.RowSpan="99" Spacing="12"
+                        HorizontalAlignment="Center" VerticalAlignment="Center"
                         Visibility="{x:Bind ViewStateManagerVM.IsBusy, Mode=OneWay}">
                 <ProgressRing Width="40" Height="40" Foreground="OrangeRed"
                               HorizontalAlignment="Center"
@@ -182,13 +219,32 @@
         <Grid Grid.Column="1" Visibility="{x:Bind ViewStateManagerVM.IsIdle, Mode=OneWay}">
             <TextBlock VerticalAlignment="Center" Margin="18,0,140,0"
                        Style="{StaticResource SubtitleTextBlockStyle}"
-                       TextWrapping="NoWrap" FontFamily="Consolas">
+                       TextWrapping="NoWrap" FontFamily="Consolas"
+                       Visibility="{x:Bind OperationManagerVM.IsOperationSelected, Mode=OneWay}">
                 <Run Text="{x:Bind OperationManagerVM.SelectedOperation.Method, Mode=OneWay}"
                      Foreground="{x:Bind OperationManagerVM.SelectedOperation.MethodBrush, Mode=OneWay}"
                      FontWeight="SemiBold"/>
                 <Run Text="{x:Bind OperationManagerVM.SelectedOperation.Model.Path, Mode=OneWay}"/>
             </TextBlock>
+            
+            <TextBlock Visibility="{x:Bind OperationManagerVM.IsntOperationSelected, Mode=OneWay}"
+                       Text="About this API" Style="{StaticResource SubtitleTextBlockStyle}"
+                       Margin="18,0,140,0" VerticalAlignment="Center" FontWeight="SemiBold"/>
         </Grid>
+
+        <!-- API information (right)-->
+        <ScrollViewer Grid.Row="1" Grid.Column="1" Padding="20,0"
+                      Visibility="{x:Bind OperationManagerVM.IsntOperationSelected, Mode=OneWay}">
+            <StackPanel>
+                <TextBlock Style="{StaticResource TitleTextBlockStyle}"
+                           Text="{x:Bind SessionManagerVM.CurrentDocument.Model.Info.Title, Mode=OneWay}"/>
+
+                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}"
+                           Text="{x:Bind SessionManagerVM.CurrentDocument.Model.Info.Version, Mode=OneWay}"/>
+
+                <TextBlock Text="{x:Bind SessionManagerVM.CurrentDocument.Model.Info.Description, Mode=OneWay}"/>
+            </StackPanel>
+        </ScrollViewer>
 
         <!-- Selected operation request/response (right) -->
         <ScrollViewer Grid.Row="1" Grid.Column="1" Padding="20,0"
@@ -230,7 +286,7 @@
                                             </TextBlock>
                                         </StackPanel>
                                     </ToolTipService.ToolTip>
-                                    
+
                                     <TextBlock Text="{x:Bind DisplayName}"
                                                FontFamily="Consolas"/>
 
@@ -329,16 +385,11 @@
                                     HorizontalContentAlignment="Stretch"
                                     VerticalContentAlignment="Stretch"
                                     Margin="0,12,0,0"/>
-                    
+
                 </StackPanel>
 
             </StackPanel>
         </ScrollViewer>
-
-        <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"
-                   Visibility="{x:Bind OperationManagerVM.IsntOperationSelected, Mode=OneWay}">
-            No operation selected.
-        </TextBlock>
 
         <!-- Grid splitter (vertical) -->
         <tkc:GridSplitter Grid.Column="1" Grid.RowSpan="99" HorizontalAlignment="Left"
@@ -353,7 +404,7 @@
                     <ColumnDefinition Width="3.5*" MinWidth="500"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                
+
                 <Border Grid.Column="1" Padding="8,20">
                     <StackPanel>
                         <Grid ColumnSpacing="12">
@@ -361,7 +412,7 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            
+
                             <!-- Dashboard title (top left) -->
                             <TextBlock Style="{StaticResource TitleTextBlockStyle}"
                                        Text="Dashboard"
@@ -446,7 +497,7 @@
                                     <TextBlock Text="Open File"/>
                                 </StackPanel>
                             </Button>
-                            
+
                             <AutoSuggestBox Grid.Column="1"
                                             Text="{x:Bind SessionManagerVM.CurrentDocument.Url, Mode=OneWay}"
                                             PlaceholderText="URL to a Swagger document (swagger.json)"

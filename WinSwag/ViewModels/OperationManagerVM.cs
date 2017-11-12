@@ -29,5 +29,7 @@ namespace WinSwag.ViewModels
         {
             _viewStateManager = viewStateManager;
         }
+
+        public void ClearSelectedOperation() => SelectedOperation = null;
     }
 }

@@ -123,10 +123,21 @@ namespace WinSwag
             AddToFavoritesFlyout.Hide();
         }
 
-        private void OnCurrentDocumentDisplayNameTextBoxKeyDown(object sender, KeyRoutedEventArgs e)
+        private async void RemoveFromFavoritesButtonClick(object sender, RoutedEventArgs e)
+        {
+            await SessionManagerVM.DeleteCurrentSessionAsync();
+            RemoveFromFavoritesFlyout.Hide();
+        }
+
+        private void CurrentDocumentDisplayNameTextBoxKeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == VirtualKey.Enter)
                 AddToFavoritesButtonClick(sender, null);
+        }
+
+        private void CurrentDocumentDisplayNameTextBoxGotFocus(object sender, RoutedEventArgs e)
+        {
+            CurrentDocumentDisplayNameTextBox.SelectAll();
         }
     }
 }
