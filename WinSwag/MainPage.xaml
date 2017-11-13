@@ -56,7 +56,7 @@
                     <Button Style="{StaticResource MyButtonRevealStyle}"
                             Click="{x:Bind DashboardPopup.Show}"
                             VerticalAlignment="Stretch"
-                            Padding="12,0"
+                            Padding="12,0" Height="48"
                             ToolTipService.ToolTip="Open Dashboard (ESC)">
                         <SymbolIcon Symbol="Home"/>
                     </Button>
