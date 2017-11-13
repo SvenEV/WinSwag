@@ -56,19 +56,25 @@ namespace WinSwag.Models
             {
                 var sessionFile = await _folder.GetFileAsync($"{info.Guid.ToString()}.json");
                 var json = await FileIO.ReadTextAsync(sessionFile);
+
+                if (string.IsNullOrEmpty(json))
+                    return EmptySession();
+
                 return SwaggerSession.FromJson(json);
             }
             catch (FileNotFoundException)
             {
                 // In case someone deleted the session file, just load the session without
                 // filling in any parameter values
-                return new SwaggerSession
-                {
-                    Url = url,
-                    DisplayName = info.DisplayName,
-                    Operations = new Dictionary<string, SwaggerSession.StoredOperation>()
-                };
+                return EmptySession();
             }
+
+            SwaggerSession EmptySession() => new SwaggerSession
+            {
+                Url = url,
+                DisplayName = info.DisplayName,
+                Operations = new Dictionary<string, SwaggerSession.StoredOperation>()
+            };
         }
 
         public async Task StoreAsync(SwaggerSession session)
