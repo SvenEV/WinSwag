@@ -3,6 +3,7 @@ using System;
 using Windows.ApplicationModel.Core;
 using Windows.System;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -47,7 +48,10 @@ namespace WinSwag
             titleBar.ButtonHoverForegroundColor = Colors.White;
             titleBar.ButtonPressedForegroundColor = Colors.White;
             titleBar.ButtonInactiveForegroundColor = Colors.Gray;
+        }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
             _messenger.Register<CloseDashboard>(this, _ => DashboardPopup.Hide());
 
             _messenger.Register<NavigatedToOperation>(this, msg =>
@@ -69,6 +73,19 @@ namespace WinSwag
             });
 
             KeyDown += OnKeyDown;
+            SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            _messenger.Unregister(this);
+            KeyDown -= OnKeyDown;
+            SystemNavigationManager.GetForCurrentView().BackRequested -= OnBackRequested;
+        }
+
+        private void OnBackRequested(object sender, BackRequestedEventArgs e)
+        {
+            OperationManagerVM.GoBack();
         }
 
         private void OnKeyDown(object sender, KeyRoutedEventArgs e)
@@ -86,7 +103,6 @@ namespace WinSwag
                     break;
 
                 case VirtualKey.GoBack:
-                case VirtualKey.Back when !e.Handled:
                 case VirtualKey.Left when e.KeyStatus.IsMenuKeyDown:
                     OperationManagerVM.GoBack();
                     break;

@@ -212,7 +212,8 @@
         </Grid>
         
         <!-- Main Content Frame (right) -->
-        <Frame x:Name="ContentFrame" Grid.Column="1" Grid.RowSpan="99">
+        <Frame x:Name="ContentFrame" Grid.Column="1" Grid.RowSpan="99"
+               Visibility="{x:Bind ViewStateManagerVM.IsIdle, Mode=OneWay}">
             <Frame.ContentTransitions>
                 <TransitionCollection>
                     <PopupThemeTransition FromVerticalOffset="0" FromHorizontalOffset="60"/>

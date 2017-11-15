@@ -40,6 +40,9 @@ namespace WinSwag.ViewModels
 
         public void NavigateToOperation(SwaggerOperationViewModel operationVM)
         {
+            if (operationVM == SelectedOperation)
+                return; // Don't navigate to the same page again
+
             // Clear forward stack
             while (_navigationStack.Count > _navigationIndex + 1)
                 _navigationStack.RemoveAt(_navigationIndex + 1);

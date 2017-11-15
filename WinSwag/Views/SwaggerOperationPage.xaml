@@ -1,5 +1,6 @@
 ﻿<Page
     x:Class="WinSwag.Views.SwaggerOperationPage"
+    x:Name="Root"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:WinSwag.Views"
@@ -55,10 +56,11 @@
                                                        FontFamily="Consolas"/>
 
                                             <TextBlock Grid.Column="2"
-                                                   Opacity=".6"
-                                                   Text="{x:Bind Parameter.Description}"
-                                                   FontSize="12"
-                                                   TextWrapping="Wrap"/>
+                                                       Opacity=".6"
+                                                       Text="{x:Bind Parameter.Description}"
+                                                       Visibility="{x:Bind HasDescription}"
+                                                       FontSize="12"
+                                                       TextWrapping="Wrap"/>
 
                                             <TextBlock Margin="0,8,0,0">
                                                 <Run Text="{x:Bind Parameter.Kind}"/> parameter

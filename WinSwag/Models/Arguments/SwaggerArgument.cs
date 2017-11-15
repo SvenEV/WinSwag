@@ -19,6 +19,8 @@ namespace WinSwag.Models.Arguments
 
         public string DisplayName => Parameter.Name + (Parameter.IsRequired ? "*" : "");
 
+        public bool HasDescription => !string.IsNullOrWhiteSpace(Parameter.Description);
+
         public bool IsBodyParameter => Parameter.Kind == SwaggerParameterKind.Body;
 
         public abstract bool HasValue { get; }
