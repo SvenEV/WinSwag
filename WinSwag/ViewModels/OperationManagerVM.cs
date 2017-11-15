@@ -40,7 +40,7 @@ namespace WinSwag.ViewModels
 
         public void NavigateToOperation(SwaggerOperationViewModel operationVM)
         {
-            if (operationVM == SelectedOperation)
+            if (operationVM == SelectedOperation && _navigationIndex != -1)
                 return; // Don't navigate to the same page again
 
             // Clear forward stack

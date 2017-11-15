@@ -12,7 +12,7 @@ namespace WinSwag.Views
     public sealed partial class DashboardPage : Page
     {
         [Inject]
-        private readonly IMessenger _messenger;
+        private readonly IMessenger _messenger = null;
 
         [Inject]
         public ISessionManagerVM SessionManagerVM { get; private set; }

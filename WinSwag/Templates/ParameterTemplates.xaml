@@ -19,6 +19,7 @@
 
     <DataTemplate x:Key="FallbackParameterTemplate" x:DataType="arguments:StringArgument">
         <TextBox Text="{x:Bind Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 PlaceholderText="{x:Bind DefaultValue}"
                  AcceptsReturn="True"
                  FontFamily="Consolas"/>
     </DataTemplate>

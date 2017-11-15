@@ -18,7 +18,7 @@ namespace WinSwag
     public sealed partial class MainPage : Page
     {
         [Inject]
-        private readonly IMessenger _messenger;
+        private readonly IMessenger _messenger = null;
 
         [Inject]
         public ISessionManagerVM SessionManagerVM { get; private set; }

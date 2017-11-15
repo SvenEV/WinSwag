@@ -14,6 +14,8 @@
     <SolidColorBrush x:Key="ComboBoxBackgroundFocused" Color="#33FFFFFF"/>
     <SolidColorBrush x:Key="ComboBoxForegroundFocused" Color="White"/>
 
+    <SolidColorBrush x:Key="ButtonRevealBackgroundDisabled" Color="Transparent"/>
+
     <RevealBackgroundBrush x:Key="ButtonRevealBackgroundPointerOver" TargetTheme="Dark"
                            Color="Transparent"
                            FallbackColor="#33FFFFFF"/>
@@ -24,6 +26,7 @@
         <Setter Property="MinHeight" Value="30"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Background" Value="#1AFFFFFF"/>
+        <Setter Property="PlaceholderForeground" Value="#44FFFFFF"/>
     </Style>
 
     <Style TargetType="ComboBox">

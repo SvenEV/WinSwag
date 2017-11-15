@@ -13,6 +13,8 @@ namespace WinSwag.Models.Arguments
 
         public override bool HasValue => !string.IsNullOrEmpty(Value);
 
+        public string DefaultValue => Parameter.Default?.ToString();
+
         public StringArgument(SwaggerParameter parameter) : base(parameter)
         {
         }
