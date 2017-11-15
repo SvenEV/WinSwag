@@ -106,6 +106,7 @@
     <Compile Include="Controls\PopupWindow.xaml.cs">
       <DependentUpon>PopupWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DependencyInjectionExtensions.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -147,6 +148,15 @@
     <Compile Include="Models\SwaggerSession.cs" />
     <Compile Include="ViewModels\ForModels\SwaggerDocumentViewModel.cs" />
     <Compile Include="ViewModels\SessionManagerVM.cs" />
+    <Compile Include="Views\ApiInfoPage.xaml.cs">
+      <DependentUpon>ApiInfoPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DashboardPage.xaml.cs">
+      <DependentUpon>DashboardPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SwaggerOperationPage.xaml.cs">
+      <DependentUpon>SwaggerOperationPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -233,6 +243,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Templates\ResponseTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ApiInfoPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DashboardPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SwaggerOperationPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

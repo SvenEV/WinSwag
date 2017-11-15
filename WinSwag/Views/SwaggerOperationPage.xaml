@@ -1,0 +1,173 @@
+﻿<Page
+    x:Class="WinSwag.Views.SwaggerOperationPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinSwag.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:arguments="using:WinSwag.Models.Arguments"
+    RequestedTheme="Dark"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <!-- Selected operation title (top right) -->
+        <TextBlock Padding="18,12,140,24"
+                   Style="{StaticResource SubtitleTextBlockStyle}"
+                   TextTrimming="CharacterEllipsis"
+                   TextWrapping="NoWrap" FontFamily="Consolas">
+            <Run Text="{x:Bind Operation.Method}"
+                 Foreground="{x:Bind Operation.MethodBrush}"
+                 FontWeight="SemiBold"/>
+            <Run Text="{x:Bind Operation.Model.Path}"/>
+        </TextBlock>
+        
+        <!-- Selected operation request/response (right) -->
+        <ScrollViewer Grid.Row="1" Grid.Column="1" Padding="20,0">
+            <StackPanel>
+                <!-- Request part -->
+                <Border Padding="0,0,0,4" Margin="0,0,0,4" BorderThickness="0,0,0,1" BorderBrush="#44FFFFFF">
+                    <TextBlock Text="Request" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiBold"/>
+                </Border>
+
+                <!-- Parameters -->
+                <ItemsControl ItemsSource="{x:Bind Operation.Arguments}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="arguments:SwaggerArgument">
+                            <Grid Margin="0,0,0,4" Padding="0,4,0,4"
+                                  ColumnSpacing="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="250"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Parameter info (left column) -->
+                                <StackPanel x:Name="ParameterInfo" Margin="0,6,0,0"
+                                            ToolTipService.PlacementTarget="{Binding ElementName=ParameterInfo}">
+                                    <ToolTipService.ToolTip>
+                                        <StackPanel MaxWidth="600">
+                                            <TextBlock Text="{x:Bind DisplayName}"
+                                                       FontSize="16"
+                                                       FontFamily="Consolas"/>
+
+                                            <TextBlock Grid.Column="2"
+                                                   Opacity=".6"
+                                                   Text="{x:Bind Parameter.Description}"
+                                                   FontSize="12"
+                                                   TextWrapping="Wrap"/>
+
+                                            <TextBlock Margin="0,8,0,0">
+                                                <Run Text="{x:Bind Parameter.Kind}"/> parameter
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </ToolTipService.ToolTip>
+
+                                    <TextBlock Text="{x:Bind DisplayName}"
+                                               FontFamily="Consolas"/>
+
+                                    <TextBlock Grid.Column="2"
+                                               Opacity=".6"
+                                               Text="{x:Bind Parameter.Description}"
+                                               FontSize="12"
+                                               MaxLines="3"
+                                               TextWrapping="Wrap"
+                                               TextTrimming="WordEllipsis"/>
+
+                                </StackPanel>
+
+                                <!-- Value input (right column) -->
+                                <StackPanel Grid.Column="1">
+                                    <ContentControl Content="{x:Bind}" IsTabStop="False"
+                                                    ContentTemplateSelector="{StaticResource ParameterTemplateSelector}"
+                                                    HorizontalContentAlignment="Stretch"
+                                                    VerticalContentAlignment="Top"/>
+
+                                    <StackPanel Orientation="Horizontal" Spacing="4" Opacity=".7"
+                                                Visibility="{x:Bind IsBodyParameter}">
+                                        <TextBlock Text="Content type:" VerticalAlignment="Center"/>
+                                        <ComboBox ItemsSource="{Binding Operation.Model.Operation.ActualConsumes, ElementName=Root}"
+                                                  SelectedItem="{Binding Operation.SelectedContentType, ElementName=Root, Mode=OneWay}"
+                                                  SelectionChanged="OnContentTypeComboBoxSelectionChanged"
+                                                  Background="Transparent"
+                                                  BorderBrush="Transparent"
+                                                  BorderThickness="0"
+                                                  Padding="4,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- Send request button -->
+                <Button HorizontalAlignment="Right" Foreground="Black" Padding="12,8" Margin="0,4,0,0"
+                        Background="{x:Bind Operation.MethodBrush}"
+                        Click="{x:Bind Operation.BeginSendRequest}"
+                        IsEnabled="{x:Bind Operation.CanSendRequest, Mode=OneWay}"
+                        ToolTipService.ToolTip="Send HTTP Request (F5)">
+                    <StackPanel Orientation="Horizontal">
+                        <SymbolIcon Symbol="Play"/>
+                        <TextBlock Margin="8,0,0,0" Text="Send Request"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Response part title -->
+                <Border Padding="0,0,0,4" Margin="0,0,0,4" BorderThickness="0,0,0,1" BorderBrush="#44FFFFFF">
+                    <TextBlock Text="Response" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="SemiBold"/>
+                </Border>
+
+                <!-- Response part -->
+                <Border Height="4">
+                    <ProgressBar IsIndeterminate="{x:Bind Operation.IsBusy, Mode=OneWay}"
+                                 Visibility="{x:Bind Operation.IsBusy, Mode=OneWay}"/>
+                </Border>
+
+                <TextBlock Visibility="{x:Bind Operation.HasRequestError, Mode=OneWay}"
+                           Text="{x:Bind Operation.RequestError, Mode=OneWay}"
+                           TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
+
+                <StackPanel Visibility="{x:Bind Operation.HasResponse, Mode=OneWay}">
+
+                    <TextBlock Text="{x:Bind Operation.Response.Status, Mode=OneWay}"
+                               FontWeight="SemiBold"/>
+
+                    <TextBlock Text="{x:Bind Operation.Response.RequestUri, Mode=OneWay}"
+                               TextWrapping="Wrap" FontFamily="Consolas" IsTextSelectionEnabled="True"
+                               Margin="0,12,0,0"/>
+
+                    <!-- Response headers -->
+                    <ItemsControl ItemsSource="{x:Bind Operation.Response.Response.Headers, Mode=OneWay}"
+                                  Margin="0,12,0,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="250"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock FontFamily="Consolas"><Run Text="{Binding Key}"/>:</TextBlock>
+                                    <ItemsControl Grid.Column="1" ItemsSource="{Binding Value}" FontFamily="Consolas"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- Response content -->
+                    <ContentControl Content="{x:Bind Operation.Response, Mode=OneWay}"
+                                    ContentTemplateSelector="{StaticResource ResponseTemplateSelector}"
+                                    HorizontalContentAlignment="Stretch"
+                                    VerticalContentAlignment="Stretch"
+                                    Margin="0,12,0,0"/>
+
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+
+    </Grid>
+</Page>

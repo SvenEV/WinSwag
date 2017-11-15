@@ -82,7 +82,8 @@ namespace WinSwag.ViewModels
                     var doc = await SwaggerDocument.FromUrlAsync(url);
                     var displayName = _storedSessions.FirstOrDefault(s => s.Url == url)?.DisplayName;
                     CurrentDocument = new SwaggerDocumentViewModel(doc, url, displayName);
-                    _operationManager.SelectedOperation = null;
+                    _operationManager.ClearNavigationStack();
+                    _operationManager.NavigateToApiInfo();
                 }
             }
             catch (Exception e)
@@ -103,7 +104,8 @@ namespace WinSwag.ViewModels
                     var json = await FileIO.ReadTextAsync(file);
                     var doc = await SwaggerDocument.FromJsonAsync(json);
                     CurrentDocument = new SwaggerDocumentViewModel(doc, "file://" + file.Path);
-                    _operationManager.SelectedOperation = null;
+                    _operationManager.ClearNavigationStack();
+                    _operationManager.NavigateToApiInfo();
                 }
             }
             catch (Exception e)
@@ -137,7 +139,8 @@ namespace WinSwag.ViewModels
                     await UnloadCurrentSessionAsync(); // unload before loading new session (important when loading the same session again)
                     var session = await _sessionManager.LoadAsync(sessionInfo.Url);
                     CurrentDocument = await SwaggerSession.ToViewModelAsync(session);
-                    _operationManager.SelectedOperation = null;
+                    _operationManager.ClearNavigationStack();
+                    _operationManager.NavigateToApiInfo();
                 }
             }
             catch (Exception e)

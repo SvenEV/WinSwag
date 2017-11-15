@@ -1,0 +1,161 @@
+﻿<Page
+    x:Class="WinSwag.Views.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinSwag.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:WinSwag.Models"
+    mc:Ignorable="d">
+
+    <Border Grid.Column="1" Padding="8,20">
+        <StackPanel>
+            <Grid ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Dashboard title (top left) -->
+                <TextBlock Style="{StaticResource TitleTextBlockStyle}"
+                           Text="Dashboard"
+                           FontWeight="Bold"
+                           Margin="12,0,0,0"/>
+
+                <!-- Dashboard buttons (top right) -->
+                <StackPanel Orientation="Horizontal" Grid.Column="1"
+                            HorizontalAlignment="Right">
+                    <Button Foreground="Gold" Background="Transparent" Padding="12,8"
+                            Style="{StaticResource MyButtonRevealStyle}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <SymbolIcon Symbol="Flag"/>
+                            <TextBlock Text="Configure Localhost Support"/>
+                        </StackPanel>
+                        <Button.Flyout>
+                            <Flyout>
+                                <StackPanel Spacing="12" Width="700">
+                                    <TextBlock TextWrapping="WrapWholeWords">
+                                        Connecting to 'localhost' is prohibited by default for modern Windows apps.
+                                        If you need to connect to a web service running on your local machine, exempt
+                                        WinSwag from this limitation by running the following command:
+                                    </TextBlock>
+                                    <Border Background="Black" Padding="4">
+                                        <TextBlock IsTextSelectionEnabled="True"
+                                                   TextWrapping="WrapWholeWords"
+                                                   FontFamily="Consolas">
+                                            checknetisolation loopbackexempt -a -n=<Run Text="{x:Bind AppInfoVM.PackageFamilyName}"/>
+                                        </TextBlock>
+                                    </Border>
+                                    <TextBlock TextWrapping="WrapWholeWords">
+                                        You can remove the exemption and block 'localhost'-access again with the following command:
+                                    </TextBlock>
+                                    <Border Background="Black" Padding="4">
+                                        <TextBlock IsTextSelectionEnabled="True"
+                                                   TextWrapping="WrapWholeWords"
+                                                   FontFamily="Consolas">
+                                            checknetisolation loopbackexempt -d -n=<Run Text="{x:Bind AppInfoVM.PackageFamilyName}"/>
+                                        </TextBlock>
+                                    </Border>
+                                    <TextBlock TextWrapping="WrapWholeWords">
+                                        (You may need to restart the app for the changes to take effect.)
+                                    </TextBlock>
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+
+                    <Button Style="{StaticResource MyButtonRevealStyle}" Padding="12,8"
+                            ToolTipService.ToolTip="About WinSwag">
+                        <SymbolIcon Symbol="Setting"/>
+                        <Button.Flyout>
+                            <Flyout>
+                                <StackPanel>
+                                    <TextBlock FontWeight="SemiBold">WinSwag <Run Text="{x:Bind AppInfoVM.Version}"/></TextBlock>
+                                    <TextBlock>Copyright © 2017 Sven Vinkemeier</TextBlock>
+                                    <HyperlinkButton Click="{x:Bind AppInfoVM.OpenGitHubWebsite}">WinSwag on GitHub</HyperlinkButton>
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+
+                    <Button Click="{x:Bind Close}" Padding="12,8"
+                            Style="{StaticResource MyButtonRevealStyle}"
+                            ToolTipService.ToolTip="Close Dashboard (ESC)">
+                        <SymbolIcon Symbol="Cancel"/>
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <!-- Dashboard URL box -->
+            <Grid ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Button Click="OpenFileButtonClick" Style="{StaticResource MyButtonRevealStyle}"
+                        Visibility="Collapsed">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <SymbolIcon Symbol="OpenFile"/>
+                        <TextBlock Text="Open File"/>
+                    </StackPanel>
+                </Button>
+
+                <AutoSuggestBox Grid.Column="1"
+                                Text="{x:Bind SessionManagerVM.CurrentDocument.Url, Mode=OneWay}"
+                                PlaceholderText="URL to a Swagger document (swagger.json)"
+                                QuerySubmitted="OnUrlBoxQuerySubmitted"
+                                QueryIcon="Forward" Margin="0,12,12,8"/>
+
+            </Grid>
+
+            <!-- Dashboard favorites -->
+            <ListView ItemsSource="{x:Bind SessionManagerVM.StoredSessions}"
+                      ItemClick="StoredSessionClick"
+                      IsItemClickEnabled="True"
+                      SelectionMode="None">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:SwaggerSessionInfo">
+                        <Grid ColumnSpacing="12" ToolTipService.ToolTip="{x:Bind Url}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <SymbolIcon Symbol="Favorite" Foreground="Gold"/>
+
+                            <TextBlock Text="{x:Bind DisplayName}"
+                                       Grid.Column="1"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center"/>
+
+                            <TextBlock Text="{x:Bind Url}"
+                                       Grid.Column="2"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center"
+                                       Opacity=".7"
+                                       FontSize="12"/>
+
+                            <Button Style="{StaticResource MyButtonRevealStyle}"
+                                    ToolTipService.ToolTip="Delete Session"
+                                    Click="DeleteSessionButtonClick"
+                                    BorderThickness="0"
+                                    Grid.Column="3"
+                                    Margin="0,0,-12,0"
+                                    Padding="12">
+                                <SymbolIcon Symbol="Delete"/>
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+    </Border>
+</Page>

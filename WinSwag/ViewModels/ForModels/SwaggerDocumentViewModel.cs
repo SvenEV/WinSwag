@@ -13,6 +13,8 @@ namespace WinSwag.ViewModels
 
         public string DisplayName { get; set; }
 
+        public bool HasDescription => !string.IsNullOrWhiteSpace(Model.Info.Description);
+
         public IReadOnlyList<IGrouping<string, SwaggerOperationViewModel>> OperationGroups { get; }
 
         public SwaggerDocumentViewModel(SwaggerDocument model, string url, string displayName = null)
