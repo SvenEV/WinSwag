@@ -20,11 +20,15 @@ namespace WinSwag.Controls
         public static readonly DependencyProperty IsOpenProperty =
             DependencyProperty.Register(nameof(IsOpen), typeof(bool), typeof(PopupWindow), new PropertyMetadata(false));
 
-        public UIElement TitleBar => TitleBarElement;
-
         public event TypedEventHandler<PopupWindow, object> Opened;
 
         public event TypedEventHandler<PopupWindow, object> Closed;
+
+        /// <summary>
+        /// An invisible element at the top of the window that can be assigned as the current window's
+        /// title bar while the popup is open and the view extends into the title bar area.
+        /// </summary>
+        public UIElement TitleBar => TitleBarElement;
 
         public DataTemplate ContentTemplate
         {
