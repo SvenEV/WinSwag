@@ -133,10 +133,7 @@ namespace WinSwag.ViewModels
                 };
 
                 foreach (var parameter in Arguments)
-                    await parameter.ApplyAsync(request, requestUri);
-
-                if (request.Content != null)
-                    request.Content.Headers.ContentType = new MediaTypeHeaderValue(_selectedContentType);
+                    await parameter.ApplyAsync(request, requestUri, _selectedContentType);
 
                 requestUri.Length--; // remove trailing '?' or '&'
                 var finalUri = requestUri.ToString();

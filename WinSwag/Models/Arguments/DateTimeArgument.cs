@@ -23,8 +23,8 @@ namespace WinSwag.Models.Arguments
         {
         }
 
-        public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri) =>
-            StringArgument.ApplyAsync(Parameter, _value?.ToString(), request, requestUri);
+        public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri, string contentType) =>
+            StringArgument.ApplyAsync(Parameter, _value?.ToString(), request, requestUri, contentType);
 
 
         public override JToken GetSerializedValue() => Value == null ? null : JToken.FromObject(Value);

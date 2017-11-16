@@ -80,7 +80,7 @@ namespace WinSwag.Models.Arguments
             _futureAccessToken = null;
         }
 
-        public override async Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri)
+        public override async Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri, string contentType)
         {
             if (_file == null)
                 return;

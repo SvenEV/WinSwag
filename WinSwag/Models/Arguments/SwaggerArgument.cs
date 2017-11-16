@@ -32,7 +32,8 @@ namespace WinSwag.Models.Arguments
 
         /// <param name="request">The request message to populate with arguments</param>
         /// <param name="requestUri">The current request URI, ending with either '?' or '&' so query parameters can just be appended</param>
-        public abstract Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri);
+        /// <param name="mediaType">The selected media type to be used in the request</param>
+        public abstract Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri, string contentType);
 
         public static SwaggerArgument FromParameter(SwaggerParameter param)
         {

@@ -2,6 +2,7 @@
 using NSwag;
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,10 +20,10 @@ namespace WinSwag.Models.Arguments
         {
         }
 
-        public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri) =>
-            ApplyAsync(Parameter, Value, request, requestUri);
+        public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri, string contentType) =>
+            ApplyAsync(Parameter, Value, request, requestUri, contentType);
 
-        public static Task ApplyAsync(SwaggerParameter parameter, string value, HttpRequestMessage request, StringBuilder requestUri)
+        public static Task ApplyAsync(SwaggerParameter parameter, string value, HttpRequestMessage request, StringBuilder requestUri, string contentType)
         {
             if (string.IsNullOrEmpty(value))
                 return Task.CompletedTask;
@@ -43,9 +44,15 @@ namespace WinSwag.Models.Arguments
 
                 case SwaggerParameterKind.Body:
                     request.Content = new StringContent(value, Encoding.UTF8);
+                    request.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
                     break;
 
                 case SwaggerParameterKind.FormData:
+                    var formData = new MultipartFormDataContent();
+                    formData.Add(new StringContent(value), parameter.Name);
+                    request.Content = formData;
+                    break;
+
                 case SwaggerParameterKind.ModelBinding:
                     throw new NotImplementedException(); // TODO
             }
