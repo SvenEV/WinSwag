@@ -48,17 +48,26 @@ namespace WinSwag.Models.Arguments
             var newFile = await picker.PickSingleFileAsync();
 
             if (newFile != null)
+                SetFile(newFile);
+        }
+
+        public void SetFile(StorageFile file)
+        {
+            if (file == null)
             {
-                // Remove current file from FutureAccessList
-                if (!string.IsNullOrEmpty(_futureAccessToken))
-                    StorageApplicationPermissions.FutureAccessList.Remove(_futureAccessToken);
-
-                File = newFile;
-
-                // Add new file to FutureAccessList
-                var operation = (SwaggerOperation)Parameter.Parent;
-                _futureAccessToken = StorageApplicationPermissions.FutureAccessList.Add(newFile);
+                ClearFile();
+                return;
             }
+
+            // Remove current file from FutureAccessList
+            if (!string.IsNullOrEmpty(_futureAccessToken))
+                StorageApplicationPermissions.FutureAccessList.Remove(_futureAccessToken);
+
+            File = file;
+
+            // Add new file to FutureAccessList
+            var operation = (SwaggerOperation)Parameter.Parent;
+            _futureAccessToken = StorageApplicationPermissions.FutureAccessList.Add(file);
         }
 
         public void ClearFile()

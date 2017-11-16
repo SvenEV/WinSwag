@@ -79,7 +79,8 @@
     </DataTemplate>
 
     <DataTemplate x:Key="FileParameterTemplate" x:DataType="arguments:FileArgument">
-        <Grid ColumnSpacing="12">
+        <Grid ColumnSpacing="12" Background="Transparent" AllowDrop="True"
+              DragOver="OnFileDragOver" Drop="OnFileDrop">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>
