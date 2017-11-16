@@ -227,7 +227,8 @@
 
         <!-- Dashboard popup -->
         <controls:PopupWindow x:Name="DashboardPopup" Grid.RowSpan="99" Grid.ColumnSpan="99"
-                              HorizontalContentAlignment="Stretch" IsOpen="True">
+                              HorizontalContentAlignment="Stretch" IsOpen="True"
+                              Opened="DashboardPopupOpened" Closed="DashboardPopupClosed">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>

@@ -9,6 +9,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using WinSwag.Controls;
 using WinSwag.Services;
 using WinSwag.ViewModels;
 using WinSwag.Views;
@@ -118,6 +119,16 @@ namespace WinSwag
         {
             var operation = (SwaggerOperationViewModel)e.ClickedItem;
             OperationManagerVM.NavigateToOperation(operation);
+        }
+
+        private void DashboardPopupOpened(PopupWindow sender, object args)
+        {
+            Window.Current.SetTitleBar(DashboardPopup.TitleBar);
+        }
+
+        private void DashboardPopupClosed(PopupWindow sender, object args)
+        {
+            Window.Current.SetTitleBar(TitleBar);
         }
     }
 }

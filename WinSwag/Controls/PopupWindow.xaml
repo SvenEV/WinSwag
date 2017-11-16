@@ -11,7 +11,8 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Popup x:Name="popup" IsLightDismissEnabled="False" IsOpen="{x:Bind IsOpen, Mode=TwoWay}">
+    <Popup x:Name="popup" IsLightDismissEnabled="False" IsOpen="{x:Bind IsOpen, Mode=TwoWay}"
+           Opened="OnOpened" Closed="OnClosed">
         <Grid>
             <Grid.Transitions>
                 <TransitionCollection>
@@ -24,6 +25,8 @@
                     <AcrylicBrush BackgroundSource="Backdrop" TintColor="#A0000000"/>
                 </Border.Background>
             </Border>
+
+            <Border x:Name="TitleBarElement" Background="Transparent" Height="32" VerticalAlignment="Top"/>
 
             <controls:DropShadowPanel Color="Black" BlurRadius="50"
                                       HorizontalAlignment="{x:Bind HorizontalContentAlignment, Mode=OneWay}"

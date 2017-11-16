@@ -20,6 +20,12 @@ namespace WinSwag.Controls
         public static readonly DependencyProperty IsOpenProperty =
             DependencyProperty.Register(nameof(IsOpen), typeof(bool), typeof(PopupWindow), new PropertyMetadata(false));
 
+        public UIElement TitleBar => TitleBarElement;
+
+        public event TypedEventHandler<PopupWindow, object> Opened;
+
+        public event TypedEventHandler<PopupWindow, object> Closed;
+
         public DataTemplate ContentTemplate
         {
             get => (DataTemplate)GetValue(ContentTemplateProperty);
@@ -85,5 +91,9 @@ namespace WinSwag.Controls
         {
             popup.IsOpen = false;
         }
+
+        private void OnOpened(object sender, object e) => Opened?.Invoke(this, null);
+
+        private void OnClosed(object sender, object e) => Closed?.Invoke(this, null);
     }
 }
