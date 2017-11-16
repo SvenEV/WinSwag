@@ -38,7 +38,7 @@ namespace WinSwag.Models
 
         public static async Task<SwaggerDocumentViewModel> ToViewModelAsync(SwaggerSession session)
         {
-            var doc = await SwaggerDocument.FromUrlAsync(session.Url);
+            var doc = await SwaggerDocumentLoader.LoadFromUrlAsync(session.Url);
             var vm = new SwaggerDocumentViewModel(doc, session.Url, session.DisplayName);
 
             foreach (var storedOp in session.Operations)

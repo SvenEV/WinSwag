@@ -79,7 +79,7 @@ namespace WinSwag.ViewModels
                     await _initTask;
                     _messenger.Send(CloseDashboard.Instance);
                     await UnloadCurrentSessionAsync();
-                    var doc = await SwaggerDocument.FromUrlAsync(url);
+                    var doc = await SwaggerDocumentLoader.LoadFromUrlAsync(url);
                     var displayName = _storedSessions.FirstOrDefault(s => s.Url == url)?.DisplayName;
                     CurrentDocument = new SwaggerDocumentViewModel(doc, url, displayName);
                     _operationManager.ClearNavigationStack();
@@ -102,7 +102,7 @@ namespace WinSwag.ViewModels
                     _messenger.Send(CloseDashboard.Instance);
                     await UnloadCurrentSessionAsync();
                     var json = await FileIO.ReadTextAsync(file);
-                    var doc = await SwaggerDocument.FromJsonAsync(json);
+                    var doc = await SwaggerDocumentLoader.LoadFromStringAsync(json);
                     CurrentDocument = new SwaggerDocumentViewModel(doc, "file://" + file.Path);
                     _operationManager.ClearNavigationStack();
                     _operationManager.NavigateToApiInfo();

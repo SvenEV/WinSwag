@@ -103,7 +103,7 @@
 
                 <AutoSuggestBox Grid.Column="1"
                                 Text="{x:Bind SessionManagerVM.CurrentDocument.Url, Mode=OneWay}"
-                                PlaceholderText="URL to a Swagger document (swagger.json)"
+                                PlaceholderText="URL to a Swagger document (swagger.json, swagger.yaml)"
                                 QuerySubmitted="OnUrlBoxQuerySubmitted"
                                 QueryIcon="Forward" Margin="0,12,12,8"/>
 
