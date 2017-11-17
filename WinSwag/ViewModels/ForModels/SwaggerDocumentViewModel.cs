@@ -25,6 +25,8 @@ namespace WinSwag.ViewModels
         /// </summary>
         public IReadOnlyList<SwaggerArgument> CommonParameters { get; }
 
+        public bool HasCommonParameters => CommonParameters?.Count > 0;
+
         public SwaggerDocumentViewModel(SwaggerDocument model, string url, string displayName = null)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));

@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:WinSwag.Controls"
+    xmlns:tkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     RequestedTheme="Dark"
     mc:Ignorable="d">
 
@@ -19,9 +20,10 @@
                     <Run Text="{x:Bind Document.Model.Info.Version}"/>
                 </TextBlock>
 
-                <TextBlock Text="{x:Bind Document.Description, Mode=OneWay}"
-                           Visibility="{x:Bind Document.HasDescription}"
-                           TextWrapping="WrapWholeWords"/>
+                <tkc:MarkdownTextBlock Text="{x:Bind Document.Description, Mode=OneWay}"
+                                       Visibility="{x:Bind Document.HasDescription}"
+                                       LinkClicked="DescriptionLinkClicked"
+                                       TextWrapping="WrapWholeWords"/>
 
                 <!-- Buttons "Add/remove favorite" -->
                 <Grid>
@@ -77,7 +79,7 @@
             </StackPanel>
 
             <!-- Common Parameters -->
-            <StackPanel Padding="18,0,18,12">
+            <StackPanel Padding="18,0,18,12" Visibility="{x:Bind Document.HasCommonParameters, Mode=OneWay}">
                 <controls:SectionHeader Text="&#xE12B; Global Parameters"
                                         FontFamily="Segoe UI Symbol"/>
                 
