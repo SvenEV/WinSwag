@@ -8,7 +8,6 @@ namespace WinSwag.Services
     public class ApplicationInfo
     {
         private const string FirstTimeAppStartKey = "AppStartedOnce";
-        private static readonly Uri GitHubUrl = new Uri("https://github.com/SvenEV/WinSwag");
 
         public string Version
         {
@@ -32,11 +31,6 @@ namespace WinSwag.Services
             IsLaunchedFirstTime = !settings.ContainsKey(FirstTimeAppStartKey);
             if (IsLaunchedFirstTime)
                 settings.Add(FirstTimeAppStartKey, true);
-        }
-
-        public async void OpenGitHubWebsite()
-        {
-            await Launcher.LaunchUriAsync(GitHubUrl);
         }
     }
 }

@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:WinSwag.Models"
+    xmlns:controls="using:WinSwag.Controls"
     mc:Ignorable="d">
 
     <Border Grid.Column="1" Padding="8,20">
@@ -69,10 +70,16 @@
                         <SymbolIcon Symbol="Setting"/>
                         <Button.Flyout>
                             <Flyout>
-                                <StackPanel>
+                                <StackPanel Width="250">
                                     <TextBlock FontWeight="SemiBold">WinSwag <Run Text="{x:Bind AppInfoVM.Version}"/></TextBlock>
                                     <TextBlock>Copyright © 2017 Sven Vinkemeier</TextBlock>
-                                    <HyperlinkButton Click="{x:Bind AppInfoVM.OpenGitHubWebsite}">WinSwag on GitHub</HyperlinkButton>
+                                    <controls:LinkButton NavigateUri="https://github.com/SvenEV/WinSwag" Content="WinSwag on GitHub"/>
+                                    <TextBlock Margin="0,12,0,0" TextWrapping="Wrap">Special thanks to the authors of the following projects:</TextBlock>
+                                    <controls:LinkButton NavigateUri="https://www.newtonsoft.com/json" Content="Json.NET"/>
+                                    <controls:LinkButton NavigateUri="https://github.com/samuelneff/MimeTypeMap" Content="MimeTypeMap"/>
+                                    <controls:LinkButton NavigateUri="http://mvvmlight.net/" Content="MVVM Light Toolkit"/>
+                                    <controls:LinkButton NavigateUri="http://nswag.org" Content="NSwag"/>
+                                    <controls:LinkButton NavigateUri="https://github.com/Microsoft/UWPCommunityToolkit" Content="UWP Community Toolkit"/>
                                 </StackPanel>
                             </Flyout>
                         </Button.Flyout>

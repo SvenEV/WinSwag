@@ -102,6 +102,7 @@
     <Compile Include="Controls\DateTimeView.xaml.cs">
       <DependentUpon>DateTimeView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\LinkButton.cs" />
     <Compile Include="Controls\SectionHeader.cs" />
     <Compile Include="Controls\Table.cs" />
     <Compile Include="Controls\PopupWindow.xaml.cs">
