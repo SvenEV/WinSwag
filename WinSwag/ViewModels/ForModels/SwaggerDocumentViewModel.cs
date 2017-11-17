@@ -14,7 +14,7 @@ namespace WinSwag.ViewModels
 
         public string DisplayName { get; set; }
 
-        public string Description => Model.Info.Description.Trim();
+        public string Description => Model.Info.Description?.Trim();
 
         public bool HasDescription => !string.IsNullOrWhiteSpace(Model.Info.Description);
 
