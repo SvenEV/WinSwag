@@ -8,6 +8,11 @@
     xmlns:arguments="using:WinSwag.Models.Arguments"
     mc:Ignorable="d">
 
+    <AcrylicBrush x:Key="AcrylicBackgroundBrush"
+                  BackgroundSource="HostBackdrop"
+                  FallbackColor="#FF101A21"
+                  TintColor="#AA000000"/>
+
     <DataTemplate x:Key="SwaggerArgumentTemplate" x:DataType="arguments:SwaggerArgument">
         <Grid Margin="0,0,0,4" Padding="0,4,0,4" ColumnSpacing="12">
             <Grid.ColumnDefinitions>

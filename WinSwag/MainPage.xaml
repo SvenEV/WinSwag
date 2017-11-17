@@ -30,13 +30,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Acrylic background (left) -->
-        <Border Grid.RowSpan="99">
-            <Border.Background>
-                <AcrylicBrush BackgroundSource="HostBackdrop"
-                              FallbackColor="#FF101A21"
-                              TintColor="#AA000000"/>
-            </Border.Background>
-        </Border>
+        <Border Grid.RowSpan="99" Background="{StaticResource AcrylicBackgroundBrush}"/>
 
         <!-- Black background (right) -->
         <tkc:DropShadowPanel Grid.Column="1" Grid.RowSpan="99"

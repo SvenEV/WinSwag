@@ -9,10 +9,17 @@
     RequestedTheme="Dark"
     mc:Ignorable="d">
 
-    <ScrollViewer Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    <ScrollViewer Background="{StaticResource AcrylicBackgroundBrush}"
                   VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto">
-        <StackPanel Spacing="12">
-            <StackPanel Background="#33FFFFFF" Padding="18,0,18,12" Spacing="12">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            
+            <!-- Header -->
+            <StackPanel Padding="18,0,18,12" Spacing="12">
+                <!-- API Title & Version -->
                 <TextBlock Padding="0,12,128,12"
                            Style="{StaticResource SubtitleTextBlockStyle}"
                            VerticalAlignment="Center">
@@ -20,6 +27,7 @@
                     <Run Text="{x:Bind Document.Model.Info.Version}"/>
                 </TextBlock>
 
+                <!-- API Description -->
                 <tkc:MarkdownTextBlock Text="{x:Bind Document.Description, Mode=OneWay}"
                                        Visibility="{x:Bind Document.HasDescription}"
                                        LinkClicked="DescriptionLinkClicked"
@@ -79,7 +87,9 @@
             </StackPanel>
 
             <!-- Common Parameters -->
-            <StackPanel Padding="18,0,18,12" Visibility="{x:Bind Document.HasCommonParameters, Mode=OneWay}">
+            <StackPanel Grid.Row="1" Padding="18,12,18,12"
+                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                        Visibility="{x:Bind Document.HasCommonParameters, Mode=OneWay}">
                 <controls:SectionHeader Text="&#xE12B; Global Parameters"
                                         FontFamily="Segoe UI Symbol"/>
                 
@@ -90,6 +100,6 @@
                               ItemTemplate="{StaticResource SwaggerArgumentTemplate}"/>
             </StackPanel>
 
-        </StackPanel>
+        </Grid>
     </ScrollViewer>
 </Page>
