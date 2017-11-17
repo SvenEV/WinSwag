@@ -102,6 +102,7 @@
     <Compile Include="Controls\DateTimeView.xaml.cs">
       <DependentUpon>DateTimeView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SectionHeader.cs" />
     <Compile Include="Controls\Table.cs" />
     <Compile Include="Controls\PopupWindow.xaml.cs">
       <DependentUpon>PopupWindow.xaml</DependentUpon>
@@ -132,6 +133,9 @@
     <Compile Include="Services\IOperationManagerVM.cs" />
     <Compile Include="Services\IViewStateManagerVM.cs" />
     <Compile Include="DataTransferHelper.cs" />
+    <Compile Include="Templates\CommonResources.xaml.cs">
+      <DependentUpon>CommonResources.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\ViewStateManagerVM.cs" />
     <Compile Include="Templates\ParameterTemplates.xaml.cs">
       <DependentUpon>ParameterTemplates.xaml</DependentUpon>
@@ -234,6 +238,10 @@
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Templates\CommonResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Templates\ControlStyles.xaml">
       <SubType>Designer</SubType>

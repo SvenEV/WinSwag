@@ -2,76 +2,91 @@
     x:Class="WinSwag.Views.ApiInfoPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:WinSwag.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:WinSwag.Controls"
     RequestedTheme="Dark"
     mc:Ignorable="d">
 
     <ScrollViewer Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                   VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto">
-        <StackPanel Padding="18,0,0,12" Spacing="12">
-            <TextBlock Padding="0,12,128,8"
-                       Style="{StaticResource SubtitleTextBlockStyle}"
-                       VerticalAlignment="Center">
-                <Run Text="{x:Bind Document.DisplayName}" FontWeight="SemiBold"/>
-                <Run Text="{x:Bind Document.Model.Info.Version}"/>
-            </TextBlock>
+        <StackPanel Spacing="12">
+            <StackPanel Background="#33FFFFFF" Padding="18,0,18,12" Spacing="12">
+                <TextBlock Padding="0,12,128,12"
+                           Style="{StaticResource SubtitleTextBlockStyle}"
+                           VerticalAlignment="Center">
+                    <Run Text="{x:Bind Document.DisplayName}" FontWeight="SemiBold"/>
+                    <Run Text="{x:Bind Document.Model.Info.Version}"/>
+                </TextBlock>
 
-            <TextBlock Text="{x:Bind Document.Model.Info.Description, Mode=OneWay}"
-                       Visibility="{x:Bind Document.HasDescription}"/>
+                <TextBlock Text="{x:Bind Document.Description, Mode=OneWay}"
+                           Visibility="{x:Bind Document.HasDescription}"
+                           TextWrapping="WrapWholeWords"/>
 
-            <!-- Buttons "Add/remove favorite" -->
-            <Grid>
-                <Button Style="{StaticResource MyButtonRevealStyle}" Padding="0,8"
-                        Visibility="{x:Bind SessionManagerVM.IsntCurrentSessionFavorite, Mode=OneWay}"
-                        AllowFocusOnInteraction="True" Foreground="Gold">
+                <!-- Buttons "Add/remove favorite" -->
+                <Grid>
+                    <Button Style="{StaticResource MyButtonRevealStyle}" Padding="0,8"
+                            Visibility="{x:Bind SessionManagerVM.IsntCurrentSessionFavorite, Mode=OneWay}"
+                            AllowFocusOnInteraction="True" Foreground="Gold">
 
-                    <StackPanel Orientation="Horizontal" Spacing="12">
-                        <SymbolIcon Symbol="OutlineStar"/>
-                        <TextBlock Text="Add to Favorites"/>
-                    </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <SymbolIcon Symbol="OutlineStar"/>
+                            <TextBlock Text="Add to Favorites"/>
+                        </StackPanel>
 
-                    <Button.Flyout>
-                        <Flyout x:Name="AddToFavoritesFlyout">
-                            <StackPanel Width="300" Spacing="12">
-                                <TextBox x:Name="CurrentDocumentDisplayNameTextBox"
-                                         Text="{x:Bind Document.DisplayName, Mode=OneWay}"
-                                         KeyDown="CurrentDocumentDisplayNameTextBoxKeyDown"
-                                         GotFocus="CurrentDocumentDisplayNameTextBoxGotFocus"
-                                         PlaceholderText="Name this API!"
-                                         Header="Display Name"/>
-                                <Button Content="Add to Favorites"
-                                        Click="AddToFavoritesButtonClick"
-                                        HorizontalContentAlignment="Stretch"/>
-                            </StackPanel>
-                        </Flyout>
-                    </Button.Flyout>
-                </Button>
+                        <Button.Flyout>
+                            <Flyout x:Name="AddToFavoritesFlyout">
+                                <StackPanel Width="300" Spacing="12">
+                                    <TextBox x:Name="CurrentDocumentDisplayNameTextBox"
+                                             Text="{x:Bind Document.DisplayName, Mode=OneWay}"
+                                             KeyDown="CurrentDocumentDisplayNameTextBoxKeyDown"
+                                             GotFocus="CurrentDocumentDisplayNameTextBoxGotFocus"
+                                             PlaceholderText="Name this API!"
+                                             Header="Display Name"/>
+                                    <Button Content="Add to Favorites"
+                                            Click="AddToFavoritesButtonClick"
+                                            HorizontalContentAlignment="Stretch"/>
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
 
-                <Button Style="{StaticResource MyButtonRevealStyle}" Padding="0,8"
-                        Visibility="{x:Bind SessionManagerVM.IsCurrentSessionFavorite, Mode=OneWay}"
-                        Foreground="Gold">
+                    <Button Style="{StaticResource MyButtonRevealStyle}" Padding="0,8"
+                            Visibility="{x:Bind SessionManagerVM.IsCurrentSessionFavorite, Mode=OneWay}"
+                            Foreground="Gold">
 
-                    <StackPanel Orientation="Horizontal" Spacing="12">
-                        <SymbolIcon Symbol="UnFavorite"/>
-                        <TextBlock Text="Remove from Favorites"/>
-                    </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <SymbolIcon Symbol="UnFavorite"/>
+                            <TextBlock Text="Remove from Favorites"/>
+                        </StackPanel>
 
-                    <Button.Flyout>
-                        <Flyout x:Name="RemoveFromFavoritesFlyout">
-                            <StackPanel Spacing="12" Width="240">
-                                <TextBlock Text="Are you sure you want to remove the API from your favorites?"
-                                                    TextWrapping="WrapWholeWords"/>
+                        <Button.Flyout>
+                            <Flyout x:Name="RemoveFromFavoritesFlyout">
+                                <StackPanel Spacing="12" Width="240">
+                                    <TextBlock Text="Are you sure you want to remove the API from your favorites?"
+                                                        TextWrapping="WrapWholeWords"/>
 
-                                <Button Content="Remove this API" HorizontalAlignment="Right"
-                                                IsEnabled="{x:Bind SessionManagerVM.IsCurrentSessionFavorite, Mode=OneWay}"
-                                                Click="RemoveFromFavoritesButtonClick"/>
-                            </StackPanel>
-                        </Flyout>
-                    </Button.Flyout>
-                </Button>
-            </Grid>
+                                    <Button Content="Remove this API" HorizontalAlignment="Right"
+                                                    IsEnabled="{x:Bind SessionManagerVM.IsCurrentSessionFavorite, Mode=OneWay}"
+                                                    Click="RemoveFromFavoritesButtonClick"/>
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                </Grid>
+            </StackPanel>
+
+            <!-- Common Parameters -->
+            <StackPanel Padding="18,0,18,12">
+                <controls:SectionHeader Text="&#xE12B; Global Parameters"
+                                        FontFamily="Segoe UI Symbol"/>
+                
+                <TextBlock Text="The following parameters appear in all operations. Values you assign here will apply to all operations, unless they are overridden in individual operations."
+                           TextWrapping="WrapWholeWords" Margin="0,0,0,12"/>
+                
+                <ItemsControl ItemsSource="{x:Bind Document.CommonParameters}"
+                              ItemTemplate="{StaticResource SwaggerArgumentTemplate}"/>
+            </StackPanel>
 
         </StackPanel>
     </ScrollViewer>

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WinSwag.Models.Arguments;
 
 namespace WinSwag.ViewModels
 {
@@ -13,9 +14,16 @@ namespace WinSwag.ViewModels
 
         public string DisplayName { get; set; }
 
+        public string Description => Model.Info.Description.Trim();
+
         public bool HasDescription => !string.IsNullOrWhiteSpace(Model.Info.Description);
 
         public IReadOnlyList<IGrouping<string, SwaggerOperationViewModel>> OperationGroups { get; }
+
+        /// <summary>
+        /// Parameters that occur in all operations and can thus be assigned globally.
+        /// </summary>
+        public IReadOnlyList<SwaggerArgument> CommonParameters { get; }
 
         public SwaggerDocumentViewModel(SwaggerDocument model, string url, string displayName = null)
         {
@@ -28,6 +36,14 @@ namespace WinSwag.ViewModels
                 .Select(op => new SwaggerOperationViewModel(op, Model.BaseUrl))
                 .GroupBy(op => op.Model.Operation.Tags.FirstOrDefault() ?? "(Default)")
                 .OrderBy(group => group.Key)
+                .ToList();
+
+            CommonParameters = OperationGroups
+                .SelectMany(group => group)
+                .SelectMany(op => op.Arguments)
+                .GroupBy(arg => arg.ParameterId)
+                .Where(group => group.Count() == model.Operations.Count())
+                .Select(group => SwaggerArgument.FromParameter(group.First().Parameter))
                 .ToList();
         }
     }

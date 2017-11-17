@@ -39,10 +39,5 @@ namespace WinSwag.Views
         {
             Operation = e.Parameter as SwaggerOperationViewModel ?? throw new ArgumentNullException();
         }
-
-        private void OnContentTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Operation.SelectedContentType = (string)e.AddedItems.FirstOrDefault();
-        }
     }
 }

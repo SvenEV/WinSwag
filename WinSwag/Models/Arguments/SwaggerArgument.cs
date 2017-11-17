@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace WinSwag.Models.Arguments
 {
-    [DebuggerDisplay("{Parameter}")]
+    [DebuggerDisplay("{ParameterId}")]
     public abstract class SwaggerArgument : ObservableObject
     {
         public SwaggerParameter Parameter { get; }
