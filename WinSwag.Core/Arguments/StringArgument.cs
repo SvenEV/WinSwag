@@ -6,22 +6,28 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WinSwag.Models.Arguments
+namespace WinSwag.Core
 {
-    public class StringArgument : SwaggerArgument
+    public class StringArgument : ArgumentBase
     {
-        public string Value { get; set; }
+        private string _value;
+
+        public string Value
+        {
+            get => _value;
+            set => Set(ref _value, value);
+        }
+
+        public override object ObjectValue
+        {
+            get => Value;
+            set => Value = (string)value;
+        }
 
         public override bool HasValue => !string.IsNullOrEmpty(Value);
 
-        public string DefaultValue => Parameter.Default?.ToString();
-
-        public StringArgument(SwaggerParameter parameter) : base(parameter)
-        {
-        }
-
-        public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri, string contentType) =>
-            ApplyAsync(Parameter, Value, request, requestUri, contentType);
+        public override async Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri) =>
+            await ApplyAsync(Parameter.Specification, Value, request, requestUri, ContentType);
 
         public static Task ApplyAsync(SwaggerParameter parameter, string value, HttpRequestMessage request, StringBuilder requestUri, string contentType)
         {

@@ -6,7 +6,7 @@ using System.Net.Http;
 [assembly: DebuggerDisplay("{Method} {Path,nq}", Target = typeof(SwaggerOperationDescription))]
 [assembly: DebuggerDisplay("{Name,nq}{IsRequired ? \"*\" : \"\",nq} in {Kind}", Target = typeof(SwaggerParameter))]
 
-namespace WinSwag.Models
+namespace WinSwag.Core
 {
     public static class NSwagExtensions
     {

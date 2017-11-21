@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.Messaging;
 using System.Collections.Generic;
 using Windows.UI.Xaml.Navigation;
+using WinSwag.Core;
 using WinSwag.Services;
 
 namespace WinSwag.ViewModels
@@ -10,10 +11,10 @@ namespace WinSwag.ViewModels
     {
         private readonly IMessenger _messenger;
         private readonly IViewStateManagerVM _viewStateManager;
-        private readonly List<SwaggerOperationViewModel> _navigationStack = new List<SwaggerOperationViewModel>();
+        private readonly List<Operation> _navigationStack = new List<Operation>();
         private int _navigationIndex = -1;
 
-        public SwaggerOperationViewModel SelectedOperation => _navigationIndex == -1 ? null : _navigationStack[_navigationIndex];
+        public Operation SelectedOperation => _navigationIndex == -1 ? null : _navigationStack[_navigationIndex];
 
         public bool CanGoBack => _navigationIndex > 0;
 
@@ -38,7 +39,7 @@ namespace WinSwag.ViewModels
 
         public void NavigateToApiInfo() => NavigateToOperation(null);
 
-        public void NavigateToOperation(SwaggerOperationViewModel operationVM)
+        public void NavigateToOperation(Operation operationVM)
         {
             if (operationVM == SelectedOperation && _navigationIndex != -1)
                 return; // Don't navigate to the same page again
@@ -87,11 +88,11 @@ namespace WinSwag.ViewModels
 
     public class NavigatedToOperation
     {
-        public SwaggerOperationViewModel Operation { get; }
+        public Operation Operation { get; }
 
         public NavigationMode NavigationMode { get; }
 
-        public NavigatedToOperation(SwaggerOperationViewModel operation, NavigationMode navigationMode)
+        public NavigatedToOperation(Operation operation, NavigationMode navigationMode)
         {
             Operation = operation;
             NavigationMode = navigationMode;

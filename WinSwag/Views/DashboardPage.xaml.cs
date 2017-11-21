@@ -4,7 +4,7 @@ using Windows.ApplicationModel;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using WinSwag.Models;
+using WinSwag.Core;
 using WinSwag.Services;
 
 namespace WinSwag.Views
@@ -41,7 +41,7 @@ namespace WinSwag.Views
 
         private async void StoredSessionClick(object sender, ItemClickEventArgs e)
         {
-            var favorite = (SwaggerSessionInfo)e.ClickedItem;
+            var favorite = (SessionInfo)e.ClickedItem;
             await SessionManagerVM.LoadSessionAsync(favorite);
         }
 
@@ -52,7 +52,7 @@ namespace WinSwag.Views
 
         private async void DeleteSessionButtonClick(object sender, RoutedEventArgs e)
         {
-            var sessionInfo = (SwaggerSessionInfo)((Button)sender).DataContext;
+            var sessionInfo = (SessionInfo)((Button)sender).DataContext;
             await SessionManagerVM.DeleteSessionAsync(sessionInfo);
         }
 

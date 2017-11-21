@@ -1,5 +1,7 @@
-﻿using Windows.UI.Xaml;
+﻿using System.Linq;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using WinSwag.Core;
 
 namespace WinSwag.Templates
 {
@@ -9,9 +11,8 @@ namespace WinSwag.Templates
 
         private void OnContentTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // TODO: Can't access the operation here...
-            //var argument = (SwaggerArgument)((FrameworkElement)sender).DataContext;
-            //Operation.SelectedContentType = (string)e.AddedItems.FirstOrDefault();
+            var argument = (IArgument)((FrameworkElement)sender).DataContext;
+            argument.ContentType = (string)e.AddedItems.FirstOrDefault();
         }
     }
 }

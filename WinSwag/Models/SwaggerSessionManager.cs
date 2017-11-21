@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using WinSwag.Services;
 
-namespace WinSwag.Models
+namespace WinSwag.Core
 {
     public class SwaggerSessionManager
     {
@@ -17,12 +17,12 @@ namespace WinSwag.Models
 
         private Task _initTask;
         private StorageFolder _folder;
-        private SettingsDictionary<SwaggerSessionInfo> _sessions;
+        private SettingsDictionary<SessionInfo> _sessions;
 
         public SwaggerSessionManager(ApplicationInfo appInfo)
         {
             _appInfo = appInfo;
-            _sessions = new SettingsDictionary<SwaggerSessionInfo>(
+            _sessions = new SettingsDictionary<SessionInfo>(
                 ApplicationData.Current.LocalSettings.CreateContainer("Sessions", ApplicationDataCreateDisposition.Always));
             _initTask = Init();
         }
@@ -39,13 +39,13 @@ namespace WinSwag.Models
             }
         }
 
-        public async Task<IReadOnlyList<SwaggerSessionInfo>> GetAllAsync()
+        public async Task<IReadOnlyList<SessionInfo>> GetAllAsync()
         {
             await _initTask;
             return _sessions.Values.OrderBy(s => s.DisplayName).ToList();
         }
 
-        public async Task<SwaggerSession> LoadAsync(string url)
+        public async Task<Session> LoadAsync(string url)
         {
             await _initTask;
 
@@ -60,7 +60,7 @@ namespace WinSwag.Models
                 if (string.IsNullOrEmpty(json))
                     return EmptySession();
 
-                return SwaggerSession.FromJson(json);
+                return Session.FromJson(json);
             }
             catch (FileNotFoundException)
             {
@@ -69,21 +69,21 @@ namespace WinSwag.Models
                 return EmptySession();
             }
 
-            SwaggerSession EmptySession() => new SwaggerSession
+            Session EmptySession() => new Session
             {
                 Url = url,
                 DisplayName = info.DisplayName,
-                Operations = new Dictionary<string, SwaggerSession.StoredOperation>()
+                Operations = new Dictionary<string, Session.StoredOperation>()
             };
         }
 
-        public async Task StoreAsync(SwaggerSession session)
+        public async Task StoreAsync(Session session)
         {
             await _initTask;
 
             if (!_sessions.TryGetValue(session.Url, out var info))
             {
-                info = new SwaggerSessionInfo(session.DisplayName, session.Url, Guid.NewGuid());
+                info = new SessionInfo(session.DisplayName, session.Url, Guid.NewGuid());
                 _sessions.Add(session.Url, info);
             }
 
@@ -110,8 +110,8 @@ namespace WinSwag.Models
 
     static class SampleApi
     {
-        public static readonly SwaggerSessionInfo SessionInfo =
-            new SwaggerSessionInfo("WinSwag Pinboard (Sample API)", "http://winswagsampleapi.azurewebsites.net/swagger/v1/swagger.json", Guid.Empty);
+        public static readonly SessionInfo SessionInfo =
+            new SessionInfo("WinSwag Pinboard (Sample API)", "http://winswagsampleapi.azurewebsites.net/swagger/v1/swagger.json", Guid.Empty);
 
         public static readonly Uri SessionFileUri =
             new Uri("ms-appx:///Assets/SampleSessions/WinSwagPinboard.json");

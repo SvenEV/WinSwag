@@ -9,6 +9,8 @@
     xmlns:vm="using:WinSwag.ViewModels"
     xmlns:controls="using:WinSwag.Controls"
     xmlns:views="using:WinSwag.Views"
+    xmlns:core="using:WinSwag.Core"
+    xmlns:xaml="using:WinSwag.Xaml"
     mc:Ignorable="d"
     RequestedTheme="Dark">
 
@@ -16,7 +18,7 @@
         <CollectionViewSource x:Key="Operations"
                               x:Name="Operations"
                               IsSourceGrouped="True"
-                              Source="{x:Bind SessionManagerVM.CurrentDocument.OperationGroups, Mode=OneWay}"/>
+                              Source="{x:Bind SessionManagerVM.CurrentDocument.Model.OperationGroups, Mode=OneWay}"/>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -149,37 +151,37 @@
                             </Style>
                         </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="vm:SwaggerOperationViewModel">
-                                <Grid ColumnSpacing="12">
-                                    <Grid.ColumnDefinitions>
+                            <DataTemplate x:DataType="core:Operation">
+                                <xaml:DataContext ColumnSpacing="12" Model="{x:Bind}">
+                                    <xaml:DataContext.ColumnDefinitions>
                                         <ColumnDefinition Width="50"/>
                                         <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
+                                    </xaml:DataContext.ColumnDefinitions>
 
                                     <TextBlock FontWeight="SemiBold"
-                                               Foreground="{x:Bind MethodBrush}"
+                                               Foreground="{Binding MethodBrush, Mode=OneTime}"
                                                VerticalAlignment="Top"
-                                               Text="{x:Bind Method}"/>
+                                               Text="{Binding Method, Mode=OneTime}"/>
 
                                     <StackPanel Grid.Column="1">
                                         <TextBlock Grid.Column="1"
                                                    FontFamily="Consolas"
-                                                   Text="{x:Bind Model.Path}"/>
+                                                   Text="{x:Bind Specification.Path}"/>
 
                                         <TextBlock FontSize="12" TextWrapping="Wrap"
                                                    Margin="0,2,0,0" Opacity=".8"
-                                                   Text="{x:Bind Description}"
+                                                   Text="{Binding Description, Mode=OneTime}"
                                                    MaxLines="2" TextTrimming="WordEllipsis"
-                                                   Visibility="{x:Bind HasDescription}"/>
+                                                   Visibility="{Binding HasDescription, Mode=OneTime}"/>
                                     </StackPanel>
-                                </Grid>
+                                </xaml:DataContext>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                         <ListView.GroupStyle>
                             <GroupStyle>
                                 <GroupStyle.HeaderTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Key, Mode=OneTime}"/>
+                                        <TextBlock Text="{Binding Name, Mode=OneTime}"/>
                                     </DataTemplate>
                                 </GroupStyle.HeaderTemplate>
                             </GroupStyle>

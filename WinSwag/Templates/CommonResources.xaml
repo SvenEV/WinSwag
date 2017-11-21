@@ -5,7 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:WinSwag.Controls"
-    xmlns:arguments="using:WinSwag.Models.Arguments"
+    xmlns:core="using:WinSwag.Core"
+    xmlns:xaml="using:WinSwag.Xaml"
     mc:Ignorable="d">
 
     <AcrylicBrush x:Key="AcrylicBackgroundBrush"
@@ -13,7 +14,7 @@
                   FallbackColor="#FF101A21"
                   TintColor="#AA000000"/>
 
-    <DataTemplate x:Key="SwaggerArgumentTemplate" x:DataType="arguments:SwaggerArgument">
+    <DataTemplate x:Key="SwaggerArgumentTemplate" x:DataType="core:IArgument">
         <Grid Margin="0,0,0,4" Padding="0,4,0,4" ColumnSpacing="12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="250"/>
@@ -25,29 +26,29 @@
 						ToolTipService.PlacementTarget="{Binding ElementName=ParameterInfo}">
                 <ToolTipService.ToolTip>
                     <StackPanel MaxWidth="600">
-                        <TextBlock Text="{x:Bind DisplayName}"
+                        <TextBlock Text="{x:Bind Parameter.Specification.Name}"
 								   FontSize="16"
 								   FontFamily="Consolas"/>
 
                         <TextBlock Grid.Column="2"
 								   Opacity=".6"
-								   Text="{x:Bind Parameter.Description}"
-								   Visibility="{x:Bind HasDescription}"
+								   Text="{x:Bind Parameter.Specification.Description}"
+								   Visibility="{x:Bind xaml:X.NotEmpty(Parameter.Specification.Description)}"
 								   FontSize="12"
 								   TextWrapping="Wrap"/>
 
                         <TextBlock Margin="0,8,0,0">
-							<Run Text="{x:Bind Parameter.Kind}"/> parameter
+							<Run Text="{x:Bind Parameter.Specification.Kind}"/> parameter
                         </TextBlock>
                     </StackPanel>
                 </ToolTipService.ToolTip>
 
-                <TextBlock Text="{x:Bind DisplayName}"
+                <TextBlock Text="{x:Bind Parameter.Specification.Name}"
 						   FontFamily="Consolas"/>
 
                 <TextBlock Grid.Column="2"
 						   Opacity=".6"
-						   Text="{x:Bind Parameter.Description}"
+						   Text="{x:Bind Parameter.Specification.Description}"
 						   FontSize="12"
 						   MaxLines="3"
 						   TextWrapping="Wrap"
@@ -63,10 +64,11 @@
 								VerticalContentAlignment="Top"/>
 
                 <StackPanel Orientation="Horizontal" Spacing="4" Opacity=".7"
-							Visibility="{x:Bind IsBodyParameter}">
+							Visibility="{x:Bind xaml:X.Eq(Parameter.Specification.Kind, 'Body')}">
                     <TextBlock Text="Content type:" VerticalAlignment="Center"/>
-                    <ComboBox ItemsSource="{Binding Operation.Model.Operation.ActualConsumes, ElementName=Root}"
-							  SelectedItem="{Binding Operation.SelectedContentType, ElementName=Root, Mode=OneWay}"
+                    
+                    <ComboBox ItemsSource="{x:Bind Parameter.Operation.Specification.Operation.ActualConsumes}"
+							  SelectedItem="{x:Bind ContentType, Mode=OneWay}"
 							  SelectionChanged="OnContentTypeComboBoxSelectionChanged"
 							  Background="Transparent"
 							  BorderBrush="Transparent"

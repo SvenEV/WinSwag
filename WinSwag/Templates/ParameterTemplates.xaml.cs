@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.UI.Xaml;
-using WinSwag.Models.Arguments;
+using WinSwag.Core.Extensions;
 
 namespace WinSwag.Templates
 {

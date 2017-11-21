@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace WinSwag.Models.Responses
+namespace WinSwag.Core.Responses
 {
     public class StringResponse : ResponseViewModel
     {

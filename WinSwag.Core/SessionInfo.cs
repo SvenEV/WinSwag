@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace WinSwag.Models
+namespace WinSwag.Core
 {
-    public class SwaggerSessionInfo
+    public class SessionInfo
     {
         public string DisplayName { get; }
 
@@ -10,7 +10,7 @@ namespace WinSwag.Models
 
         public Guid Guid { get; }
 
-        public SwaggerSessionInfo(string displayName, string url, Guid guid)
+        public SessionInfo(string displayName, string url, Guid guid)
         {
             DisplayName = displayName ?? throw new ArgumentNullException(nameof(displayName));
             Url = url ?? throw new ArgumentNullException(nameof(url));

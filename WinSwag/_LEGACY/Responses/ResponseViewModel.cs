@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.Storage.Pickers;
 
-namespace WinSwag.Models.Responses
+namespace WinSwag.Core.Responses
 {
     public abstract class ResponseViewModel
     {

@@ -6,7 +6,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:WinSwag.ViewModels"
     xmlns:controls="using:WinSwag.Controls"
-    xmlns:arguments="using:WinSwag.Models.Arguments"
+    xmlns:core="using:WinSwag.Core"
+    xmlns:coreex="using:WinSwag.Core.Extensions"
     mc:Ignorable="d">
 
     <vm:ParameterTemplateSelector
@@ -17,24 +18,24 @@
         DateTimeTemplate="{StaticResource DateTimeParameterTemplate}"
         FileTemplate="{StaticResource FileParameterTemplate}"/>
 
-    <DataTemplate x:Key="FallbackParameterTemplate" x:DataType="arguments:StringArgument">
+    <DataTemplate x:Key="FallbackParameterTemplate" x:DataType="core:StringArgument">
         <TextBox Text="{x:Bind Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 PlaceholderText="{x:Bind DefaultValue}"
+                 PlaceholderText="{x:Bind Parameter.GlobalArgument.ObjectValue}"
                  AcceptsReturn="True"
                  FontFamily="Consolas"/>
     </DataTemplate>
 
-    <DataTemplate x:Key="BoolParameterTemplate" x:DataType="arguments:BoolArgument">
+    <DataTemplate x:Key="BoolParameterTemplate" x:DataType="core:BoolArgument">
         <ToggleSwitch IsOn="{x:Bind Value, Mode=TwoWay}"
                       OnContent="True" OffContent="False"/>
     </DataTemplate>
 
-    <DataTemplate x:Key="EnumParameterTemplate" x:DataType="arguments:EnumArgument">
+    <DataTemplate x:Key="EnumParameterTemplate" x:DataType="core:EnumArgument">
         <ComboBox ItemsSource="{x:Bind Options}"
                   SelectedItem="{x:Bind Value, Mode=TwoWay}"
                   HorizontalAlignment="Stretch">
             <ComboBox.ItemTemplate>
-                <DataTemplate x:DataType="arguments:NamedValue">
+                <DataTemplate x:DataType="core:NamedValue">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{x:Bind Name}"/>
                         <TextBlock Text="(default)" FontStyle="Italic"
@@ -46,7 +47,7 @@
         </ComboBox>
     </DataTemplate>
 
-    <DataTemplate x:Key="DateTimeParameterTemplate" x:DataType="arguments:DateTimeArgument">
+    <DataTemplate x:Key="DateTimeParameterTemplate" x:DataType="core:DateTimeArgument">
         <Grid ColumnSpacing="12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -78,7 +79,7 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="FileParameterTemplate" x:DataType="arguments:FileArgument">
+    <DataTemplate x:Key="FileParameterTemplate" x:DataType="coreex:FileArgument">
         <Grid ColumnSpacing="12" Background="Transparent" AllowDrop="True"
               DragOver="OnFileDragOver" Drop="OnFileDrop">
             <Grid.ColumnDefinitions>
@@ -88,11 +89,11 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Image Source="{x:Bind FileThumbnail, Mode=OneWay}" Height="24"/>
+            <Image Source="{x:Bind Thumbnail, Mode=OneWay}" Height="24"/>
 
             <TextBlock Grid.Column="1"
                        VerticalAlignment="Center"
-                       Text="{x:Bind File.Name, Mode=OneWay, FallbackValue='(no file selected)'}"
+                       Text="{x:Bind Value.Name, Mode=OneWay, FallbackValue='(no file selected)'}"
                        IsTextSelectionEnabled="True"
                        TextTrimming="CharacterEllipsis"/>
 

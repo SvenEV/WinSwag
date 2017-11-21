@@ -2,14 +2,14 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.Storage;
-using WinSwag.Models;
+using WinSwag.Core;
 using WinSwag.ViewModels;
 
 namespace WinSwag.Services
 {
     public interface ISessionManagerVM : INotifyPropertyChanged
     {
-        IReadOnlyList<SwaggerSessionInfo> StoredSessions { get; }
+        IReadOnlyList<SessionInfo> StoredSessions { get; }
 
         SwaggerDocumentViewModel CurrentDocument { get; }
 
@@ -23,9 +23,9 @@ namespace WinSwag.Services
 
         Task CreateSessionAsync(StorageFile file);
 
-        Task DeleteSessionAsync(SwaggerSessionInfo sessionInfo);
+        Task DeleteSessionAsync(SessionInfo sessionInfo);
 
-        Task LoadSessionAsync(SwaggerSessionInfo sessionInfo);
+        Task LoadSessionAsync(SessionInfo sessionInfo);
 
         Task SaveCurrentSessionAsync(string displayName);
 

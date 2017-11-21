@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json.Linq;
-using NSwag;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,15 +6,15 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WinSwag.Models.Arguments
+namespace WinSwag.Core
 {
-    public class EnumArgument : SwaggerArgument
+    public class EnumArgument : ArgumentBase
     {
         private static readonly NamedValue NullEnumerationValue = new NamedValue("(null)", null);
 
         private NamedValue _value;
 
-        public IReadOnlyList<NamedValue> Options { get; }
+        public IReadOnlyList<NamedValue> Options { get; private set; }
 
         public NamedValue Value
         {
@@ -23,10 +22,19 @@ namespace WinSwag.Models.Arguments
             set => Set(ref _value, value ?? NullEnumerationValue);
         }
 
+        public override object ObjectValue
+        {
+            get => Value;
+            set => Value = (NamedValue)value;
+        }
+
         public override bool HasValue => _value != NullEnumerationValue;
 
-        public EnumArgument(SwaggerParameter parameter) : base(parameter)
+        internal override IArgument Init(IEnumerable<IParameter> parameters)
         {
+            base.Init(parameters);
+            var parameter = parameters.First().Specification;
+
             if (parameter.ActualSchema.EnumerationNames.Count == 0)
             {
                 Options = parameter.ActualSchema.Enumeration
@@ -41,10 +49,12 @@ namespace WinSwag.Models.Arguments
                     .Prepend(NullEnumerationValue)
                     .ToList();
             }
+
+            return this;
         }
 
-        public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri, string contentType) =>
-            StringArgument.ApplyAsync(Parameter, _value?.Value?.ToString(), request, requestUri, contentType);
+        public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri) =>
+            StringArgument.ApplyAsync(Parameter.Specification, _value?.Value?.ToString(), request, requestUri, ContentType);
 
 
         public override JToken GetSerializedValue() => Value == null ? null : JToken.FromObject(Value);

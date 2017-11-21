@@ -5,7 +5,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using WinSwag.Models;
+using WinSwag.Core;
 using WinSwag.Services;
 using WinSwag.ViewModels;
 

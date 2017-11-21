@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel;
+using WinSwag.Core;
 using WinSwag.ViewModels;
 
 namespace WinSwag.Services
 {
     public interface IOperationManagerVM : INotifyPropertyChanged
     {
-        SwaggerOperationViewModel SelectedOperation { get; }
+        Operation SelectedOperation { get; }
 
         bool CanGoBack { get; }
 
@@ -17,7 +18,7 @@ namespace WinSwag.Services
 
         void NavigateToApiInfo();
 
-        void NavigateToOperation(SwaggerOperationViewModel operationVM);
+        void NavigateToOperation(Operation operationVM);
 
         void GoBack();
 

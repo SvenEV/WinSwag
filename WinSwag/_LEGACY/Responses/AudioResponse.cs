@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace WinSwag.Models.Responses
+namespace WinSwag.Core.Responses
 {
     public class AudioResponse : ResponseViewModel
     {
