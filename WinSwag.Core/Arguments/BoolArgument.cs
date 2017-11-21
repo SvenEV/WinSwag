@@ -21,13 +21,22 @@ namespace WinSwag.Core
             set => Value = (bool)value;
         }
 
-        public override bool HasValue => true; // TODO: Make value of type bool? and serialize only if not null
+        // A bool argument is "default" if
+        // (a) a default bool value is specified and the selected value equals that default value -or-
+        // (b) a default bool value is NOT specified and the selected value is 'false'
+        public override bool HasNonDefaultValue =>
+            _value != (Parameter.Specification.Default is bool b ? b : false);
 
         public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri) =>
             StringArgument.ApplyAsync(Parameter.Specification, _value.ToString(), request, requestUri, ContentType);
 
         public override JToken GetSerializedValue() => JToken.FromObject(Value);
 
-        public override Task SetSerializedValueAsync(JToken o) => Task.FromResult(Value = o.ToObject<bool>());
+        public override Task SetSerializedValueAsync(JToken o)
+        {
+            var defaultBool = Parameter.Specification.Default is bool b ? b : false;
+            Value = o?.ToObject<bool>() ?? defaultBool;
+            return Task.CompletedTask;
+        }
     }
 }

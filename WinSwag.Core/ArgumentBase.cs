@@ -12,18 +12,25 @@ namespace WinSwag.Core
 {
     public abstract class ArgumentBase : ObservableObject, IArgument
     {
-        private ImmutableList<IParameter> _parameters;
+        private ImmutableList<Parameter> _parameters;
         private string _contentType = "text/plain";
+        private bool _isActive = true;
 
         /// <summary>
         /// For local arguments, this is the corresponding parameter.
         /// For global arguments, this is the first of the corresponding parameters.
         /// </summary>
-        public IParameter Parameter => _parameters.First();
+        public Parameter Parameter => _parameters.First();
+
+        public bool IsActive
+        {
+            get => _isActive;
+            set => Set(ref _isActive, value);
+        }
 
         public abstract object ObjectValue { get; set; }
 
-        public abstract bool HasValue { get; }
+        public abstract bool HasNonDefaultValue { get; }
 
         public string ContentType
         {
@@ -37,7 +44,7 @@ namespace WinSwag.Core
 
         public abstract Task SetSerializedValueAsync(JToken o);
 
-        internal virtual IArgument Init(IEnumerable<IParameter> parameters)
+        internal virtual IArgument Init(IEnumerable<Parameter> parameters)
         {
             _parameters = parameters?.ToImmutableList() ?? throw new ArgumentNullException(nameof(parameters));
             return this;

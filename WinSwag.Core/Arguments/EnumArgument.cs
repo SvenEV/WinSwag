@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,77 +11,73 @@ namespace WinSwag.Core
 {
     public class EnumArgument : ArgumentBase
     {
-        private static readonly NamedValue NullEnumerationValue = new NamedValue("(null)", null);
+        private static readonly JsonSerializer _serializer = new JsonSerializer { TypeNameHandling = TypeNameHandling.All };
 
-        private NamedValue _value;
+        private object _value;
 
-        public IReadOnlyList<NamedValue> Options { get; private set; }
+        public IReadOnlyList<KeyValuePair<string, object>> Options { get; private set; }
 
-        public NamedValue Value
+        public object Value
         {
             get => _value;
-            set => Set(ref _value, value ?? NullEnumerationValue);
+            set => Set(ref _value, value);
         }
 
         public override object ObjectValue
         {
             get => Value;
-            set => Value = (NamedValue)value;
+            set => Value = (string)value;
         }
 
-        public override bool HasValue => _value != NullEnumerationValue;
+        // An enum value is "default" if
+        // (a) a default option is specified and the selected option equals that default option -or-
+        // (b) a default option is NOT specified and the selected option is the first option
+        public override bool HasNonDefaultValue => !Equals(_value,
+(object)(Parameter.Specification.Default ?? Options.FirstOrDefault().Value));
 
-        internal override IArgument Init(IEnumerable<IParameter> parameters)
+        public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri) =>
+            StringArgument.ApplyAsync((NSwag.SwaggerParameter)Parameter.Specification, _value?.ToString(), request, requestUri, ContentType);
+
+        internal override IArgument Init(IEnumerable<Parameter> parameters)
         {
             base.Init(parameters);
+
             var parameter = parameters.First().Specification;
+
+            if (parameter.ActualSchema.Enumeration.Contains(null))
+                throw new NotSupportedException("'null' is not a valid enumeration value");
+
+            _value = parameter.Default ?? parameter.ActualSchema.Enumeration.FirstOrDefault();
 
             if (parameter.ActualSchema.EnumerationNames.Count == 0)
             {
                 Options = parameter.ActualSchema.Enumeration
-                    .Select(v => new NamedValue(v.ToString(), v, Equals(v, parameter.Default)))
-                    .Prepend(NullEnumerationValue)
+                    .Select(v => new KeyValuePair<string, object>(v.ToString(), v))
                     .ToList();
             }
             else
             {
                 Options = parameter.ActualSchema.EnumerationNames
-                    .Zip(parameter.ActualSchema.Enumeration, (k, v) => new NamedValue(k, v, Equals(v, parameter.Default)))
-                    .Prepend(NullEnumerationValue)
+                    .Zip(parameter.ActualSchema.Enumeration, (k, v) => new KeyValuePair<string, object>(k, v))
                     .ToList();
             }
 
             return this;
         }
 
-        public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri) =>
-            StringArgument.ApplyAsync(Parameter.Specification, _value?.Value?.ToString(), request, requestUri, ContentType);
-
-
-        public override JToken GetSerializedValue() => Value == null ? null : JToken.FromObject(Value);
-
-        public override Task SetSerializedValueAsync(JToken o) => Task.FromResult(Value = o?.ToObject<NamedValue>());
-    }
-
-    public class NamedValue : IEquatable<NamedValue>
-    {
-        public string Name { get; }
-        public object Value { get; }
-        public bool IsDefault { get; }
-
-        public NamedValue(string name, object value, bool isDefault = false)
+        public override JToken GetSerializedValue()
         {
-            Name = name;
-            Value = value;
-            IsDefault = isDefault;
+            if (Value == null)
+                return null;
+
+            return JToken.FromObject(Value, _serializer);
         }
 
-        public override bool Equals(object obj) => obj is NamedValue other && Equals(other);
-
-        public override int GetHashCode() => (Name, Value, IsDefault).GetHashCode();
-
-        public bool Equals(NamedValue other) => Equals(
-            (Name, Value, IsDefault),
-            (other.Name, other.Value, other.IsDefault));
+        public override Task SetSerializedValueAsync(JToken o)
+        {
+            var defaultOption = Parameter.Specification.Default ?? Options.FirstOrDefault().Value;
+            Value = o?.ToObject<object>(_serializer) ?? defaultOption;
+            return Task.CompletedTask;
+        }
     }
 }

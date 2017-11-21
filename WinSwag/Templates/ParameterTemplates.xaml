@@ -5,9 +5,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:WinSwag.ViewModels"
+    xmlns:vmm="using:WinSwag.ViewModels.ForModels"
     xmlns:controls="using:WinSwag.Controls"
     xmlns:core="using:WinSwag.Core"
     xmlns:coreex="using:WinSwag.Core.Extensions"
+    xmlns:xaml="using:WinSwag.Xaml"
     mc:Ignorable="d">
 
     <vm:ParameterTemplateSelector
@@ -31,20 +33,25 @@
     </DataTemplate>
 
     <DataTemplate x:Key="EnumParameterTemplate" x:DataType="core:EnumArgument">
-        <ComboBox ItemsSource="{x:Bind Options}"
-                  SelectedItem="{x:Bind Value, Mode=TwoWay}"
-                  HorizontalAlignment="Stretch">
-            <ComboBox.ItemTemplate>
-                <DataTemplate x:DataType="core:NamedValue">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{x:Bind Name}"/>
-                        <TextBlock Text="(default)" FontStyle="Italic"
-                                   Visibility="{x:Bind IsDefault}"
-                                   Opacity=".7" Margin="8,0,0,0"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
+        <Border>
+            <!-- Outer border is required because setting ComboBox.DataContext to an
+            EnumArgumentViewModel causes an InvalidCastException in generated binding code -->
+            <ComboBox xaml:DataContext.Model="{x:Bind}"
+                      ItemsSource="{Binding Options}"
+                      SelectedItem="{Binding SelectedOption, Mode=TwoWay}"
+                      HorizontalAlignment="Stretch">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="vmm:NamedValue">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{x:Bind Name}"/>
+                            <TextBlock Text="(default)" FontStyle="Italic"
+                                       Visibility="{x:Bind IsDefault}"
+                                       Opacity=".7" Margin="8,0,0,0"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Border>
     </DataTemplate>
 
     <DataTemplate x:Key="DateTimeParameterTemplate" x:DataType="core:DateTimeArgument">

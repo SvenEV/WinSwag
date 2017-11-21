@@ -13,7 +13,7 @@ namespace WinSwag.Core
 
         public string OperationId => $"{Specification.Method.ToString().ToUpper()} {Specification.Path}";
 
-        public IReadOnlyList<IParameter> Parameters { get; }
+        public IReadOnlyList<Parameter> Parameters { get; }
 
         public string RequestContentType { get; } // TODO
 

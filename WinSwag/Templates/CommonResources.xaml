@@ -7,6 +7,7 @@
     xmlns:controls="using:WinSwag.Controls"
     xmlns:core="using:WinSwag.Core"
     xmlns:xaml="using:WinSwag.Xaml"
+    xmlns:vm="using:WinSwag.ViewModels"
     mc:Ignorable="d">
 
     <AcrylicBrush x:Key="AcrylicBackgroundBrush"
@@ -14,47 +15,62 @@
                   FallbackColor="#FF101A21"
                   TintColor="#AA000000"/>
 
+    <vm:BoolSelectorConverter x:Key="IsActiveToOpacity">
+        <vm:BoolSelectorConverter.TrueValue>
+            <x:Double>1</x:Double>
+        </vm:BoolSelectorConverter.TrueValue>
+        <vm:BoolSelectorConverter.FalseValue>
+            <x:Double>.5</x:Double>
+        </vm:BoolSelectorConverter.FalseValue>
+    </vm:BoolSelectorConverter>
+
     <DataTemplate x:Key="SwaggerArgumentTemplate" x:DataType="core:IArgument">
-        <Grid Margin="0,0,0,4" Padding="0,4,0,4" ColumnSpacing="12">
+        <Grid Margin="0,0,0,4" Padding="0,4,0,4" ColumnSpacing="12"
+              Opacity="{x:Bind IsActive, Mode=OneWay, Converter={StaticResource IsActiveToOpacity}}"
+              Loaded="OnArgumentRootLoaded">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="250"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
             <!-- Parameter info (left column) -->
-            <StackPanel x:Name="ParameterInfo" Margin="0,6,0,0"
-						ToolTipService.PlacementTarget="{Binding ElementName=ParameterInfo}">
-                <ToolTipService.ToolTip>
-                    <StackPanel MaxWidth="600">
-                        <TextBlock Text="{x:Bind Parameter.Specification.Name}"
-								   FontSize="16"
-								   FontFamily="Consolas"/>
+            <CheckBox IsChecked="{x:Bind IsActive, Mode=TwoWay}"
+                      ToolTipService.ToolTip="If checked, this parameter and its value are included in the request. If unchecked, the parameter is not included, so the server falls back to a default value or, in case of a required parameter, returns an error status code.">
+                
+                <StackPanel x:Name="ParameterInfo"
+						    ToolTipService.PlacementTarget="{Binding ElementName=ParameterInfo}">
+                    <ToolTipService.ToolTip>
+                        <StackPanel MaxWidth="600">
+                            <TextBlock Text="{x:Bind Parameter.Specification.Name}"
+								       FontSize="16"
+								       FontFamily="Consolas"/>
 
-                        <TextBlock Grid.Column="2"
-								   Opacity=".6"
-								   Text="{x:Bind Parameter.Specification.Description}"
-								   Visibility="{x:Bind xaml:X.NotEmpty(Parameter.Specification.Description)}"
-								   FontSize="12"
-								   TextWrapping="Wrap"/>
+                            <TextBlock Grid.Column="2"
+								       Opacity=".6"
+								       Text="{x:Bind Parameter.Specification.Description}"
+								       Visibility="{x:Bind xaml:X.NotEmpty(Parameter.Specification.Description)}"
+								       FontSize="12"
+								       TextWrapping="Wrap"/>
 
-                        <TextBlock Margin="0,8,0,0">
-							<Run Text="{x:Bind Parameter.Specification.Kind}"/> parameter
-                        </TextBlock>
-                    </StackPanel>
-                </ToolTipService.ToolTip>
+                            <TextBlock Margin="0,8,0,0">
+							    <Run Text="{x:Bind Parameter.Specification.Kind}"/> parameter
+                            </TextBlock>
+                        </StackPanel>
+                    </ToolTipService.ToolTip>
 
-                <TextBlock Text="{x:Bind Parameter.Specification.Name}"
-						   FontFamily="Consolas"/>
+                    <TextBlock Text="{x:Bind Parameter.Specification.Name}"
+						       FontFamily="Consolas"/>
 
-                <TextBlock Grid.Column="2"
-						   Opacity=".6"
-						   Text="{x:Bind Parameter.Specification.Description}"
-						   FontSize="12"
-						   MaxLines="3"
-						   TextWrapping="Wrap"
-						   TextTrimming="WordEllipsis"/>
+                    <TextBlock Grid.Column="2"
+						       Opacity=".6"
+						       Text="{x:Bind Parameter.Specification.Description}"
+						       FontSize="12"
+						       MaxLines="3"
+						       TextWrapping="Wrap"
+						       TextTrimming="WordEllipsis"/>
 
-            </StackPanel>
+                </StackPanel>
+            </CheckBox>
 
             <!-- Value input (right column) -->
             <StackPanel Grid.Column="1">

@@ -22,7 +22,7 @@ namespace WinSwag.Core
             set => Value = (DateTimeOffset?)value;
         }
 
-        public override bool HasValue => _value != null;
+        public override bool HasNonDefaultValue => _value != null;
 
         public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri) =>
             StringArgument.ApplyAsync(Parameter.Specification, _value?.ToString(), request, requestUri, ContentType);

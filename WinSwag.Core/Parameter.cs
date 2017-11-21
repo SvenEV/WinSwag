@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WinSwag.Core
 {
-    public class Parameter : IParameter
+    public class Parameter
     {
         public SwaggerParameter Specification { get; }
 
@@ -18,10 +18,6 @@ namespace WinSwag.Core
         public IArgument LocalArgument { get; }
 
         public IArgument GlobalArgument { get; internal set; }
-
-        IArgument IParameter.LocalArgument => LocalArgument;
-
-        IArgument IParameter.GlobalArgument => GlobalArgument;
 
         public Parameter(SwaggerParameter parameter, Operation operation, ArgumentBase localArgument, IArgument globalArgument)
         {
@@ -34,7 +30,7 @@ namespace WinSwag.Core
 
         public async Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri)
         {
-            await (LocalArgument.HasValue ? LocalArgument : GlobalArgument)
+            await (LocalArgument.HasNonDefaultValue ? LocalArgument : GlobalArgument)
                 .ApplyAsync(request, requestUri);
         }
 
@@ -43,7 +39,7 @@ namespace WinSwag.Core
 
         public static string Id(SwaggerParameter spec) => $"{spec.Name}:{spec.Kind}";
 
-        public static IParameter FromSpec(SwaggerParameter spec, string defaultContentType, DocumentCreationContext context)
+        public static Parameter FromSpec(SwaggerParameter spec, string defaultContentType, DocumentCreationContext context)
         {
             if (spec == null)
                 throw new ArgumentNullException(nameof(spec));

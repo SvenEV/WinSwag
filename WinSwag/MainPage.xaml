@@ -6,7 +6,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:vm="using:WinSwag.ViewModels"
     xmlns:controls="using:WinSwag.Controls"
     xmlns:views="using:WinSwag.Views"
     xmlns:core="using:WinSwag.Core"
@@ -190,7 +189,7 @@
                 </SemanticZoom.ZoomedInView>
                 <SemanticZoom.ZoomedOutView>
                     <ListView ItemsSource="{x:Bind Operations.View.CollectionGroups, Mode=OneWay}"
-                              DisplayMemberPath="Group.Key"/>
+                              DisplayMemberPath="Group.Name"/>
                 </SemanticZoom.ZoomedOutView>
             </SemanticZoom>
 

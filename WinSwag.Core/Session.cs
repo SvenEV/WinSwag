@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,7 +15,11 @@ namespace WinSwag.Core
 
         public Dictionary<string, StoredOperation> Operations { get; set; } = new Dictionary<string, StoredOperation>();
 
-        public Dictionary<string, JToken> GlobalArguments { get; set; } = new Dictionary<string, JToken>();
+        public Dictionary<string, StoredArgument> GlobalArguments { get; set; } = new Dictionary<string, StoredArgument>();
+
+        public bool ShouldSerializeOperations() => Operations.Count > 0;
+
+        public bool ShouldSerializeGlobalArguments() => GlobalArguments.Count > 0;
 
         public static Session FromDocument(OpenApiDocument doc, string displayName)
         {
@@ -24,18 +29,25 @@ namespace WinSwag.Core
                 DisplayName = displayName,
 
                 GlobalArguments = doc.GlobalArguments
-                    .ToDictionary(arg => arg.Parameter.ParameterId, arg => arg.GetSerializedValue()),
+                    .Select(arg => new { Key = arg.Parameter.ParameterId, Value = new StoredArgument(arg) })
+                    .Where(o => o.Value.ShouldSerialize())
+                    .ToDictionary(o => o.Key, o => o.Value),
 
                 Operations = doc.OperationGroups
                     .SelectMany(g => g)
-                    .ToDictionary(
-                        op => op.OperationId,
-                        op => new StoredOperation
+                    .Select(op => new
+                    {
+                        Key = op.OperationId,
+                        Value = new StoredOperation
                         {
                             Arguments = op.Parameters
-                                .Where(p => p.LocalArgument.HasValue)
-                                .ToDictionary(p => p.ParameterId, p => p.LocalArgument.GetSerializedValue())
-                        })
+                                .Select(p => new { Key = p.ParameterId, Value = new StoredArgument(p.LocalArgument) })
+                                .Where(o => o.Value.ShouldSerialize())
+                                .ToDictionary(o => o.Key, o => o.Value)
+                        }
+                    })
+                    .Where(o => o.Value.ShouldSerialize())
+                    .ToDictionary(o => o.Key, o => o.Value)
             };
         }
 
@@ -52,7 +64,10 @@ namespace WinSwag.Core
                     .FirstOrDefault(arg => arg.Parameter.ParameterId == storedArg.Key);
 
                 if (argument != null)
-                    await argument.SetSerializedValueAsync(storedArg.Value);
+                {
+                    argument.IsActive = storedArg.Value.IsActive;
+                    await argument.SetSerializedValueAsync(storedArg.Value.Value);
+                }
             }
 
             // Restore local arguments
@@ -67,7 +82,8 @@ namespace WinSwag.Core
                     foreach (var storedArg in storedOp.Value.Arguments)
                     {
                         var parameter = operation.Parameters.FirstOrDefault(p => p.ParameterId == storedArg.Key);
-                        await parameter.LocalArgument.SetSerializedValueAsync(storedArg.Value);
+                        parameter.LocalArgument.IsActive = storedArg.Value.IsActive;
+                        await parameter.LocalArgument.SetSerializedValueAsync(storedArg.Value.Value);
                     }
                 }
             }
@@ -75,13 +91,42 @@ namespace WinSwag.Core
             return doc;
         }
 
-        public string ToJson() => JsonConvert.SerializeObject(this);
+        public string ToJson() => JsonConvert.SerializeObject(this, Formatting.Indented);
 
         public static Session FromJson(string json) => JsonConvert.DeserializeObject<Session>(json);
 
+
         public class StoredOperation
         {
-            public Dictionary<string, JToken> Arguments { get; set; }
+            public Dictionary<string, StoredArgument> Arguments { get; set; } = new Dictionary<string, StoredArgument>();
+
+            public bool ShouldSerialize() => Arguments?.Count > 0;
+        }
+
+        public class StoredArgument
+        {
+            private readonly bool _hasNonDefaultValue;
+
+            [DefaultValue(true)]
+            [JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+            public bool IsActive { get; set; }
+
+            public JToken Value { get; set; }
+
+            public bool ShouldSerializeValue() => _hasNonDefaultValue;
+
+            public bool ShouldSerialize() => !IsActive || ShouldSerializeValue();
+
+            public StoredArgument()
+            {
+            }
+
+            public StoredArgument(IArgument argument)
+            {
+                IsActive = argument.IsActive;
+                Value = argument.GetSerializedValue();
+                _hasNonDefaultValue = argument.HasNonDefaultValue;
+            }
         }
     }
 }

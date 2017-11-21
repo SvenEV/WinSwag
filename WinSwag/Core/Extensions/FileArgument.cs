@@ -41,7 +41,7 @@ namespace WinSwag.Core.Extensions
             private set => Set(ref _thumbnail, value);
         }
 
-        public override bool HasValue => _value != null;
+        public override bool HasNonDefaultValue => _value != null;
 
         public async void PickFile()
         {

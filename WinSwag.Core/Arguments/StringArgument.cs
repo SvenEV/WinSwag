@@ -24,7 +24,7 @@ namespace WinSwag.Core
             set => Value = (string)value;
         }
 
-        public override bool HasValue => !string.IsNullOrEmpty(Value);
+        public override bool HasNonDefaultValue => !string.IsNullOrEmpty(Value);
 
         public override async Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri) =>
             await ApplyAsync(Parameter.Specification, Value, request, requestUri, ContentType);

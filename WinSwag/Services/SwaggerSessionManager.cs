@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
-using WinSwag.Services;
+using WinSwag.Core;
 
 namespace WinSwag.Services
 {
@@ -35,7 +35,7 @@ namespace WinSwag.Services
             if (_appInfo.IsLaunchedFirstTime && _sessions.TryAdd(SampleApi.SessionInfo.Url, SampleApi.SessionInfo))
             {
                 var sessionFile = await StorageFile.GetFileFromApplicationUriAsync(SampleApi.SessionFileUri);
-                await sessionFile.CopyAsync(_folder, $"{SampleApi.SessionInfo.Guid}.json");
+                await sessionFile.CopyAsync(_folder, $"{SampleApi.SessionInfo.UrlHash}.json");
             }
         }
 
@@ -54,7 +54,7 @@ namespace WinSwag.Services
 
             try
             {
-                var sessionFile = await _folder.GetFileAsync($"{info.Guid.ToString()}.json");
+                var sessionFile = await _folder.GetFileAsync($"{info.UrlHash.ToString()}.json");
                 var json = await FileIO.ReadTextAsync(sessionFile);
 
                 if (string.IsNullOrEmpty(json))
@@ -83,11 +83,11 @@ namespace WinSwag.Services
 
             if (!_sessions.TryGetValue(session.Url, out var info))
             {
-                info = new SessionInfo(session.DisplayName, session.Url, Guid.NewGuid());
+                info = new SessionInfo(session.DisplayName, session.Url);
                 _sessions.Add(session.Url, info);
             }
 
-            var sessionFile = await _folder.CreateFileAsync($"{info.Guid}.json", CreationCollisionOption.ReplaceExisting);
+            var sessionFile = await _folder.CreateFileAsync($"{info.UrlHash}.json", CreationCollisionOption.ReplaceExisting);
             var json = session.ToJson();
             await FileIO.WriteTextAsync(sessionFile, json);
         }
@@ -98,7 +98,7 @@ namespace WinSwag.Services
             {
                 try
                 {
-                    var file = await _folder.GetFileAsync($"{info.Guid}.json");
+                    var file = await _folder.GetFileAsync($"{info.UrlHash}.json");
                     await file.DeleteAsync();
                 }
                 catch (FileNotFoundException) // If file already deleted, that's fine
@@ -111,7 +111,7 @@ namespace WinSwag.Services
     static class SampleApi
     {
         public static readonly SessionInfo SessionInfo =
-            new SessionInfo("WinSwag Pinboard (Sample API)", "http://winswagsampleapi.azurewebsites.net/swagger/v1/swagger.json", Guid.Empty);
+            new SessionInfo("WinSwag Pinboard (Sample API)", "http://winswagsampleapi.azurewebsites.net/swagger/v1/swagger.json");
 
         public static readonly Uri SessionFileUri =
             new Uri("ms-appx:///Assets/SampleSessions/WinSwagPinboard.json");
