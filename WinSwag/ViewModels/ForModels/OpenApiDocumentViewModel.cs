@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using WinSwag.Core;
+using WinSwag.Xaml;
 
 namespace WinSwag.ViewModels
 {
-    public class SwaggerDocumentViewModel
+    public class OpenApiDocumentViewModel : IViewModel<OpenApiDocument>
     {
         public OpenApiDocument Model { get; }
 
@@ -15,7 +14,7 @@ namespace WinSwag.ViewModels
         
         public bool HasGlobalArguments => Model.GlobalArguments?.Count > 0;
 
-        public SwaggerDocumentViewModel(OpenApiDocument model, string displayName = null)
+        public OpenApiDocumentViewModel(OpenApiDocument model, string displayName = null)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
             DisplayName = displayName ?? model.Specification.Info.Title;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using WinSwag.Services;
 
-namespace WinSwag.Core
+namespace WinSwag.Services
 {
     public class SwaggerSessionManager
     {

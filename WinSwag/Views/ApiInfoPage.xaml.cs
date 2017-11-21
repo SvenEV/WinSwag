@@ -15,9 +15,9 @@ namespace WinSwag.Views
         public static readonly DependencyProperty DocumentProperty =
             DependencyProperty.Register(nameof(Document), typeof(int), typeof(ApiInfoPage), new PropertyMetadata(null));
 
-        public SwaggerDocumentViewModel Document
+        public OpenApiDocumentViewModel Document
         {
-            get { return (SwaggerDocumentViewModel)GetValue(DocumentProperty); }
+            get { return (OpenApiDocumentViewModel)GetValue(DocumentProperty); }
             set { SetValue(DocumentProperty, value); }
         }
 
@@ -35,7 +35,7 @@ namespace WinSwag.Views
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Document = e.Parameter as SwaggerDocumentViewModel ?? throw new ArgumentNullException();
+            Document = e.Parameter as OpenApiDocumentViewModel ?? throw new ArgumentNullException();
         }
 
         private async void AddToFavoritesButtonClick(object sender, RoutedEventArgs e)

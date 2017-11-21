@@ -5,7 +5,7 @@ using System.Linq;
 using Windows.Storage;
 using System.Collections;
 
-namespace WinSwag.Core
+namespace WinSwag
 {
     /// <summary>
     /// Provides a strongly typed dictionary interface over an <see cref="ApplicationDataContainer"/>.

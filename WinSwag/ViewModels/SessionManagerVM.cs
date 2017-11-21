@@ -20,12 +20,12 @@ namespace WinSwag.ViewModels
         private readonly ApplicationInfo _appInfo;
 
         private ObservableCollection<SessionInfo> _storedSessions = new ObservableCollection<SessionInfo>();
-        private SwaggerDocumentViewModel _currentDocument;
+        private OpenApiDocumentViewModel _currentDocument;
         private Task _initTask;
 
         public IReadOnlyList<SessionInfo> StoredSessions => _storedSessions;
 
-        public SwaggerDocumentViewModel CurrentDocument
+        public OpenApiDocumentViewModel CurrentDocument
         {
             get => _currentDocument;
             private set
@@ -82,7 +82,7 @@ namespace WinSwag.ViewModels
                     await UnloadCurrentSessionAsync();
                     var doc = await OpenApiDocument.LoadFromUrlAsync(url, _appInfo.Settings);
                     var displayName = _storedSessions.FirstOrDefault(s => s.Url == url)?.DisplayName;
-                    CurrentDocument = new SwaggerDocumentViewModel(doc, displayName);
+                    CurrentDocument = new OpenApiDocumentViewModel(doc, displayName);
                     _operationManager.ClearNavigationStack();
                     _operationManager.NavigateToApiInfo();
                 }
@@ -104,7 +104,7 @@ namespace WinSwag.ViewModels
                     await UnloadCurrentSessionAsync();
                     var json = await FileIO.ReadTextAsync(file);
                     var doc = await OpenApiDocument.LoadFromStringAsync(json, null /* TODO */, _appInfo.Settings);
-                    CurrentDocument = new SwaggerDocumentViewModel(doc, "file://" + file.Path);
+                    CurrentDocument = new OpenApiDocumentViewModel(doc, "file://" + file.Path);
                     _operationManager.ClearNavigationStack();
                     _operationManager.NavigateToApiInfo();
                 }
@@ -141,7 +141,7 @@ namespace WinSwag.ViewModels
                     var session = await _sessionManager.LoadAsync(sessionInfo.Url);
 
                     var doc = await Session.ToDocumentAsync(session);
-                    CurrentDocument = new SwaggerDocumentViewModel(doc, sessionInfo.DisplayName);
+                    CurrentDocument = new OpenApiDocumentViewModel(doc, sessionInfo.DisplayName);
 
                     _operationManager.ClearNavigationStack();
                     _operationManager.NavigateToApiInfo();
