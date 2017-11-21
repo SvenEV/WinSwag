@@ -128,8 +128,10 @@
     <Compile Include="Templates\CommonResources.xaml.cs">
       <DependentUpon>CommonResources.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DataContext.cs" />
-    <Compile Include="XamlHelper.cs" />
+    <Compile Include="Xaml\DataContext.cs" />
+    <Compile Include="Xaml\IViewModel.cs" />
+    <Compile Include="Xaml\ViewModelRegistry.cs" />
+    <Compile Include="Xaml\XamlHelper.cs" />
     <Compile Include="ViewModels\ViewStateManagerVM.cs" />
     <Compile Include="Templates\ParameterTemplates.xaml.cs">
       <DependentUpon>ParameterTemplates.xaml</DependentUpon>
@@ -291,9 +293,7 @@
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="_LEGACY\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\WinSwag.Core\WinSwag.Core.csproj">
       <Project>{c6ef858a-1d8e-4863-8170-4dd17c4fe0f4}</Project>

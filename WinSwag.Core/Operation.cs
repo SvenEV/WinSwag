@@ -9,6 +9,8 @@ namespace WinSwag.Core
     {
         public SwaggerOperationDescription Specification { get; }
 
+        public OpenApiDocument Document { get; }
+
         public string OperationId => $"{Specification.Method.ToString().ToUpper()} {Specification.Path}";
 
         public IReadOnlyList<IParameter> Parameters { get; }
@@ -20,12 +22,16 @@ namespace WinSwag.Core
         public Operation(SwaggerOperationDescription operation, DocumentCreationContext context)
         {
             Specification = operation ?? throw new ArgumentNullException(nameof(operation));
+            Document = context.Document;
 
+            context.CurrentOperation = this;
             var defaultContentType = Specification.Operation.ActualConsumes?.FirstOrDefault() ?? "application/json";
 
             Parameters = operation.Operation.Parameters
-                .Select(p => Parameter.FromSpec(p, this, defaultContentType, context))
+                .Select(p => Parameter.FromSpec(p, defaultContentType, context))
                 .ToList();
+
+            context.CurrentOperation = null;
         }
     }
 }

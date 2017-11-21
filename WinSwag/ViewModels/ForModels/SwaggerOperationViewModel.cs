@@ -24,7 +24,6 @@ namespace WinSwag.ViewModels
         public static readonly SolidColorBrush DeleteBrush = new SolidColorBrush(Colors.OrangeRed);
         public static readonly SolidColorBrush DefaultBrush = new SolidColorBrush(Colors.Gray);
 
-        private readonly string _baseUrl;
         private Response _response;
         private bool _canSendRequest = true;
 
@@ -86,7 +85,6 @@ namespace WinSwag.ViewModels
         public OperationViewModel(Operation model)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
-            // TODO: _baseUrl = baseUrl ?? "";
         }
 
         public async void BeginSendRequest()
@@ -97,7 +95,7 @@ namespace WinSwag.ViewModels
             CanSendRequest = false;
 
             var settings = ApplicationInstance.Current.Services.GetService<ApplicationInfo>().Settings;
-            Response = await OpenApi.SendRequestAsync(Model, _baseUrl, settings);
+            Response = await OpenApi.SendRequestAsync(Model, settings);
 
             CanSendRequest = true;
         }

@@ -43,14 +43,14 @@ namespace WinSwag.Core
 
         public static string Id(SwaggerParameter spec) => $"{spec.Name}:{spec.Kind}";
 
-        public static IParameter FromSpec(SwaggerParameter spec, Operation operation, string defaultContentType, DocumentCreationContext context)
+        public static IParameter FromSpec(SwaggerParameter spec, string defaultContentType, DocumentCreationContext context)
         {
             if (spec == null)
                 throw new ArgumentNullException(nameof(spec));
 
             var localArgument = (ArgumentBase)Argument.FromSpec(spec, defaultContentType, context.Settings);
             var globalArgument = context.GlobalArguments.GetOrAdd(Id(spec), _ => Argument.FromSpec(spec, defaultContentType, context.Settings));
-            return new Parameter(spec, operation, localArgument, globalArgument);
+            return new Parameter(spec, context.CurrentOperation, localArgument, globalArgument);
         }
     }
 }

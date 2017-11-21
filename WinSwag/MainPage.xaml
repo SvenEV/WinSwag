@@ -152,11 +152,11 @@
                         </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="core:Operation">
-                                <xaml:DataContext ColumnSpacing="12" Model="{x:Bind}">
-                                    <xaml:DataContext.ColumnDefinitions>
+                                <Grid ColumnSpacing="12" xaml:DataContext.Model="{x:Bind}">
+                                    <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="50"/>
                                         <ColumnDefinition/>
-                                    </xaml:DataContext.ColumnDefinitions>
+                                    </Grid.ColumnDefinitions>
 
                                     <TextBlock FontWeight="SemiBold"
                                                Foreground="{Binding MethodBrush, Mode=OneTime}"
@@ -174,7 +174,7 @@
                                                    MaxLines="2" TextTrimming="WordEllipsis"
                                                    Visibility="{Binding HasDescription, Mode=OneTime}"/>
                                     </StackPanel>
-                                </xaml:DataContext>
+                                </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                         <ListView.GroupStyle>

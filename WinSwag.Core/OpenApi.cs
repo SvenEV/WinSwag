@@ -11,13 +11,15 @@ namespace WinSwag.Core
     {
         public static OpenApiSettings DefaultSettings { get; set; } = OpenApiSettings.Default;
 
-        public static async Task<Response> SendRequestAsync(Operation operation, string baseUrl, OpenApiSettings settings = null)
+        public static async Task<Response> SendRequestAsync(Operation operation, OpenApiSettings settings = null)
         {
             settings = settings ?? DefaultSettings ?? OpenApiSettings.Default;
 
             using (var http = new HttpClient())
             {
-                var requestUri = new StringBuilder(baseUrl + operation.Specification.Path + '?');
+                var requestUri = new StringBuilder(
+                    operation.Document.Specification.BaseUrl +
+                    operation.Specification.Path + '?');
 
                 var request = new HttpRequestMessage
                 {

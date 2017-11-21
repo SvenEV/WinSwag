@@ -26,7 +26,7 @@ namespace WinSwag.Core
 
             settings = settings ?? OpenApiSettings.Default;
 
-            var context = new DocumentCreationContext();
+            var context = new DocumentCreationContext(this, settings);
 
             var operations = specification.Operations
                 .ToDictionary(op => op.Operation, op => new Operation(op, context));
@@ -101,9 +101,13 @@ namespace WinSwag.Core
     {
         public OpenApiSettings Settings { get; }
 
+        public OpenApiDocument Document { get; }
+
+        public Operation CurrentOperation { get; set; }
+
         public IDictionary<string, IArgument> GlobalArguments { get; } = new Dictionary<string, IArgument>();
 
-        public DocumentCreationContext(OpenApiSettings settings = null)
+        public DocumentCreationContext(OpenApiDocument document, OpenApiSettings settings = null)
         {
             Settings = settings ?? OpenApiSettings.Default;
         }
