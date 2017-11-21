@@ -7,8 +7,6 @@ namespace WinSwag.Core
     {
         public string Value { get; private set; }
 
-        public StringResponse(string value) => Value = value;
-
         public async Task InitAsync(HttpResponseMessage message)
         {
             Value = await message.Content.ReadAsStringAsync();

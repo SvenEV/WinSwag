@@ -109,6 +109,7 @@ namespace WinSwag.Core
 
         public DocumentCreationContext(OpenApiDocument document, OpenApiSettings settings = null)
         {
+            Document = document ?? throw new ArgumentNullException(nameof(document));
             Settings = settings ?? OpenApiSettings.Default;
         }
     }

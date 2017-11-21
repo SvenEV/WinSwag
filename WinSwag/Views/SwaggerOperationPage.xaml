@@ -89,7 +89,7 @@
                     </ItemsControl>
 
                     <!-- Response content -->
-                    <ContentControl Content="{x:Bind VM.Response, Mode=OneWay}"
+                    <ContentControl Content="{x:Bind VM.Response.Content, Mode=OneWay}"
                                     ContentTemplateSelector="{StaticResource ResponseTemplateSelector}"
                                     HorizontalContentAlignment="Stretch"
                                     VerticalContentAlignment="Stretch"

@@ -9,8 +9,6 @@ namespace WinSwag.Core
     {
         public string Json { get; private set; }
 
-        public JsonResponse(string json) => Json = json;
-
         public async Task InitAsync(HttpResponseMessage message)
         {
             var json = await message.Content.ReadAsStringAsync();
