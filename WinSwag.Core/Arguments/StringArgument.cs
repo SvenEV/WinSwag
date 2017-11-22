@@ -10,7 +10,7 @@ namespace WinSwag.Core
 {
     public class StringArgument : ArgumentBase
     {
-        private string _value;
+        private string _value = "";
 
         public string Value
         {

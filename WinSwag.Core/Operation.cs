@@ -17,8 +17,8 @@ namespace WinSwag.Core
         public string OperationId => $"{Method.ToString().ToUpper()} {Path}";
 
         public string Description => string.IsNullOrWhiteSpace(Specification.Operation.Summary)
-            ? Specification.Operation.Description
-            : Specification.Operation.Summary;
+            ? Specification.Operation.Description?.Trim()
+            : Specification.Operation.Summary.Trim();
 
         public string Path => Specification.Path;
 
