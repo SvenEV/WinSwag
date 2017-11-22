@@ -55,7 +55,7 @@
                     Style="{StaticResource MyButtonRevealStyle}"
                     Click="{x:Bind DashboardPopup.Show}"
                     ToolTipService.ToolTip="Open Dashboard (ESC)">
-                <SymbolIcon Symbol="Home"/>
+                <SymbolIcon Symbol="GlobalNavigationButton"/>
             </Button>
 
             <!-- Button "Go Back" -->
@@ -89,7 +89,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <SymbolIcon Symbol="Library"/>
+                    <SymbolIcon Symbol="Home"/>
                     <TextBlock Text="{x:Bind SessionManagerVM.CurrentDocument.DisplayName, Mode=OneWay}"
                                TextTrimming="CharacterEllipsis" Grid.Column="1"/>
                 </Grid>
