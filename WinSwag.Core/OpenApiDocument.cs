@@ -62,6 +62,7 @@ namespace WinSwag.Core
                 .SelectMany(op => op.Parameters)
                 .GroupBy(param => param.ParameterId)
                 .Select(group => group.First().GlobalArgument)
+                .OrderBy(arg => arg.Parameter.Name)
                 .ToList(); // TODO: Select only those that appear frequently
         }
 
