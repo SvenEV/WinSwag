@@ -20,7 +20,7 @@
             <x:Double>1</x:Double>
         </vm:BoolSelectorConverter.TrueValue>
         <vm:BoolSelectorConverter.FalseValue>
-            <x:Double>.5</x:Double>
+            <x:Double>.6</x:Double>
         </vm:BoolSelectorConverter.FalseValue>
     </vm:BoolSelectorConverter>
 
@@ -105,14 +105,21 @@
                                     ContentTemplateSelector="{StaticResource ParameterTemplateSelector}"
                                     HorizontalContentAlignment="Stretch"
                                     VerticalContentAlignment="Top"/>
-                    <TextBlock Text="(globally set value)" FontStyle="Italic" Foreground="Gray" Margin="0,2,0,0"/>
+                    <TextBlock Text="(globally assigned value)" FontStyle="Italic" Foreground="Gray" Margin="0,2,0,0"/>
                 </StackPanel>
 
                 <!-- If effective value is given by spec's default -->
-                <TextBlock Visibility="{Binding EffectiveValueIsSpecDefault}">
-                    <Run Text="{Binding Model.InitialValue}"/>
-                    <Run Text="(default)" FontStyle="Italic" Foreground="Gray"/>
+                <TextBlock Visibility="{Binding EffectiveValueIsSpecDefault}"
+                           FontStyle="Italic" Foreground="Gray"
+                           Margin="0,4,0,0">
+                    (not included in request, defaults to "<Run Text="{Binding Model.Parameter.Specification.Default}"/>")
                 </TextBlock>
+
+                <!-- If effective value is none -->
+                <TextBlock Visibility="{Binding EffectiveValueIsNone}"
+                           FontStyle="Italic" Foreground="Gray"
+                           Text="(not included in request)"
+                           Margin="0,4,0,0"/>
 
             </Grid>
 

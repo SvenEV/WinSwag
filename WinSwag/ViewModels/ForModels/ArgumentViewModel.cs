@@ -24,8 +24,14 @@ namespace WinSwag.ViewModels.ForModels
             IsLocalArgument && !Model.IsActive && Model.Parameter.GlobalArgument.IsActive;
 
         public bool EffectiveValueIsSpecDefault =>
-            (IsLocalArgument && !Model.IsActive && !Model.Parameter.GlobalArgument.IsActive) ||
-            (IsGlobalArgument && !Model.IsActive);
+            Model.Parameter.Specification.Default != null &&
+            ((IsLocalArgument && !Model.IsActive && !Model.Parameter.GlobalArgument.IsActive) ||
+            (IsGlobalArgument && !Model.IsActive));
+
+        public bool EffectiveValueIsNone =>
+            Model.Parameter.Specification.Default == null &&
+            ((IsLocalArgument && !Model.IsActive && !Model.Parameter.GlobalArgument.IsActive) ||
+            (IsGlobalArgument && !Model.IsActive));
 
         public ArgumentViewModelBase(IArgument model)
         {
@@ -35,6 +41,7 @@ namespace WinSwag.ViewModels.ForModels
             {
                 RaisePropertyChanged(nameof(EffectiveValueIsGlobalArgument));
                 RaisePropertyChanged(nameof(EffectiveValueIsSpecDefault));
+                RaisePropertyChanged(nameof(EffectiveValueIsNone));
             });
         }
     }
