@@ -112,7 +112,7 @@ namespace WinSwag.Core
 
             public bool ShouldSerializeValue() => !_hasInitialValue;
 
-            public bool ShouldSerialize() => !IsActive || !_hasInitialValue;
+            public bool ShouldSerialize() => IsActive || !_hasInitialValue;
 
             public StoredArgument()
             {
