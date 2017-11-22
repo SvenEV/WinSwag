@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace WinSwag.Core
 {
-    public abstract class ArgumentBase : ObservableObject, IArgument
+    public abstract class ArgumentBase : ObservableObjectEx, IArgument
     {
         private ImmutableList<Parameter> _parameters;
         private string _contentType = "text/plain";
@@ -30,7 +29,7 @@ namespace WinSwag.Core
 
         public abstract object ObjectValue { get; set; }
 
-        public abstract bool HasNonDefaultValue { get; }
+        public abstract object InitialValue { get; }
 
         public string ContentType
         {

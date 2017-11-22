@@ -25,12 +25,17 @@ namespace WinSwag.Xaml
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
+            var modelType = model.GetType();
+
             return _viewModels.GetValue(model, _ =>
             {
-                if (_viewModelTypes.TryGetValue(model.GetType(), out var vmType))
-                    return Activator.CreateInstance(vmType, model);
-                else
-                    throw new InvalidOperationException($"No ViewModel-type is known for Model-type '{model.GetType().Name}'");
+                var typesToCheck = modelType.GetInterfaces().Prepend(modelType);
+
+                foreach (var type in typesToCheck)
+                    if (_viewModelTypes.TryGetValue(type, out var vmType))
+                        return Activator.CreateInstance(vmType, model);
+
+                throw new InvalidOperationException($"No ViewModel-type is known for Model-type '{model.GetType().Name}'");
             });
         }
     }

@@ -105,7 +105,7 @@ namespace WinSwag.Core
 
         public class StoredArgument
         {
-            private readonly bool _hasNonDefaultValue;
+            private readonly bool _hasInitialValue;
 
             [DefaultValue(true)]
             [JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
@@ -113,9 +113,9 @@ namespace WinSwag.Core
 
             public JToken Value { get; set; }
 
-            public bool ShouldSerializeValue() => _hasNonDefaultValue;
+            public bool ShouldSerializeValue() => !_hasInitialValue;
 
-            public bool ShouldSerialize() => !IsActive || ShouldSerializeValue();
+            public bool ShouldSerialize() => !IsActive || !_hasInitialValue;
 
             public StoredArgument()
             {
@@ -125,7 +125,7 @@ namespace WinSwag.Core
             {
                 IsActive = argument.IsActive;
                 Value = argument.GetSerializedValue();
-                _hasNonDefaultValue = argument.HasNonDefaultValue;
+                _hasInitialValue = Equals(argument.ObjectValue, argument.InitialValue);
             }
         }
     }

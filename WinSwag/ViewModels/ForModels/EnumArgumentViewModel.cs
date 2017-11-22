@@ -1,5 +1,4 @@
-﻿using GalaSoft.MvvmLight;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using WinSwag.Core;
@@ -7,11 +6,9 @@ using WinSwag.Xaml;
 
 namespace WinSwag.ViewModels.ForModels
 {
-    public class EnumArgumentViewModel : ObservableObject, IViewModel<EnumArgument>
+    public class EnumArgumentViewModel : ArgumentViewModelBase, IViewModel<EnumArgument>
     {
         private NamedValue _selectedOption;
-
-        public EnumArgument Model { get; }
 
         public IReadOnlyList<NamedValue> Options { get; private set; }
 
@@ -21,14 +18,12 @@ namespace WinSwag.ViewModels.ForModels
             set
             {
                 if (Set(ref _selectedOption, value))
-                    Model.Value = _selectedOption.Value;
+                    ((EnumArgument)Model).Value = _selectedOption.Value;
             }
         }
 
-        public EnumArgumentViewModel(EnumArgument argument)
+        public EnumArgumentViewModel(EnumArgument argument) : base(argument)
         {
-            Model = argument;
-
             Options = argument.Options
                 .Select(option => new NamedValue(
                     option.Key, option.Value,

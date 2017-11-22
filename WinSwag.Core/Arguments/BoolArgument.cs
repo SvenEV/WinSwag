@@ -21,11 +21,7 @@ namespace WinSwag.Core
             set => Value = (bool)value;
         }
 
-        // A bool argument is "default" if
-        // (a) a default bool value is specified and the selected value equals that default value -or-
-        // (b) a default bool value is NOT specified and the selected value is 'false'
-        public override bool HasNonDefaultValue =>
-            _value != (Parameter.Specification.Default is bool b ? b : false);
+        public override object InitialValue => false;
 
         public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri) =>
             StringArgument.ApplyAsync(Parameter.Specification, _value.ToString(), request, requestUri, ContentType);

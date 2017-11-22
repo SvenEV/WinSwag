@@ -35,8 +35,9 @@
 
             <!-- Parameter info (left column) -->
             <CheckBox IsChecked="{x:Bind IsActive, Mode=TwoWay}"
-                      ToolTipService.ToolTip="If checked, this parameter and its value are included in the request. If unchecked, the parameter is not included, so the server falls back to a default value or, in case of a required parameter, returns an error status code.">
-                
+                      ToolTipService.ToolTip="If checked, this parameter and its value are included in the request. If unchecked, the parameter is not included, so the server falls back to a default value or, in case of a required parameter, returns an error status code."
+                      VerticalAlignment="Top">
+
                 <StackPanel x:Name="ParameterInfo"
 						    ToolTipService.PlacementTarget="{Binding ElementName=ParameterInfo}">
                     <ToolTipService.ToolTip>
@@ -72,8 +73,8 @@
                 </StackPanel>
             </CheckBox>
 
-            <!-- Value input (right column) -->
-            <StackPanel Grid.Column="1">
+            <!-- Value input (if active, right column) -->
+            <StackPanel Grid.Column="1" Visibility="{x:Bind IsActive, Mode=OneWay}">
                 <ContentControl Content="{x:Bind}" IsTabStop="False"
 								ContentTemplateSelector="{StaticResource ParameterTemplateSelector}"
 								HorizontalContentAlignment="Stretch"
@@ -92,6 +93,28 @@
 							  Padding="4,0"/>
                 </StackPanel>
             </StackPanel>
+            
+            <!-- Effective value (if not active, right column) -->
+            <Grid Grid.Column="1"
+                  xaml:DataContext.Model="{x:Bind}">
+
+                <!-- If effective value is given by global argument -->
+                <StackPanel Visibility="{Binding EffectiveValueIsGlobalArgument}">
+                    <ContentControl IsEnabled="False" IsTabStop="False"
+                                    Content="{Binding Model.Parameter.GlobalArgument}"
+                                    ContentTemplateSelector="{StaticResource ParameterTemplateSelector}"
+                                    HorizontalContentAlignment="Stretch"
+                                    VerticalContentAlignment="Top"/>
+                    <TextBlock Text="(globally set value)" FontStyle="Italic" Foreground="Gray" Margin="0,2,0,0"/>
+                </StackPanel>
+
+                <!-- If effective value is given by spec's default -->
+                <TextBlock Visibility="{Binding EffectiveValueIsSpecDefault}">
+                    <Run Text="{Binding Model.InitialValue}"/>
+                    <Run Text="(default)" FontStyle="Italic" Foreground="Gray"/>
+                </TextBlock>
+
+            </Grid>
 
         </Grid>
     </DataTemplate>

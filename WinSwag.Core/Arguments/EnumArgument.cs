@@ -29,14 +29,11 @@ namespace WinSwag.Core
             set => Value = (string)value;
         }
 
-        // An enum value is "default" if
-        // (a) a default option is specified and the selected option equals that default option -or-
-        // (b) a default option is NOT specified and the selected option is the first option
-        public override bool HasNonDefaultValue => !Equals(_value,
-(object)(Parameter.Specification.Default ?? Options.FirstOrDefault().Value));
+        // The initial enum value is either the default value given by the spec or the first of the enum values.
+        public override object InitialValue => Parameter.Specification.Default ?? Options.FirstOrDefault().Value;
 
         public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri) =>
-            StringArgument.ApplyAsync((NSwag.SwaggerParameter)Parameter.Specification, _value?.ToString(), request, requestUri, ContentType);
+            StringArgument.ApplyAsync(Parameter.Specification, _value?.ToString(), request, requestUri, ContentType);
 
         internal override IArgument Init(IEnumerable<Parameter> parameters)
         {

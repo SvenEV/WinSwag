@@ -1,12 +1,11 @@
 ﻿using Newtonsoft.Json.Linq;
-using System.ComponentModel;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace WinSwag.Core
 {
-    public interface IArgument : INotifyPropertyChanged
+    public interface IArgument : INotifyPropertyChangedEx
     {
         Parameter Parameter { get; }
 
@@ -18,11 +17,10 @@ namespace WinSwag.Core
         object ObjectValue { get; set; }
 
         /// <summary>
-        /// Indicates whether a value is assigned that is not the default value for the argument type.
-        /// TODO: This should really only check for type's default, e.g. false, null, 0.
-        ///       It should have nothing to do with swagger-spec's default value.
+        /// Indicates whether a value is assigned that is not the initial value that this argument has
+        /// when loading an OpenAPI document for the first time.
         /// </summary>
-        bool HasNonDefaultValue { get; }
+        object InitialValue { get; }
 
         /// <summary>
         /// The media type of the value. Only applicable to body-parameters.

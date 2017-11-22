@@ -30,12 +30,11 @@ namespace WinSwag.Core
 
         public async Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri)
         {
-            await (LocalArgument.HasNonDefaultValue ? LocalArgument : GlobalArgument)
-                .ApplyAsync(request, requestUri);
+            if (LocalArgument.IsActive)
+                await LocalArgument.ApplyAsync(request, requestUri);
+            else if (GlobalArgument.IsActive)
+                await GlobalArgument.ApplyAsync(request, requestUri);
         }
-
-
-
 
         public static string Id(SwaggerParameter spec) => $"{spec.Name}:{spec.Kind}";
 

@@ -22,9 +22,7 @@
 
     <DataTemplate x:Key="FallbackParameterTemplate" x:DataType="core:StringArgument">
         <TextBox Text="{x:Bind Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 PlaceholderText="{x:Bind Parameter.GlobalArgument.ObjectValue}"
-                 AcceptsReturn="True"
-                 FontFamily="Consolas"/>
+                 AcceptsReturn="True" FontFamily="Consolas"/>
     </DataTemplate>
 
     <DataTemplate x:Key="BoolParameterTemplate" x:DataType="core:BoolArgument">

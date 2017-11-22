@@ -129,6 +129,7 @@
       <DependentUpon>CommonResources.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\BoolSelectorConverter.cs" />
+    <Compile Include="ViewModels\ForModels\ArgumentViewModel.cs" />
     <Compile Include="ViewModels\ForModels\EnumArgumentViewModel.cs" />
     <Compile Include="Xaml\DataContext.cs" />
     <Compile Include="Xaml\IViewModel.cs" />
@@ -288,6 +289,9 @@
     </PackageReference>
     <PackageReference Include="NSwag.Core.Yaml">
       <Version>11.12.9</Version>
+    </PackageReference>
+    <PackageReference Include="System.Reactive.Linq">
+      <Version>3.1.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
