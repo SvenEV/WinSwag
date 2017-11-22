@@ -17,12 +17,12 @@ namespace WinSwag.Core
             using (var http = new HttpClient())
             {
                 var requestUri = new StringBuilder(
-                    operation.Document.Specification.BaseUrl +
-                    operation.Specification.Path + '?');
+                    operation.Document.BaseUrl +
+                    operation.Path + '?');
 
                 var request = new HttpRequestMessage
                 {
-                    Method = operation.Specification.Method.ToHttpMethod()
+                    Method = operation.Method.ToHttpMethod()
                 };
 
                 settings.ConfigureRequest?.Invoke(request);

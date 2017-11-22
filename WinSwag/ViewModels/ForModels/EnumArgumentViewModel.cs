@@ -27,7 +27,7 @@ namespace WinSwag.ViewModels.ForModels
             Options = argument.Options
                 .Select(option => new NamedValue(
                     option.Key, option.Value,
-                    Equals(option.Value, argument.Parameter.Specification.Default)))
+                    Equals(option.Value, argument.Parameter.DefaultValue)))
                 .ToList();
 
             _selectedOption = Options.FirstOrDefault(o => Equals(o.Value, argument.Value));

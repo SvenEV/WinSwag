@@ -29,22 +29,18 @@ namespace WinSwag.ViewModels
 
         public Operation Model { get; }
 
-        public string OperationId => $"{Model.Specification.Method.ToString().ToUpper()} {Model.Specification.Path}";
-
-        public string Description => string.IsNullOrWhiteSpace(Model.Specification.Operation.Summary) ? Model.Specification.Operation.Description : Model.Specification.Operation.Summary;
+        public string OperationId => $"{Model.Method.ToString().ToUpper()} {Model.Path}";
 
         public Visibility HasDescription =>
-            !string.IsNullOrWhiteSpace(Model.Specification.Operation.Description) ||
-            !string.IsNullOrWhiteSpace(Model.Specification.Operation.Summary)
-                ? Visibility.Visible : Visibility.Collapsed;
+            !string.IsNullOrWhiteSpace(Model.Description) ? Visibility.Visible : Visibility.Collapsed;
 
-        public string Method => Model.Specification.Method.ToString().ToUpper();
+        public string Method => Model.Method.ToString().ToUpper();
 
         public Brush MethodBrush
         {
             get
             {
-                switch (Model.Specification.Method)
+                switch (Model.Method)
                 {
                     case SwaggerOperationMethod.Get: return GetBrush;
                     case SwaggerOperationMethod.Post: return PostBrush;

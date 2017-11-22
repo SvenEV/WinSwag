@@ -25,7 +25,7 @@ namespace WinSwag.Core
         public override object InitialValue => null;
 
         public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri) =>
-            StringArgument.ApplyAsync(Parameter.Specification, _value?.ToString(), request, requestUri, ContentType);
+            StringArgument.ApplyAsync(Parameter, _value?.ToString(), request, requestUri, ContentType);
 
         public override JToken GetSerializedValue() => ObjectValue == null ? null : JToken.FromObject(ObjectValue);
 

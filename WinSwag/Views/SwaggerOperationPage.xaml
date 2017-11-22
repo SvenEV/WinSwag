@@ -24,7 +24,7 @@
             <Run Text="{x:Bind VM.Method}"
                  Foreground="{x:Bind VM.MethodBrush}"
                  FontWeight="SemiBold"/>
-            <Run Text="{x:Bind Operation.Specification.Path}"/>
+            <Run Text="{x:Bind Operation.Path}"/>
         </TextBlock>
         
         <!-- Selected operation request/response (right) -->

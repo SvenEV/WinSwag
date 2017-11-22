@@ -7,15 +7,29 @@ namespace WinSwag.Core
 {
     public class Operation
     {
-        public SwaggerOperationDescription Specification { get; }
+        private SwaggerOperationDescription Specification { get; }
 
         public OpenApiDocument Document { get; }
 
-        public string OperationId => $"{Specification.Method.ToString().ToUpper()} {Specification.Path}";
+        /// <summary>
+        /// The ID of the operation. Consists of <see cref="Method"/> and <see cref="Path"/>.
+        /// </summary>
+        public string OperationId => $"{Method.ToString().ToUpper()} {Path}";
+
+        public string Description => string.IsNullOrWhiteSpace(Specification.Operation.Summary)
+            ? Specification.Operation.Description
+            : Specification.Operation.Summary;
+
+        public string Path => Specification.Path;
+
+        public SwaggerOperationMethod Method => Specification.Method;
+
+        public string GroupName => Specification.Operation.Tags.FirstOrDefault() ?? "(Default)";
 
         public IReadOnlyList<Parameter> Parameters { get; }
 
-        public IEnumerable<string> AcceptedContentTypes => Specification.Operation.ActualConsumes;
+        public IEnumerable<string> AcceptedContentTypes =>
+            Specification.Operation.ActualConsumes ?? Enumerable.Empty<string>();
 
         public Operation(SwaggerOperationDescription operation, DocumentCreationContext context)
         {

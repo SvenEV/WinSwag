@@ -9,10 +9,22 @@ namespace WinSwag.Core
 {
     public class Parameter
     {
-        public SwaggerParameter Specification { get; }
+        internal SwaggerParameter Specification { get; }
+
+        public string Name => Specification.Name;
+
+        public string Description => Specification.Description;
+
+        public object DefaultValue => Specification.Default;
+
+        public SwaggerParameterKind Kind => Specification.Kind;
 
         public Operation Operation { get; }
 
+        /// <summary>
+        /// The ID of a parameter. Consists of <see cref="Name"/> and <see cref="Kind"/>.
+        /// The ID is unique among all parameters of an operation.
+        /// </summary>
         public string ParameterId => Id(Specification);
 
         public IArgument LocalArgument { get; }

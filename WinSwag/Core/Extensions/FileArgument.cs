@@ -86,7 +86,7 @@ namespace WinSwag.Core.Extensions
             if (_value == null)
                 return;
 
-            if (Parameter.Specification.Kind != SwaggerParameterKind.FormData)
+            if (Parameter.Kind != SwaggerParameterKind.FormData)
                 throw new NotSupportedException("Files can only appear as form data");
 
             // The following streaming approach doesn't work

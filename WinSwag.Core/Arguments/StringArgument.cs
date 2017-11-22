@@ -27,9 +27,9 @@ namespace WinSwag.Core
         public override object InitialValue => "";
 
         public override async Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri) =>
-            await ApplyAsync(Parameter.Specification, Value, request, requestUri, ContentType);
+            await ApplyAsync(Parameter, Value, request, requestUri, ContentType);
 
-        public static Task ApplyAsync(SwaggerParameter parameter, string value, HttpRequestMessage request, StringBuilder requestUri, string contentType)
+        public static Task ApplyAsync(Parameter parameter, string value, HttpRequestMessage request, StringBuilder requestUri, string contentType)
         {
             if (string.IsNullOrEmpty(value))
                 return Task.CompletedTask;

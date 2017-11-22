@@ -30,10 +30,10 @@ namespace WinSwag.Core
         }
 
         // The initial enum value is either the default value given by the spec or the first of the enum values.
-        public override object InitialValue => Parameter.Specification.Default ?? Options.FirstOrDefault().Value;
+        public override object InitialValue => Parameter.DefaultValue ?? Options.FirstOrDefault().Value;
 
         public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri) =>
-            StringArgument.ApplyAsync(Parameter.Specification, _value?.ToString(), request, requestUri, ContentType);
+            StringArgument.ApplyAsync(Parameter, _value?.ToString(), request, requestUri, ContentType);
 
         internal override IArgument Init(IEnumerable<Parameter> parameters)
         {
@@ -71,7 +71,7 @@ namespace WinSwag.Core
 
         public override Task SetSerializedValueAsync(JToken o)
         {
-            var defaultOption = Parameter.Specification.Default ?? Options.FirstOrDefault().Value;
+            var defaultOption = Parameter.DefaultValue ?? Options.FirstOrDefault().Value;
             Value = o?.ToObject<object>(_serializer) ?? defaultOption;
             return Task.CompletedTask;
         }

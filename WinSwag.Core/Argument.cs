@@ -18,7 +18,7 @@ namespace WinSwag.Core
                 .FirstOrDefault(info => info.IsApplicable?.Invoke(spec) ?? false)?.Type ??
                 context.Settings.FallbackArgumentType;
 
-            var defaultContentType = context.CurrentOperation.Specification.Operation.ActualConsumes?.FirstOrDefault() ?? "application/json";
+            var defaultContentType = context.CurrentOperation.AcceptedContentTypes.FirstOrDefault() ?? "application/json";
             var argument = (IArgument)Activator.CreateInstance(type);
             argument.ContentType = defaultContentType;
             return argument;

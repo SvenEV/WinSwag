@@ -42,29 +42,29 @@
 						    ToolTipService.PlacementTarget="{Binding ElementName=ParameterInfo}">
                     <ToolTipService.ToolTip>
                         <StackPanel MaxWidth="600">
-                            <TextBlock Text="{x:Bind Parameter.Specification.Name}"
+                            <TextBlock Text="{x:Bind Parameter.Name}"
 								       FontSize="16"
 								       FontFamily="Consolas"/>
 
                             <TextBlock Grid.Column="2"
 								       Opacity=".6"
-								       Text="{x:Bind Parameter.Specification.Description}"
-								       Visibility="{x:Bind xaml:X.NotEmpty(Parameter.Specification.Description)}"
+								       Text="{x:Bind Parameter.Description}"
+								       Visibility="{x:Bind xaml:X.NotEmpty(Parameter.Description)}"
 								       FontSize="12"
 								       TextWrapping="Wrap"/>
 
                             <TextBlock Margin="0,8,0,0">
-							    <Run Text="{x:Bind Parameter.Specification.Kind}"/> parameter
+							    <Run Text="{x:Bind Parameter.Kind}"/> parameter
                             </TextBlock>
                         </StackPanel>
                     </ToolTipService.ToolTip>
 
-                    <TextBlock Text="{x:Bind Parameter.Specification.Name}"
+                    <TextBlock Text="{x:Bind Parameter.Name}"
 						       FontFamily="Consolas"/>
 
                     <TextBlock Grid.Column="2"
 						       Opacity=".6"
-						       Text="{x:Bind Parameter.Specification.Description}"
+						       Text="{x:Bind Parameter.Description}"
 						       FontSize="12"
 						       MaxLines="3"
 						       TextWrapping="Wrap"
@@ -81,10 +81,10 @@
 								VerticalContentAlignment="Top"/>
 
                 <StackPanel Orientation="Horizontal" Spacing="4" Opacity=".7"
-							Visibility="{x:Bind xaml:X.Eq(Parameter.Specification.Kind, 'Body')}">
+							Visibility="{x:Bind xaml:X.Eq(Parameter.Kind, 'Body')}">
                     <TextBlock Text="Content type:" VerticalAlignment="Center"/>
                     
-                    <ComboBox ItemsSource="{x:Bind Parameter.Operation.Specification.Operation.ActualConsumes}"
+                    <ComboBox ItemsSource="{x:Bind Parameter.Operation.AcceptedContentTypes}"
 							  SelectedItem="{x:Bind ContentType, Mode=OneWay}"
 							  SelectionChanged="OnContentTypeComboBoxSelectionChanged"
 							  Background="Transparent"
@@ -112,7 +112,7 @@
                 <TextBlock Visibility="{Binding EffectiveValueIsSpecDefault}"
                            FontStyle="Italic" Foreground="Gray"
                            Margin="0,4,0,0">
-                    (not included in request, defaults to "<Run Text="{Binding Model.Parameter.Specification.Default}"/>")
+                    (not included in request, defaults to "<Run Text="{Binding Model.Parameter.DefaultValue}"/>")
                 </TextBlock>
 
                 <!-- If effective value is none -->

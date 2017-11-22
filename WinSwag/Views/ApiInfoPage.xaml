@@ -24,7 +24,7 @@
                            Style="{StaticResource SubtitleTextBlockStyle}"
                            VerticalAlignment="Center">
                     <Run Text="{x:Bind Document.DisplayName}" FontWeight="SemiBold"/>
-                    <Run Text="{x:Bind Document.Specification.Info.Version}"/>
+                    <Run Text="{x:Bind Document.Version}"/>
                 </TextBlock>
 
                 <!-- API Description -->

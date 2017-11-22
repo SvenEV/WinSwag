@@ -24,13 +24,13 @@ namespace WinSwag.Core
         public override object InitialValue => false;
 
         public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri) =>
-            StringArgument.ApplyAsync(Parameter.Specification, _value.ToString(), request, requestUri, ContentType);
+            StringArgument.ApplyAsync(Parameter, _value.ToString(), request, requestUri, ContentType);
 
         public override JToken GetSerializedValue() => JToken.FromObject(Value);
 
         public override Task SetSerializedValueAsync(JToken o)
         {
-            var defaultBool = Parameter.Specification.Default is bool b ? b : false;
+            var defaultBool = Parameter.DefaultValue is bool b ? b : false;
             Value = o?.ToObject<bool>() ?? defaultBool;
             return Task.CompletedTask;
         }

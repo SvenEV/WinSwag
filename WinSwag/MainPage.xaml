@@ -165,7 +165,7 @@
                                     <StackPanel Grid.Column="1">
                                         <TextBlock Grid.Column="1"
                                                    FontFamily="Consolas"
-                                                   Text="{x:Bind Specification.Path}"/>
+                                                   Text="{x:Bind Path}"/>
 
                                         <TextBlock FontSize="12" TextWrapping="Wrap"
                                                    Margin="0,2,0,0" Opacity=".8"

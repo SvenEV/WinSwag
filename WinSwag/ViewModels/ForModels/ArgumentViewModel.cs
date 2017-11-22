@@ -24,12 +24,12 @@ namespace WinSwag.ViewModels.ForModels
             IsLocalArgument && !Model.IsActive && Model.Parameter.GlobalArgument.IsActive;
 
         public bool EffectiveValueIsSpecDefault =>
-            Model.Parameter.Specification.Default != null &&
+            Model.Parameter.DefaultValue != null &&
             ((IsLocalArgument && !Model.IsActive && !Model.Parameter.GlobalArgument.IsActive) ||
             (IsGlobalArgument && !Model.IsActive));
 
         public bool EffectiveValueIsNone =>
-            Model.Parameter.Specification.Default == null &&
+            Model.Parameter.DefaultValue == null &&
             ((IsLocalArgument && !Model.IsActive && !Model.Parameter.GlobalArgument.IsActive) ||
             (IsGlobalArgument && !Model.IsActive));
 

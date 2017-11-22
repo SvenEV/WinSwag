@@ -9,7 +9,7 @@ namespace WinSwag.Core
 {
     public class OpenApiDocument
     {
-        public SwaggerDocument Specification { get; }
+        private SwaggerDocument Specification { get; }
 
         public IReadOnlyList<IArgument> GlobalArguments { get; }
 
@@ -17,9 +17,16 @@ namespace WinSwag.Core
 
         public string Description => Specification.Info?.Description?.Trim();
 
+        public string BaseUrl => Specification.BaseUrl;
+
+        /// <summary>
+        /// The URL to the JSON- or YAML-file this document was loaded from.
+        /// </summary>
         public string SourceUrl { get; }
 
         public string DisplayName { get; set; }
+
+        public string Version => Specification.Info.Version;
 
         public OpenApiDocument(SwaggerDocument specification, string sourceUrl, OpenApiSettings settings = null)
         {
@@ -36,7 +43,7 @@ namespace WinSwag.Core
             OperationGroups = specification.Operations
                 .OrderBy(op => op.Path)
                 .Select(op => operations[op.Operation])
-                .GroupBy(op => op.Specification.Operation.Tags.FirstOrDefault() ?? "(Default)")
+                .GroupBy(op => op.GroupName)
                 .Select(group => new OperationGroup(group.Key, group))
                 .OrderBy(group => group.Name)
                 .ToList();
@@ -53,7 +60,7 @@ namespace WinSwag.Core
 
             GlobalArguments = operations.Values
                 .SelectMany(op => op.Parameters)
-                .GroupBy(param => (param.Specification.Name, param.Specification.Kind))
+                .GroupBy(param => param.ParameterId)
                 .Select(group => group.First().GlobalArgument)
                 .ToList(); // TODO: Select only those that appear frequently
         }
