@@ -60,7 +60,7 @@ namespace WinSwag.Core
                     break;
 
                 case SwaggerParameterKind.ModelBinding:
-                    throw new NotImplementedException(); // TODO
+                    throw new NotImplementedException(); // TODO: ModelBinding-parameters
             }
 
             return Task.CompletedTask;

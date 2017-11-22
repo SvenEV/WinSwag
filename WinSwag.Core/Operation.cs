@@ -15,8 +15,6 @@ namespace WinSwag.Core
 
         public IReadOnlyList<Parameter> Parameters { get; }
 
-        public string RequestContentType { get; } // TODO
-
         public IEnumerable<string> AcceptedContentTypes => Specification.Operation.ActualConsumes;
 
         public Operation(SwaggerOperationDescription operation, DocumentCreationContext context)
@@ -27,7 +25,7 @@ namespace WinSwag.Core
             context.CurrentOperation = this;
 
             Parameters = operation.Operation.Parameters
-                .Select(p => Parameter.FromSpec(p, context))
+                .Select(p => new Parameter(p, context))
                 .ToList();
 
             context.CurrentOperation = null;

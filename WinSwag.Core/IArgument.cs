@@ -14,6 +14,9 @@ namespace WinSwag.Core
         /// </summary>
         bool IsActive { get; set; }
 
+        /// <summary>
+        /// The current value as object.
+        /// </summary>
         object ObjectValue { get; set; }
 
         /// <summary>
@@ -27,8 +30,22 @@ namespace WinSwag.Core
         /// </summary>
         string ContentType { get; set; }
 
+        /// <summary>
+        /// Applies the argument to the HTTP request body or request URI
+        /// (depending on the kind of parameter) and sets the necessary headers.
+        /// </summary>
         Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri);
+
+        /// <summary>
+        /// Converts the current argument value to a serializable JSON-value that
+        /// can be stored as part of a session.
+        /// </summary>
         JToken GetSerializedValue();
+
+        /// <summary>
+        /// Converts the specified serializable JSON-value to the argument's internal representation
+        /// and makes it the current value of the argument.
+        /// </summary>
         Task SetSerializedValueAsync(JToken o);
     }
 }

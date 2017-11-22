@@ -17,7 +17,7 @@ namespace WinSwag.Core
 
         public IArgument LocalArgument { get; }
 
-        public IArgument GlobalArgument { get; internal set; }
+        public IArgument GlobalArgument { get; }
 
         public Parameter(SwaggerParameter parameter, Operation operation, ArgumentBase localArgument, IArgument globalArgument)
         {
