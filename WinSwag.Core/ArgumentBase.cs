@@ -13,7 +13,7 @@ namespace WinSwag.Core
     {
         private ImmutableList<Parameter> _parameters;
         private string _contentType = "text/plain";
-        private bool _isActive = true;
+        private bool _isActive = false;
 
         /// <summary>
         /// For local arguments, this is the corresponding parameter.

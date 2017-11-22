@@ -105,7 +105,6 @@ namespace WinSwag.Core
         {
             private readonly bool _hasInitialValue;
 
-            [DefaultValue(true)]
             [JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
             public bool IsActive { get; set; }
 
