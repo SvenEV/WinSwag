@@ -9,7 +9,7 @@
     RequestedTheme="Dark"
     mc:Ignorable="d">
 
-    <ScrollViewer Background="{StaticResource AcrylicBackgroundBrush}"
+    <ScrollViewer Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                   VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto">
         <Grid>
             <Grid.RowDefinitions>
@@ -18,7 +18,8 @@
             </Grid.RowDefinitions>
             
             <!-- Header -->
-            <StackPanel Padding="18,0,18,12" Spacing="12">
+            <StackPanel Padding="18,500,18,12" Margin="0,-500,0,0" Spacing="12"
+                        Background="{StaticResource AcrylicBackgroundBrush}">
                 <!-- API Title & Version -->
                 <TextBlock Padding="0,12,128,12"
                            Style="{StaticResource SubtitleTextBlockStyle}"
@@ -86,8 +87,7 @@
                 </Grid>
             </StackPanel>
 
-            <Border Grid.Row="1" Padding="18,12,18,12"
-                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <Border Grid.Row="1" Padding="18,12,18,12">
                 <!-- Common Parameters -->
                 <StackPanel Visibility="{x:Bind DocumentVM.HasGlobalArguments, Mode=OneWay}">
                     <controls:SectionHeader Text="&#xE12B; Global Parameters"
