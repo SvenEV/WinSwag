@@ -9,7 +9,8 @@
     RequestedTheme="Dark"
     mc:Ignorable="d">
 
-    <ScrollViewer Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    <ScrollViewer Style="{StaticResource TopMarginScrollViewerStyle}"
+                  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                   VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto">
         <Grid>
             <Grid.RowDefinitions>

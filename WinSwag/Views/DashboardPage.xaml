@@ -150,7 +150,7 @@
                                        FontSize="12"/>
 
                             <Button Style="{StaticResource MyButtonRevealStyle}"
-                                    ToolTipService.ToolTip="Delete Session"
+                                    ToolTipService.ToolTip="Remove from Favorites"
                                     Click="DeleteSessionButtonClick"
                                     BorderThickness="0"
                                     Grid.Column="3"
