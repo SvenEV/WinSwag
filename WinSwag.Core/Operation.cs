@@ -25,10 +25,9 @@ namespace WinSwag.Core
             Document = context.Document;
 
             context.CurrentOperation = this;
-            var defaultContentType = Specification.Operation.ActualConsumes?.FirstOrDefault() ?? "application/json";
 
             Parameters = operation.Operation.Parameters
-                .Select(p => Parameter.FromSpec(p, defaultContentType, context))
+                .Select(p => Parameter.FromSpec(p, context))
                 .ToList();
 
             context.CurrentOperation = null;

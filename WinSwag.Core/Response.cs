@@ -35,8 +35,17 @@ namespace WinSwag.Core
             Exception = exception ?? throw new ArgumentNullException(nameof(exception));
         }
 
-        public static async Task<Response> FromResponseMessageAsync(string requestUri, HttpResponseMessage message, OpenApiSettings settings = null)
+        public static async Task<Response> FromResponseMessageAsync(string requestUri, HttpResponseMessage message, OpenApiSettings settings)
         {
+            if (requestUri == null)
+                throw new ArgumentNullException(nameof(requestUri));
+
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
+            if (settings == null)
+                throw new ArgumentNullException(nameof(settings));
+
             var type = settings.ResponseContentTypes
                 .FirstOrDefault(info => info.IsApplicable?.Invoke(message) ?? false)?.Type ??
                 settings.FallbackResponseContentType;

@@ -28,6 +28,14 @@ namespace WinSwag.Core
             localArgument.Init(new[] { this });
         }
 
+        public Parameter(SwaggerParameter spec, DocumentCreationContext context) : this(
+            parameter: spec,
+            operation: context.CurrentOperation,
+            localArgument: (ArgumentBase)Argument.FromSpec(spec, context),
+            globalArgument: context.GlobalArguments.GetOrAdd(Id(spec), _ => Argument.FromSpec(spec, context)))
+        {
+        }
+
         public async Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri)
         {
             if (LocalArgument.IsActive)
@@ -37,15 +45,5 @@ namespace WinSwag.Core
         }
 
         public static string Id(SwaggerParameter spec) => $"{spec.Name}:{spec.Kind}";
-
-        public static Parameter FromSpec(SwaggerParameter spec, string defaultContentType, DocumentCreationContext context)
-        {
-            if (spec == null)
-                throw new ArgumentNullException(nameof(spec));
-
-            var localArgument = (ArgumentBase)Argument.FromSpec(spec, defaultContentType, context.Settings);
-            var globalArgument = context.GlobalArguments.GetOrAdd(Id(spec), _ => Argument.FromSpec(spec, defaultContentType, context.Settings));
-            return new Parameter(spec, context.CurrentOperation, localArgument, globalArgument);
-        }
     }
 }

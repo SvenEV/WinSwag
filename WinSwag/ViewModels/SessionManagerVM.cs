@@ -20,12 +20,12 @@ namespace WinSwag.ViewModels
         private readonly ApplicationInfo _appInfo;
 
         private ObservableCollection<SessionInfo> _storedSessions = new ObservableCollection<SessionInfo>();
-        private OpenApiDocumentViewModel _currentDocument;
+        private OpenApiDocument _currentDocument;
         private Task _initTask;
 
         public IReadOnlyList<SessionInfo> StoredSessions => _storedSessions;
 
-        public OpenApiDocumentViewModel CurrentDocument
+        public OpenApiDocument CurrentDocument
         {
             get => _currentDocument;
             private set
@@ -41,7 +41,7 @@ namespace WinSwag.ViewModels
 
         public bool IsSessionLoaded => CurrentDocument != null;
 
-        public bool IsCurrentSessionFavorite => _storedSessions.Any(s => s.Url == _currentDocument?.Model.SourceUrl);
+        public bool IsCurrentSessionFavorite => _storedSessions.Any(s => s.Url == _currentDocument?.SourceUrl);
 
         public bool IsntCurrentSessionFavorite => !IsCurrentSessionFavorite && CurrentDocument != null;
 
@@ -80,9 +80,7 @@ namespace WinSwag.ViewModels
                     await _initTask;
                     _messenger.Send(CloseDashboard.Instance);
                     await UnloadCurrentSessionAsync();
-                    var doc = await OpenApiDocument.LoadFromUrlAsync(url, _appInfo.Settings);
-                    var displayName = _storedSessions.FirstOrDefault(s => s.Url == url)?.DisplayName;
-                    CurrentDocument = new OpenApiDocumentViewModel(doc, displayName);
+                    CurrentDocument = await OpenApiDocument.LoadFromUrlAsync(url, _appInfo.Settings);
                     _operationManager.ClearNavigationStack();
                     _operationManager.NavigateToApiInfo();
                 }
@@ -103,8 +101,7 @@ namespace WinSwag.ViewModels
                     _messenger.Send(CloseDashboard.Instance);
                     await UnloadCurrentSessionAsync();
                     var json = await FileIO.ReadTextAsync(file);
-                    var doc = await OpenApiDocument.LoadFromStringAsync(json, null /* TODO */, _appInfo.Settings);
-                    CurrentDocument = new OpenApiDocumentViewModel(doc, "file://" + file.Path);
+                    CurrentDocument = await OpenApiDocument.LoadFromStringAsync(json, null /* TODO */, _appInfo.Settings);
                     _operationManager.ClearNavigationStack();
                     _operationManager.NavigateToApiInfo();
                 }
@@ -139,9 +136,7 @@ namespace WinSwag.ViewModels
                     _messenger.Send(CloseDashboard.Instance);
                     await UnloadCurrentSessionAsync(); // unload before loading new session (important when loading the same session again)
                     var session = await _sessionManager.LoadAsync(sessionInfo.Url);
-
-                    var doc = await Session.ToDocumentAsync(session);
-                    CurrentDocument = new OpenApiDocumentViewModel(doc, sessionInfo.DisplayName);
+                    CurrentDocument = await Session.ToDocumentAsync(session);
 
                     _operationManager.ClearNavigationStack();
                     _operationManager.NavigateToApiInfo();
@@ -159,7 +154,7 @@ namespace WinSwag.ViewModels
             {
                 await _initTask;
                 CurrentDocument.DisplayName = displayName;
-                var session = Session.FromDocument(CurrentDocument.Model, displayName);
+                var session = Session.FromDocument(CurrentDocument);
                 await _sessionManager.StoreAsync(session);
                 await RefreshStoredSessionsAsync();
             }
@@ -170,7 +165,7 @@ namespace WinSwag.ViewModels
             try
             {
                 await _initTask;
-                await _sessionManager.DeleteAsync(_currentDocument.Model.SourceUrl);
+                await _sessionManager.DeleteAsync(_currentDocument.SourceUrl);
                 await RefreshStoredSessionsAsync();
             }
             catch (Exception e)
@@ -181,7 +176,7 @@ namespace WinSwag.ViewModels
         
         public async Task UnloadCurrentSessionAsync()
         {
-            if (_storedSessions.Any(s => s.Url == _currentDocument?.Model.SourceUrl))
+            if (_storedSessions.Any(s => s.Url == _currentDocument?.SourceUrl))
             {
                 // Store current session before switching to another one
                 await SaveCurrentSessionAsync(_currentDocument.DisplayName);

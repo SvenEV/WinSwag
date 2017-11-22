@@ -6,15 +6,19 @@ namespace WinSwag.Core
 {
     public static class Argument
     {
-        public static IArgument FromSpec(SwaggerParameter spec, string defaultContentType, OpenApiSettings settings = null)
+        public static IArgument FromSpec(SwaggerParameter spec, DocumentCreationContext context)
         {
             if (spec == null)
                 throw new ArgumentNullException(nameof(spec));
 
-            var type = settings.ArgumentTypes
-                .FirstOrDefault(info => info.IsApplicable?.Invoke(spec) ?? false)?.Type ??
-                settings.FallbackArgumentType;
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
 
+            var type = context.Settings.ArgumentTypes
+                .FirstOrDefault(info => info.IsApplicable?.Invoke(spec) ?? false)?.Type ??
+                context.Settings.FallbackArgumentType;
+
+            var defaultContentType = context.CurrentOperation.Specification.Operation.ActualConsumes?.FirstOrDefault() ?? "application/json";
             var argument = (IArgument)Activator.CreateInstance(type);
             argument.ContentType = defaultContentType;
             return argument;

@@ -64,10 +64,9 @@ namespace WinSwag.Core
 
         public override JToken GetSerializedValue()
         {
-            if (Value == null)
-                return null;
-
-            return JToken.FromObject(Value, _serializer);
+            return (Value == null)
+                ? null
+                : JToken.FromObject(Value, _serializer);
         }
 
         public override Task SetSerializedValueAsync(JToken o)

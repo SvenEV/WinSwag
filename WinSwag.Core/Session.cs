@@ -9,9 +9,7 @@ namespace WinSwag.Core
 {
     public class Session
     {
-        public string Url { get; set; }
-
-        public string DisplayName { get; set; }
+        public SessionInfo Info { get; set; }
 
         public Dictionary<string, StoredOperation> Operations { get; set; } = new Dictionary<string, StoredOperation>();
 
@@ -21,12 +19,11 @@ namespace WinSwag.Core
 
         public bool ShouldSerializeGlobalArguments() => GlobalArguments.Count > 0;
 
-        public static Session FromDocument(OpenApiDocument doc, string displayName)
+        public static Session FromDocument(OpenApiDocument doc)
         {
             return new Session
             {
-                Url = doc.SourceUrl,
-                DisplayName = displayName,
+                Info = new SessionInfo(doc.DisplayName, doc.SourceUrl),
 
                 GlobalArguments = doc.GlobalArguments
                     .Select(arg => new { Key = arg.Parameter.ParameterId, Value = new StoredArgument(arg) })
@@ -55,7 +52,8 @@ namespace WinSwag.Core
         {
             settings = settings ?? OpenApiSettings.Default;
 
-            var doc = await OpenApiDocument.LoadFromUrlAsync(session.Url, settings);
+            var doc = await OpenApiDocument.LoadFromUrlAsync(session.Info.Url, settings);
+            doc.DisplayName = session.Info.DisplayName ?? doc.DisplayName;
 
             // Restore global arguments
             foreach (var storedArg in session.GlobalArguments)

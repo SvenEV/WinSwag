@@ -19,11 +19,13 @@ namespace WinSwag.Core
 
         public string SourceUrl { get; }
 
+        public string DisplayName { get; set; }
+
         public OpenApiDocument(SwaggerDocument specification, string sourceUrl, OpenApiSettings settings = null)
         {
             Specification = specification ?? throw new ArgumentNullException(nameof(specification));
             SourceUrl = sourceUrl ?? throw new ArgumentNullException(nameof(sourceUrl));
-
+            DisplayName = specification.Info.Title;
             settings = settings ?? OpenApiSettings.Default;
 
             var context = new DocumentCreationContext(this, settings);
@@ -39,13 +41,14 @@ namespace WinSwag.Core
                 .OrderBy(group => group.Name)
                 .ToList();
 
+            // set up relationship "global argument -> parameters"
             foreach (var arg in context.GlobalArguments)
             {
                 var parameters = operations.Values
                     .SelectMany(op => op.Parameters)
                     .Where(p => p.ParameterId == arg.Key);
 
-                ((dynamic)arg.Value).Init(parameters);
+                ((dynamic)arg.Value).Init(parameters); // TODO: de-uglify!
             }
 
             GlobalArguments = operations.Values
@@ -81,13 +84,15 @@ namespace WinSwag.Core
             settings = settings ?? OpenApiSettings.Default;
             try
             {
-                return new OpenApiDocument(await SwaggerDocument.FromJsonAsync(data), sourceUrl, settings);
+                var json = await SwaggerDocument.FromJsonAsync(data);
+                return new OpenApiDocument(json, sourceUrl, settings);
             }
             catch
             {
                 try
                 {
-                    return new OpenApiDocument(await SwaggerYamlDocument.FromYamlAsync(data), sourceUrl, settings);
+                    var yaml = await SwaggerYamlDocument.FromYamlAsync(data);
+                    return new OpenApiDocument(yaml, sourceUrl, settings);
                 }
                 catch
                 {

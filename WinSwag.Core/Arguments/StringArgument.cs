@@ -37,7 +37,7 @@ namespace WinSwag.Core
             switch (parameter.Kind)
             {
                 case SwaggerParameterKind.Path:
-                    requestUri = requestUri.Replace("{" + parameter.Name + "}", value ?? "");
+                    requestUri.Replace("{" + parameter.Name + "}", value ?? "");
                     break;
 
                 case SwaggerParameterKind.Header:

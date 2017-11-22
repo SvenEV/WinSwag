@@ -24,12 +24,12 @@
                            Style="{StaticResource SubtitleTextBlockStyle}"
                            VerticalAlignment="Center">
                     <Run Text="{x:Bind Document.DisplayName}" FontWeight="SemiBold"/>
-                    <Run Text="{x:Bind Document.Model.Specification.Info.Version}"/>
+                    <Run Text="{x:Bind Document.Specification.Info.Version}"/>
                 </TextBlock>
 
                 <!-- API Description -->
-                <tkc:MarkdownTextBlock Text="{x:Bind Document.Model.Description, Mode=OneWay}"
-                                       Visibility="{x:Bind Document.HasDescription}"
+                <tkc:MarkdownTextBlock Text="{x:Bind Document.Description, Mode=OneWay}"
+                                       Visibility="{x:Bind DocumentVM.HasDescription}"
                                        LinkClicked="DescriptionLinkClicked"
                                        TextWrapping="WrapWholeWords"/>
 
@@ -89,14 +89,14 @@
             <Border Grid.Row="1" Padding="18,12,18,12"
                     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
                 <!-- Common Parameters -->
-                <StackPanel Visibility="{x:Bind Document.HasGlobalArguments, Mode=OneWay}">
+                <StackPanel Visibility="{x:Bind DocumentVM.HasGlobalArguments, Mode=OneWay}">
                     <controls:SectionHeader Text="&#xE12B; Global Parameters"
                                             FontFamily="Segoe UI Symbol"/>
 
                     <TextBlock Text="The following parameters appear in all operations. Values you assign here will apply to all operations, unless they are overridden in individual operations."
                                TextWrapping="WrapWholeWords" Margin="0,0,0,12"/>
 
-                    <ItemsControl ItemsSource="{x:Bind Document.Model.GlobalArguments}"
+                    <ItemsControl ItemsSource="{x:Bind Document.GlobalArguments}"
                                   ItemTemplate="{StaticResource SwaggerArgumentTemplate}"/>
                 </StackPanel>
             </Border>

@@ -71,9 +71,7 @@ namespace WinSwag.Services
 
             Session EmptySession() => new Session
             {
-                Url = url,
-                DisplayName = info.DisplayName,
-                Operations = new Dictionary<string, Session.StoredOperation>()
+                Info = new SessionInfo(info.DisplayName, url),
             };
         }
 
@@ -81,10 +79,10 @@ namespace WinSwag.Services
         {
             await _initTask;
 
-            if (!_sessions.TryGetValue(session.Url, out var info))
+            if (!_sessions.TryGetValue(session.Info.Url, out var info))
             {
-                info = new SessionInfo(session.DisplayName, session.Url);
-                _sessions.Add(session.Url, info);
+                info = session.Info;
+                _sessions.Add(session.Info.Url, session.Info);
             }
 
             var sessionFile = await _folder.CreateFileAsync($"{info.UrlHash}.json", CreationCollisionOption.ReplaceExisting);

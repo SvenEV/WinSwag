@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -12,6 +13,7 @@ namespace WinSwag.Core
 
         public string Url { get; }
 
+        [JsonIgnore]
         public string UrlHash => _urlHash.Value;
 
         public SessionInfo(string displayName, string url)

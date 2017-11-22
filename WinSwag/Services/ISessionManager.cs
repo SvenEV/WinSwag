@@ -11,7 +11,7 @@ namespace WinSwag.Services
     {
         IReadOnlyList<SessionInfo> StoredSessions { get; }
 
-        OpenApiDocumentViewModel CurrentDocument { get; }
+        OpenApiDocument CurrentDocument { get; }
 
         bool IsSessionLoaded { get; }
 

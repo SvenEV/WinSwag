@@ -17,7 +17,7 @@
         <CollectionViewSource x:Key="Operations"
                               x:Name="Operations"
                               IsSourceGrouped="True"
-                              Source="{x:Bind SessionManagerVM.CurrentDocument.Model.OperationGroups, Mode=OneWay}"/>
+                              Source="{x:Bind SessionManagerVM.CurrentDocument.OperationGroups, Mode=OneWay}"/>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
