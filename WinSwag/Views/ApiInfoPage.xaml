@@ -95,10 +95,10 @@
             <Border Grid.Row="1" Padding="18,12,18,12">
                 <!-- Common Parameters -->
                 <StackPanel Visibility="{x:Bind DocumentVM.HasGlobalArguments, Mode=OneWay}">
-                    <controls:SectionHeader Text="&#xE12B; Global Parameters"
+                    <controls:SectionHeader Text="&#xE12B; Global Arguments"
                                             FontFamily="Segoe UI Symbol"/>
 
-                    <TextBlock Text="The following parameters appear in all operations. Values you assign here will apply to all operations, unless they are overridden in individual operations."
+                    <TextBlock Text="Below is a list of all parameters, some of them may appear in multiple or even all operations. Enter a value once in this section and it will apply to all operations so you don't need to manually copy and paste the value between operations. If needed, global values can still be overridden in individual operations ."
                                TextWrapping="WrapWholeWords" Margin="0,0,0,12"/>
 
                     <ItemsControl ItemsSource="{x:Bind Document.GlobalArguments}"

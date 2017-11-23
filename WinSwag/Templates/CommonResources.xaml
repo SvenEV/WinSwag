@@ -43,7 +43,6 @@
                 <CheckBox.Resources>
                     <MenuFlyout x:Key="ContextFlyout">
                         <MenuFlyoutSubItem Text="Go To Operation..."
-                                           Visibility="{Binding IsGlobalArgument}"
                                            xaml:BindableFlyout.ItemsSource="{x:Bind Parameters}"
                                            xaml:BindableFlyout.DisplayMemberPath="Operation.OperationId"
                                            xaml:BindableFlyout.ItemClick="{Binding GlobalArgumentRelatedOperationClickHandler, Mode=OneTime}">
@@ -169,6 +168,8 @@
         </Setter>
     </Style>
 
+    <!-- A ScrollViewer where the vertical ScrollBar has a top margin of 32 pixels
+    to prevent overlapping with window buttons -->
     <Style x:Key="TopMarginScrollViewerStyle" TargetType="ScrollViewer">
         <Setter Property="HorizontalScrollMode" Value="Auto" />
         <Setter Property="VerticalScrollMode" Value="Auto" />
