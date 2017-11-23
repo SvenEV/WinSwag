@@ -49,9 +49,11 @@ namespace WinSwag.Services
             return _apis
                 .Where(api =>
                     Normalize(api.Key).Contains(text) ||
-                    Normalize(api.Value.PreferredVersion?.Info.Title).Contains(text))
+                    Normalize(api.Value.PreferredVersion?.Info.Title).Contains(text) ||
+                    Normalize(api.Value.PreferredVersion?.SwaggerUrl).Contains(text))
                 .Select(api => api.Value)
                 .Take(8)
+                .OrderBy(api => api.PreferredVersion?.Info.Title)
                 .ToList();
 
             string Normalize(string s) => s == null ? "" : Regex.Replace(s, "[^a-zA-Z0-9äöüß\\-]", "").Trim().ToLower();
@@ -78,5 +80,13 @@ namespace WinSwag.Services
     {
         public string Title { get; set; }
         public string Description { get; set; }
+
+        [JsonProperty("x-logo")]
+        public ApiVersionInfoLogo Logo { get; set; }
+    }
+
+    public class ApiVersionInfoLogo
+    {
+        public string Url { get; set; }
     }
 }

@@ -118,11 +118,22 @@
 
                     <AutoSuggestBox.ItemTemplate>
                         <DataTemplate x:DataType="services:ApiInfo">
-                            <StackPanel>
-                                <TextBlock Text="{x:Bind PreferredVersion.Info.Title}"/>
-                                <TextBlock Text="{x:Bind PreferredVersion.Info.Description}"
-                                           MaxLines="1" FontSize="12" Opacity=".8" TextTrimming="WordEllipsis"/>
-                            </StackPanel>
+                            <Grid ColumnSpacing="8" Margin="0,4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border Background="White" Padding="4" CornerRadius="4">
+                                    <Image Source="{x:Bind PreferredVersion.Info.Logo.Url}"/>
+                                </Border>
+
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="{x:Bind PreferredVersion.Info.Title}"/>
+                                    <TextBlock Text="{x:Bind PreferredVersion.Info.Description}"
+                                               MaxLines="1" FontSize="12" Opacity=".8" TextTrimming="WordEllipsis"/>
+                                </StackPanel>
+                            </Grid>
                         </DataTemplate>
                     </AutoSuggestBox.ItemTemplate>
                 </AutoSuggestBox>
