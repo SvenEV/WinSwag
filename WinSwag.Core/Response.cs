@@ -17,7 +17,7 @@ namespace WinSwag.Core
 
         public IResponseContent Content { get; }
 
-        public string Status => $"{(int)Message.StatusCode} {Message.StatusCode}";
+        public string Status => Message == null ? "Error" : $"{(int)Message.StatusCode} {Message.StatusCode}";
 
         public Exception Exception { get; }
 
