@@ -13,7 +13,7 @@
     <AcrylicBrush x:Key="AcrylicBackgroundBrush"
                   BackgroundSource="HostBackdrop"
                   FallbackColor="#FF1F2528"
-                  TintColor="#99202020"/>
+                  TintColor="#BB1F2528"/>
     
     <vm:BoolSelectorConverter x:Key="IsActiveToOpacity">
         <vm:BoolSelectorConverter.TrueValue>
