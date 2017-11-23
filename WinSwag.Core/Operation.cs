@@ -39,6 +39,7 @@ namespace WinSwag.Core
             context.CurrentOperation = this;
 
             Parameters = operation.Operation.Parameters
+                .Select(p => p.ActualSchema as SwaggerParameter ?? p)
                 .Select(p => new Parameter(p, context))
                 .ToList();
 

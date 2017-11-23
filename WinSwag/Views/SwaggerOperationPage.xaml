@@ -25,6 +25,15 @@
                  Foreground="{x:Bind VM.MethodBrush}"
                  FontWeight="SemiBold"/>
             <Run Text="{x:Bind Operation.Path}"/>
+            
+            <ToolTipService.ToolTip>
+                <TextBlock TextWrapping="Wrap" FontFamily="Consolas">
+                    <Run Text="{x:Bind VM.Method}"
+                         Foreground="{x:Bind VM.MethodBrush}"
+                         FontWeight="SemiBold"/>
+                    <Run Text="{x:Bind Operation.Path}"/>
+                </TextBlock>
+            </ToolTipService.ToolTip>
         </TextBlock>
         
         <!-- Selected operation request/response (right) -->
