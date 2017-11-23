@@ -5,7 +5,6 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using WinSwag.Core;
 using WinSwag.Services;
 using WinSwag.ViewModels;
 
@@ -30,6 +29,7 @@ namespace WinSwag
             services
                 .AddSingleton<ApplicationInfo>()
                 .AddSingleton<SwaggerSessionManager>()
+                .AddSingleton<ApisGuruClient>()
                 .AddScoped<IMessenger, Messenger>()
                 .AddScoped<ISessionManagerVM, SessionManagerVM>()
                 .AddScoped<IOperationManagerVM, OperationManagerVM>()

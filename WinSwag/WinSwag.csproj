@@ -117,6 +117,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ApplicationInstance.cs" />
+    <Compile Include="Services\ApisGuruClient.cs" />
     <Compile Include="SettingsDictionary.cs" />
     <Compile Include="Services\SwaggerSessionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

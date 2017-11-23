@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:services="using:WinSwag.Services"
     xmlns:core="using:WinSwag.Core"
     xmlns:controls="using:WinSwag.Controls"
     mc:Ignorable="d">
@@ -111,7 +112,20 @@
                                 Text="{x:Bind SessionManagerVM.CurrentDocument.SourceUrl, Mode=OneWay}"
                                 PlaceholderText="URL to a Swagger document (swagger.json, swagger.yaml)"
                                 QuerySubmitted="OnUrlBoxQuerySubmitted"
-                                QueryIcon="Forward" Margin="0,12,12,8"/>
+                                TextMemberPath="PreferredVersion.SwaggerUrl"
+                                TextChanged="OnUrlBoxQueryTextChanged"
+                                QueryIcon="Forward" Margin="0,12,12,8">
+
+                    <AutoSuggestBox.ItemTemplate>
+                        <DataTemplate x:DataType="services:ApiInfo">
+                            <StackPanel>
+                                <TextBlock Text="{x:Bind PreferredVersion.Info.Title}"/>
+                                <TextBlock Text="{x:Bind PreferredVersion.Info.Description}"
+                                           MaxLines="1" FontSize="12" Opacity=".8" TextTrimming="WordEllipsis"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </AutoSuggestBox.ItemTemplate>
+                </AutoSuggestBox>
 
             </Grid>
 
