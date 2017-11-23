@@ -14,7 +14,7 @@
                   BackgroundSource="HostBackdrop"
                   FallbackColor="#FF1F2528"
                   TintColor="#99202020"/>
-
+    
     <vm:BoolSelectorConverter x:Key="IsActiveToOpacity">
         <vm:BoolSelectorConverter.TrueValue>
             <x:Double>1</x:Double>
@@ -315,6 +315,5 @@
             </Setter.Value>
         </Setter>
     </Style>
-
 
 </ResourceDictionary>

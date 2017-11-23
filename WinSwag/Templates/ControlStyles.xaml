@@ -14,6 +14,12 @@
     <SolidColorBrush x:Key="ComboBoxBackgroundFocused" Color="#33FFFFFF"/>
     <SolidColorBrush x:Key="ComboBoxForegroundFocused" Color="White"/>
 
+    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="White"/>
+    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="Black"/>
+    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUncheckedPointerOver" Color="Gray"/>
+    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="Gray"/>
+    <Thickness x:Key="CheckBoxBorderThemeThickness">1</Thickness>
+
     <SolidColorBrush x:Key="ButtonRevealBackgroundDisabled" Color="Transparent"/>
 
     <RevealBackgroundBrush x:Key="ButtonRevealBackgroundPointerOver" TargetTheme="Dark"
