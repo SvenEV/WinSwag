@@ -1,6 +1,8 @@
 ﻿using GalaSoft.MvvmLight;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using WinSwag.Core;
+using WinSwag.Services;
 using WinSwag.Xaml;
 
 namespace WinSwag.ViewModels.ForModels
@@ -16,9 +18,9 @@ namespace WinSwag.ViewModels.ForModels
     {
         public IArgument Model { get; }
 
-        private bool IsLocalArgument => Model == Model.Parameter.LocalArgument;
+        public bool IsLocalArgument => Model == Model.Parameter.LocalArgument;
 
-        private bool IsGlobalArgument => Model == Model.Parameter.GlobalArgument;
+        public bool IsGlobalArgument => Model == Model.Parameter.GlobalArgument;
 
         public bool EffectiveValueIsGlobalArgument =>
             IsLocalArgument && !Model.IsActive && Model.Parameter.GlobalArgument.IsActive;
@@ -43,6 +45,9 @@ namespace WinSwag.ViewModels.ForModels
             : "Check to specify a global value that is used in operations where no value for this parameter is set. " +
               "Uncheck to not provide a global value";
 
+        public Box<FlyoutItemClickEventHandler> GlobalArgumentRelatedOperationClickHandler { get; } =
+            new Box<FlyoutItemClickEventHandler>(OnGlobalArgumentRelatedOperationClick);
+
         public ArgumentViewModelBase(IArgument model)
         {
             Model = model;
@@ -53,6 +58,13 @@ namespace WinSwag.ViewModels.ForModels
                 RaisePropertyChanged(nameof(EffectiveValueIsSpecDefault));
                 RaisePropertyChanged(nameof(EffectiveValueIsNone));
             });
+        }
+
+        private static void OnGlobalArgumentRelatedOperationClick(object sender, object clickedItem)
+        {
+            var parameter = (Parameter)clickedItem;
+            var operationManagerVM = ApplicationInstance.Current.Services.GetService<IOperationManagerVM>();
+            operationManagerVM.NavigateToOperation(parameter.Operation);
         }
     }
 }

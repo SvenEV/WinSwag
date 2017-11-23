@@ -39,9 +39,9 @@ namespace WinSwag.ViewModels
 
         public void NavigateToApiInfo() => NavigateToOperation(null);
 
-        public void NavigateToOperation(Operation operationVM)
+        public void NavigateToOperation(Operation operation)
         {
-            if (operationVM == SelectedOperation && _navigationIndex != -1)
+            if (operation == SelectedOperation && _navigationIndex != -1)
                 return; // Don't navigate to the same page again
 
             // Clear forward stack
@@ -49,7 +49,7 @@ namespace WinSwag.ViewModels
                 _navigationStack.RemoveAt(_navigationIndex + 1);
 
             // Push onto stack
-            _navigationStack.Add(operationVM);
+            _navigationStack.Add(operation);
             _navigationIndex++;
 
             RaisePropertyChangeEvents();

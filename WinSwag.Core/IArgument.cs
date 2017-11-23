@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace WinSwag.Core
     public interface IArgument : INotifyPropertyChangedEx
     {
         Parameter Parameter { get; }
+
+        IReadOnlyList<Parameter> Parameters { get; }
 
         /// <summary>
         /// Indicates whether this argument should be included in the request.

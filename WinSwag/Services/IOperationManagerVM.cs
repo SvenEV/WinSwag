@@ -18,7 +18,7 @@ namespace WinSwag.Services
 
         void NavigateToApiInfo();
 
-        void NavigateToOperation(Operation operationVM);
+        void NavigateToOperation(Operation operation);
 
         void GoBack();
 

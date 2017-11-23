@@ -21,6 +21,8 @@ namespace WinSwag.Core
         /// </summary>
         public Parameter Parameter => _parameters.First();
 
+        public IReadOnlyList<Parameter> Parameters => _parameters;
+
         public bool IsActive
         {
             get => _isActive;

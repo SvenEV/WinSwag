@@ -131,6 +131,7 @@
     <Compile Include="ViewModels\BoolSelectorConverter.cs" />
     <Compile Include="ViewModels\ForModels\ArgumentViewModel.cs" />
     <Compile Include="ViewModels\ForModels\EnumArgumentViewModel.cs" />
+    <Compile Include="Xaml\BindableFlyout.cs" />
     <Compile Include="Xaml\DataContext.cs" />
     <Compile Include="Xaml\IViewModel.cs" />
     <Compile Include="Xaml\ViewModelRegistry.cs" />

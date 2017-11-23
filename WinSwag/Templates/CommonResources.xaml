@@ -37,7 +37,22 @@
             <CheckBox IsChecked="{x:Bind IsActive, Mode=TwoWay}"
                       xaml:DataContext.Model="{x:Bind}"
                       ToolTipService.ToolTip="{Binding ToolTip}"
+                      RightTapped="OnArgumentRightTapped"
                       VerticalAlignment="Top">
+                
+                <CheckBox.Resources>
+                    <MenuFlyout x:Key="ContextFlyout">
+                        <MenuFlyoutSubItem Text="Go To Operation..."
+                                           Visibility="{Binding IsGlobalArgument}"
+                                           xaml:BindableFlyout.ItemsSource="{x:Bind Parameters}"
+                                           xaml:BindableFlyout.DisplayMemberPath="Operation.OperationId"
+                                           xaml:BindableFlyout.ItemClick="{Binding GlobalArgumentRelatedOperationClickHandler, Mode=OneTime}">
+                            <MenuFlyoutSubItem.Icon>
+                                <SymbolIcon Symbol="Go"/>
+                            </MenuFlyoutSubItem.Icon>
+                        </MenuFlyoutSubItem>
+                    </MenuFlyout>
+                </CheckBox.Resources>
 
                 <StackPanel x:Name="ParameterInfo"
 						    ToolTipService.PlacementTarget="{Binding ElementName=ParameterInfo}">
@@ -70,7 +85,6 @@
 						       MaxLines="3"
 						       TextWrapping="Wrap"
 						       TextTrimming="WordEllipsis"/>
-
                 </StackPanel>
             </CheckBox>
 

@@ -73,6 +73,8 @@ namespace WinSwag
                 }
 
                 OperationsListView.SelectedItem = msg.Operation;
+                var selectedContainer = OperationsListView.ContainerFromItem(msg.Operation) as FrameworkElement;
+                selectedContainer?.StartBringIntoView();
             });
 
             KeyDown += OnKeyDown;

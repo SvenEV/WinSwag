@@ -2,8 +2,11 @@
 using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Input;
 using WinSwag.Core;
+using WinSwag.ViewModels.ForModels;
 
 namespace WinSwag.Templates
 {
@@ -28,6 +31,18 @@ namespace WinSwag.Templates
             var anims = visual.Compositor.CreateImplicitAnimationCollection();
             anims[nameof(UIElement.Opacity)] = anim;
             visual.ImplicitAnimations = anims;
+        }
+
+        private void OnArgumentRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var checkBox = (FrameworkElement)sender;
+            var argumentVM = (ArgumentViewModelBase)checkBox.DataContext;
+
+            if (argumentVM.IsGlobalArgument)
+            {
+                var flyout = checkBox.Resources["ContextFlyout"] as FlyoutBase;
+                flyout.ShowAt(checkBox);
+            }
         }
     }
 }
