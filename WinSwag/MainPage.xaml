@@ -6,9 +6,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:vm="using:WinSwag.ViewModels"
     xmlns:controls="using:WinSwag.Controls"
     xmlns:views="using:WinSwag.Views"
+    xmlns:core="using:WinSwag.Core"
+    xmlns:xaml="using:WinSwag.Xaml"
     mc:Ignorable="d"
     RequestedTheme="Dark">
 
@@ -54,7 +55,7 @@
                     Style="{StaticResource MyButtonRevealStyle}"
                     Click="{x:Bind DashboardPopup.Show}"
                     ToolTipService.ToolTip="Open Dashboard (ESC)">
-                <SymbolIcon Symbol="Home"/>
+                <SymbolIcon Symbol="GlobalNavigationButton"/>
             </Button>
 
             <!-- Button "Go Back" -->
@@ -88,7 +89,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <SymbolIcon Symbol="Library"/>
+                    <SymbolIcon Symbol="Home"/>
                     <TextBlock Text="{x:Bind SessionManagerVM.CurrentDocument.DisplayName, Mode=OneWay}"
                                TextTrimming="CharacterEllipsis" Grid.Column="1"/>
                 </Grid>
@@ -149,28 +150,28 @@
                             </Style>
                         </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="vm:SwaggerOperationViewModel">
-                                <Grid ColumnSpacing="12">
+                            <DataTemplate x:DataType="core:Operation">
+                                <Grid ColumnSpacing="12" xaml:DataContext.Model="{x:Bind}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="50"/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
 
                                     <TextBlock FontWeight="SemiBold"
-                                               Foreground="{x:Bind MethodBrush}"
+                                               Foreground="{Binding MethodBrush, Mode=OneTime}"
                                                VerticalAlignment="Top"
-                                               Text="{x:Bind Method}"/>
+                                               Text="{Binding Method, Mode=OneTime}"/>
 
                                     <StackPanel Grid.Column="1">
                                         <TextBlock Grid.Column="1"
                                                    FontFamily="Consolas"
-                                                   Text="{x:Bind Model.Path}"/>
+                                                   Text="{x:Bind Path}"/>
 
                                         <TextBlock FontSize="12" TextWrapping="Wrap"
                                                    Margin="0,2,0,0" Opacity=".8"
                                                    Text="{x:Bind Description}"
                                                    MaxLines="2" TextTrimming="WordEllipsis"
-                                                   Visibility="{x:Bind HasDescription}"/>
+                                                   Visibility="{Binding HasDescription, Mode=OneTime}"/>
                                     </StackPanel>
                                 </Grid>
                             </DataTemplate>
@@ -179,7 +180,7 @@
                             <GroupStyle>
                                 <GroupStyle.HeaderTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Key, Mode=OneTime}"/>
+                                        <TextBlock Text="{Binding Name, Mode=OneTime}"/>
                                     </DataTemplate>
                                 </GroupStyle.HeaderTemplate>
                             </GroupStyle>
@@ -188,7 +189,7 @@
                 </SemanticZoom.ZoomedInView>
                 <SemanticZoom.ZoomedOutView>
                     <ListView ItemsSource="{x:Bind Operations.View.CollectionGroups, Mode=OneWay}"
-                              DisplayMemberPath="Group.Key"/>
+                              DisplayMemberPath="Group.Name"/>
                 </SemanticZoom.ZoomedOutView>
             </SemanticZoom>
 

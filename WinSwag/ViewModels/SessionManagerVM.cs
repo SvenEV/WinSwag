@@ -1,13 +1,12 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
-using NSwag;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
-using WinSwag.Models;
+using WinSwag.Core;
 using WinSwag.Services;
 
 namespace WinSwag.ViewModels
@@ -18,14 +17,15 @@ namespace WinSwag.ViewModels
         private readonly IOperationManagerVM _operationManager;
         private readonly IViewStateManagerVM _viewStateManager;
         private readonly SwaggerSessionManager _sessionManager;
+        private readonly ApplicationInfo _appInfo;
 
-        private ObservableCollection<SwaggerSessionInfo> _storedSessions = new ObservableCollection<SwaggerSessionInfo>();
-        private SwaggerDocumentViewModel _currentDocument;
+        private ObservableCollection<SessionInfo> _storedSessions = new ObservableCollection<SessionInfo>();
+        private OpenApiDocument _currentDocument;
         private Task _initTask;
 
-        public IReadOnlyList<SwaggerSessionInfo> StoredSessions => _storedSessions;
+        public IReadOnlyList<SessionInfo> StoredSessions => _storedSessions;
 
-        public SwaggerDocumentViewModel CurrentDocument
+        public OpenApiDocument CurrentDocument
         {
             get => _currentDocument;
             private set
@@ -41,17 +41,18 @@ namespace WinSwag.ViewModels
 
         public bool IsSessionLoaded => CurrentDocument != null;
 
-        public bool IsCurrentSessionFavorite => _storedSessions.Any(s => s.Url == _currentDocument?.Url);
+        public bool IsCurrentSessionFavorite => _storedSessions.Any(s => s.Url == _currentDocument?.SourceUrl);
 
         public bool IsntCurrentSessionFavorite => !IsCurrentSessionFavorite && CurrentDocument != null;
 
         public SessionManagerVM(IMessenger messenger, IOperationManagerVM operationManager,
-            IViewStateManagerVM viewStateManager, SwaggerSessionManager sessionManager)
+            IViewStateManagerVM viewStateManager, SwaggerSessionManager sessionManager, ApplicationInfo appInfo)
         {
             _messenger = messenger;
             _operationManager = operationManager;
             _viewStateManager = viewStateManager;
             _sessionManager = sessionManager;
+            _appInfo = appInfo;
             _initTask = Init();
 
             async Task Init()
@@ -79,9 +80,7 @@ namespace WinSwag.ViewModels
                     await _initTask;
                     _messenger.Send(CloseDashboard.Instance);
                     await UnloadCurrentSessionAsync();
-                    var doc = await SwaggerDocumentLoader.LoadFromUrlAsync(url);
-                    var displayName = _storedSessions.FirstOrDefault(s => s.Url == url)?.DisplayName;
-                    CurrentDocument = new SwaggerDocumentViewModel(doc, url, displayName);
+                    CurrentDocument = await OpenApiDocument.LoadFromUrlAsync(url, _appInfo.Settings);
                     _operationManager.ClearNavigationStack();
                     _operationManager.NavigateToApiInfo();
                 }
@@ -102,8 +101,7 @@ namespace WinSwag.ViewModels
                     _messenger.Send(CloseDashboard.Instance);
                     await UnloadCurrentSessionAsync();
                     var json = await FileIO.ReadTextAsync(file);
-                    var doc = await SwaggerDocumentLoader.LoadFromStringAsync(json);
-                    CurrentDocument = new SwaggerDocumentViewModel(doc, "file://" + file.Path);
+                    CurrentDocument = await OpenApiDocument.LoadFromStringAsync(json, null /* TODO */, _appInfo.Settings);
                     _operationManager.ClearNavigationStack();
                     _operationManager.NavigateToApiInfo();
                 }
@@ -114,7 +112,7 @@ namespace WinSwag.ViewModels
             }
         }
 
-        public async Task DeleteSessionAsync(SwaggerSessionInfo sessionInfo)
+        public async Task DeleteSessionAsync(SessionInfo sessionInfo)
         {
             try
             {
@@ -128,7 +126,7 @@ namespace WinSwag.ViewModels
             }
         }
 
-        public async Task LoadSessionAsync(SwaggerSessionInfo sessionInfo)
+        public async Task LoadSessionAsync(SessionInfo sessionInfo)
         {
             try
             {
@@ -138,7 +136,8 @@ namespace WinSwag.ViewModels
                     _messenger.Send(CloseDashboard.Instance);
                     await UnloadCurrentSessionAsync(); // unload before loading new session (important when loading the same session again)
                     var session = await _sessionManager.LoadAsync(sessionInfo.Url);
-                    CurrentDocument = await SwaggerSession.ToViewModelAsync(session);
+                    CurrentDocument = await Session.ToDocumentAsync(session);
+
                     _operationManager.ClearNavigationStack();
                     _operationManager.NavigateToApiInfo();
                 }
@@ -155,7 +154,7 @@ namespace WinSwag.ViewModels
             {
                 await _initTask;
                 CurrentDocument.DisplayName = displayName;
-                var session = SwaggerSession.FromViewModel(CurrentDocument, displayName);
+                var session = Session.FromDocument(CurrentDocument);
                 await _sessionManager.StoreAsync(session);
                 await RefreshStoredSessionsAsync();
             }
@@ -166,7 +165,7 @@ namespace WinSwag.ViewModels
             try
             {
                 await _initTask;
-                await _sessionManager.DeleteAsync(_currentDocument.Url);
+                await _sessionManager.DeleteAsync(_currentDocument.SourceUrl);
                 await RefreshStoredSessionsAsync();
             }
             catch (Exception e)
@@ -177,7 +176,7 @@ namespace WinSwag.ViewModels
         
         public async Task UnloadCurrentSessionAsync()
         {
-            if (_storedSessions.Any(s => s.Url == _currentDocument?.Url))
+            if (_storedSessions.Any(s => s.Url == _currentDocument?.SourceUrl))
             {
                 // Store current session before switching to another one
                 await SaveCurrentSessionAsync(_currentDocument.DisplayName);

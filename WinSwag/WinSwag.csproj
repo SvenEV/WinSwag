@@ -108,26 +108,17 @@
     <Compile Include="Controls\PopupWindow.xaml.cs">
       <DependentUpon>PopupWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Core\Extensions\AudioResponse.cs" />
+    <Compile Include="Core\Extensions\FileArgument.cs" />
+    <Compile Include="Core\Extensions\ImageResponse.cs" />
     <Compile Include="DeferralExtensions.cs" />
     <Compile Include="DependencyInjectionExtensions.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ApplicationInstance.cs" />
-    <Compile Include="Models\Arguments\BoolArgument.cs" />
-    <Compile Include="Models\Arguments\DateTimeArgument.cs" />
-    <Compile Include="Models\Arguments\EnumArgument.cs" />
-    <Compile Include="Models\Arguments\FileArgument.cs" />
-    <Compile Include="Models\Arguments\StringArgument.cs" />
-    <Compile Include="Models\NSwagExtensions.cs" />
-    <Compile Include="Models\Arguments\SwaggerArgument.cs" />
-    <Compile Include="Models\Responses\AudioResponse.cs" />
-    <Compile Include="Models\Responses\ImageResponse.cs" />
-    <Compile Include="Models\Responses\JsonResponse.cs" />
-    <Compile Include="Models\Responses\StringResponse.cs" />
-    <Compile Include="Models\SettingsDictionary.cs" />
-    <Compile Include="Models\SwaggerDocumentLoader.cs" />
-    <Compile Include="Models\SwaggerSessionManager.cs" />
+    <Compile Include="SettingsDictionary.cs" />
+    <Compile Include="Services\SwaggerSessionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ApplicationInfo.cs" />
     <Compile Include="Services\ISessionManager.cs" />
@@ -137,23 +128,28 @@
     <Compile Include="Templates\CommonResources.xaml.cs">
       <DependentUpon>CommonResources.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\BoolSelectorConverter.cs" />
+    <Compile Include="ViewModels\ForModels\ArgumentViewModel.cs" />
+    <Compile Include="ViewModels\ForModels\EnumArgumentViewModel.cs" />
+    <Compile Include="Xaml\BindableFlyout.cs" />
+    <Compile Include="Xaml\DataContext.cs" />
+    <Compile Include="Xaml\IViewModel.cs" />
+    <Compile Include="Xaml\ViewModelRegistry.cs" />
+    <Compile Include="Xaml\XamlHelper.cs" />
     <Compile Include="ViewModels\ViewStateManagerVM.cs" />
     <Compile Include="Templates\ParameterTemplates.xaml.cs">
       <DependentUpon>ParameterTemplates.xaml</DependentUpon>
     </Compile>
     <Compile Include="AppMessage.cs" />
-    <Compile Include="Models\SwaggerSessionInfo.cs" />
     <Compile Include="Templates\ResponseTemplates.xaml.cs">
       <DependentUpon>ResponseTemplates.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\DateTimeToStringConverter.cs" />
-    <Compile Include="ViewModels\ForModels\SwaggerOperationViewModel.cs" />
+    <Compile Include="ViewModels\ForModels\OperationViewModel.cs" />
     <Compile Include="ViewModels\OperationManagerVM.cs" />
     <Compile Include="ViewModels\ParameterTemplateSelector.cs" />
     <Compile Include="ViewModels\ResponseTemplateSelector.cs" />
-    <Compile Include="Models\Responses\ResponseViewModel.cs" />
-    <Compile Include="Models\SwaggerSession.cs" />
-    <Compile Include="ViewModels\ForModels\SwaggerDocumentViewModel.cs" />
+    <Compile Include="ViewModels\ForModels\OpenApiDocumentViewModel.cs" />
     <Compile Include="ViewModels\SessionManagerVM.cs" />
     <Compile Include="Views\ApiInfoPage.xaml.cs">
       <DependentUpon>ApiInfoPage.xaml</DependentUpon>
@@ -278,13 +274,13 @@
       <Version>2.0.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.0.1</Version>
+      <Version>6.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Services.Store.Engagement">
       <Version>10.1710.25002</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>2.0.0</Version>
+      <Version>2.1.0</Version>
     </PackageReference>
     <PackageReference Include="MvvmLightLibs">
       <Version>5.3.0</Version>
@@ -295,11 +291,21 @@
     <PackageReference Include="NSwag.Core.Yaml">
       <Version>11.12.9</Version>
     </PackageReference>
+    <PackageReference Include="System.Reactive.Linq">
+      <Version>3.1.1</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\WinSwag.Core\WinSwag.Core.csproj">
+      <Project>{c6ef858a-1d8e-4863-8170-4dd17c4fe0f4}</Project>
+      <Name>WinSwag.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

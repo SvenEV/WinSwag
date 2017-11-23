@@ -6,24 +6,30 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WinSwag.Models.Arguments
+namespace WinSwag.Core
 {
-    public class StringArgument : SwaggerArgument
+    public class StringArgument : ArgumentBase
     {
-        public string Value { get; set; }
+        private string _value = "";
 
-        public override bool HasValue => !string.IsNullOrEmpty(Value);
-
-        public string DefaultValue => Parameter.Default?.ToString();
-
-        public StringArgument(SwaggerParameter parameter) : base(parameter)
+        public string Value
         {
+            get => _value;
+            set => Set(ref _value, value);
         }
 
-        public override Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri, string contentType) =>
-            ApplyAsync(Parameter, Value, request, requestUri, contentType);
+        public override object ObjectValue
+        {
+            get => Value;
+            set => Value = (string)value;
+        }
 
-        public static Task ApplyAsync(SwaggerParameter parameter, string value, HttpRequestMessage request, StringBuilder requestUri, string contentType)
+        public override object InitialValue => "";
+
+        public override async Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri) =>
+            await ApplyAsync(Parameter, Value, request, requestUri, ContentType);
+
+        public static Task ApplyAsync(Parameter parameter, string value, HttpRequestMessage request, StringBuilder requestUri, string contentType)
         {
             if (string.IsNullOrEmpty(value))
                 return Task.CompletedTask;
@@ -31,7 +37,7 @@ namespace WinSwag.Models.Arguments
             switch (parameter.Kind)
             {
                 case SwaggerParameterKind.Path:
-                    requestUri = requestUri.Replace("{" + parameter.Name + "}", value ?? "");
+                    requestUri.Replace("{" + parameter.Name + "}", value ?? "");
                     break;
 
                 case SwaggerParameterKind.Header:
@@ -54,7 +60,7 @@ namespace WinSwag.Models.Arguments
                     break;
 
                 case SwaggerParameterKind.ModelBinding:
-                    throw new NotImplementedException(); // TODO
+                    throw new NotImplementedException(); // TODO: ModelBinding-parameters
             }
 
             return Task.CompletedTask;

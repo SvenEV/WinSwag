@@ -4,8 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:responses="using:WinSwag.Models.Responses"
+    xmlns:core="using:WinSwag.Core"
     xmlns:vm="using:WinSwag.ViewModels"
+    xmlns:coreex="using:WinSwag.Core.Extensions"
     mc:Ignorable="d">
 
     <vm:ResponseTemplateSelector
@@ -16,19 +17,19 @@
         ImageTemplate="{StaticResource ImageResponseTemplate}"
         AudioTemplate="{StaticResource AudioResponseTemplate}"/>
     
-    <DataTemplate x:Key="StringResponseTemplate" x:DataType="responses:StringResponse">
+    <DataTemplate x:Key="StringResponseTemplate" x:DataType="core:StringResponse">
         <TextBlock Margin="0,12,0,0" IsTextSelectionEnabled="True"
                    TextWrapping="Wrap" FontFamily="Consolas"
                    Text="{x:Bind Value}"/>
     </DataTemplate>
 
-    <DataTemplate x:Key="JsonResponseTemplate" x:DataType="responses:JsonResponse">
+    <DataTemplate x:Key="JsonResponseTemplate" x:DataType="core:JsonResponse">
         <TextBlock Margin="0,12,0,0" IsTextSelectionEnabled="True"
                    TextWrapping="Wrap" FontFamily="Consolas"
                    Text="{x:Bind Json}"/>
     </DataTemplate>
 
-    <DataTemplate x:Key="ImageResponseTemplate" x:DataType="responses:ImageResponse">
+    <DataTemplate x:Key="ImageResponseTemplate" x:DataType="coreex:ImageResponse">
         <Viewbox StretchDirection="DownOnly" HorizontalAlignment="Left">
             <Image Source="{x:Bind Image}" Tapped="OnImageTapped"
                    CanDrag="True" DragStarting="OnImageDragStarting">
@@ -61,7 +62,7 @@
         </Viewbox>
     </DataTemplate>
 
-    <DataTemplate x:Key="AudioResponseTemplate" x:DataType="responses:AudioResponse">
+    <DataTemplate x:Key="AudioResponseTemplate" x:DataType="coreex:AudioResponse">
         <MediaElement Loaded="OnAudioTemplateLoaded" AreTransportControlsEnabled="True"
                       Height="100"/>
     </DataTemplate>

@@ -10,9 +10,11 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using WinSwag.Controls;
+using WinSwag.Core;
 using WinSwag.Services;
 using WinSwag.ViewModels;
 using WinSwag.Views;
+using WinSwag.Xaml;
 
 namespace WinSwag
 {
@@ -71,6 +73,8 @@ namespace WinSwag
                 }
 
                 OperationsListView.SelectedItem = msg.Operation;
+                var selectedContainer = OperationsListView.ContainerFromItem(msg.Operation) as FrameworkElement;
+                selectedContainer?.StartBringIntoView();
             });
 
             KeyDown += OnKeyDown;
@@ -94,7 +98,8 @@ namespace WinSwag
             switch (e.Key)
             {
                 case VirtualKey.F5 when OperationManagerVM.IsOperationSelected:
-                    OperationManagerVM.SelectedOperation.BeginSendRequest();
+                    var vm = ViewModelRegistry.ViewModelFor<OperationViewModel>(OperationManagerVM.SelectedOperation);
+                    vm.BeginSendRequest();
                     e.Handled = true;
                     break;
 
@@ -117,7 +122,7 @@ namespace WinSwag
 
         private void OperationClicked(object sender, ItemClickEventArgs e)
         {
-            var operation = (SwaggerOperationViewModel)e.ClickedItem;
+            var operation = (Operation)e.ClickedItem;
             OperationManagerVM.NavigateToOperation(operation);
         }
 

@@ -1,7 +1,9 @@
-﻿using System;
+﻿using NJsonSchema;
+using System.Net.Http.Headers;
 using Windows.ApplicationModel;
 using Windows.Storage;
-using Windows.System;
+using WinSwag.Core;
+using WinSwag.Core.Extensions;
 
 namespace WinSwag.Services
 {
@@ -20,6 +22,8 @@ namespace WinSwag.Services
 
         public string PackageFamilyName => Package.Current.Id.FamilyName;
 
+        public OpenApiSettings Settings { get; }
+
         /// <summary>
         /// Indicates whether the app was launched for the first time after being installed.
         /// </summary>
@@ -31,6 +35,32 @@ namespace WinSwag.Services
             IsLaunchedFirstTime = !settings.ContainsKey(FirstTimeAppStartKey);
             if (IsLaunchedFirstTime)
                 settings.Add(FirstTimeAppStartKey, true);
+
+            Settings = new OpenApiSettings(OpenApiSettings.Default)
+            {
+                ConfigureRequest = request => request.Headers.UserAgent.Add(new ProductInfoHeaderValue("WinSwag", Version)),
+                ArgumentTypes =
+                {
+                    new ArgumentTypeInfo
+                    {
+                        Type = typeof(FileArgument),
+                        IsApplicable = spec => spec.Type == JsonObjectType.File
+                    }
+                },
+                ResponseContentTypes =
+                {
+                    new ResponseContentTypeInfo
+                    {
+                        Type = typeof(ImageResponse),
+                        IsApplicable = spec => spec.Content?.Headers.ContentType?.MediaType?.StartsWith("image/") ?? false
+                    },
+                    new ResponseContentTypeInfo
+                    {
+                        Type = typeof(AudioResponse),
+                        IsApplicable = spec => spec.Content?.Headers.ContentType?.MediaType?.StartsWith("audio/") ?? false
+                    }
+                }
+            };
         }
     }
 }

@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
-using WinSwag.Services;
+using WinSwag.Core;
 
-namespace WinSwag.Models
+namespace WinSwag.Services
 {
     public class SwaggerSessionManager
     {
@@ -17,12 +17,12 @@ namespace WinSwag.Models
 
         private Task _initTask;
         private StorageFolder _folder;
-        private SettingsDictionary<SwaggerSessionInfo> _sessions;
+        private SettingsDictionary<SessionInfo> _sessions;
 
         public SwaggerSessionManager(ApplicationInfo appInfo)
         {
             _appInfo = appInfo;
-            _sessions = new SettingsDictionary<SwaggerSessionInfo>(
+            _sessions = new SettingsDictionary<SessionInfo>(
                 ApplicationData.Current.LocalSettings.CreateContainer("Sessions", ApplicationDataCreateDisposition.Always));
             _initTask = Init();
         }
@@ -35,17 +35,17 @@ namespace WinSwag.Models
             if (_appInfo.IsLaunchedFirstTime && _sessions.TryAdd(SampleApi.SessionInfo.Url, SampleApi.SessionInfo))
             {
                 var sessionFile = await StorageFile.GetFileFromApplicationUriAsync(SampleApi.SessionFileUri);
-                await sessionFile.CopyAsync(_folder, $"{SampleApi.SessionInfo.Guid}.json");
+                await sessionFile.CopyAsync(_folder, $"{SampleApi.SessionInfo.UrlHash}.json");
             }
         }
 
-        public async Task<IReadOnlyList<SwaggerSessionInfo>> GetAllAsync()
+        public async Task<IReadOnlyList<SessionInfo>> GetAllAsync()
         {
             await _initTask;
             return _sessions.Values.OrderBy(s => s.DisplayName).ToList();
         }
 
-        public async Task<SwaggerSession> LoadAsync(string url)
+        public async Task<Session> LoadAsync(string url)
         {
             await _initTask;
 
@@ -54,13 +54,13 @@ namespace WinSwag.Models
 
             try
             {
-                var sessionFile = await _folder.GetFileAsync($"{info.Guid.ToString()}.json");
+                var sessionFile = await _folder.GetFileAsync($"{info.UrlHash.ToString()}.json");
                 var json = await FileIO.ReadTextAsync(sessionFile);
 
                 if (string.IsNullOrEmpty(json))
                     return EmptySession();
 
-                return SwaggerSession.FromJson(json);
+                return Session.FromJson(json);
             }
             catch (FileNotFoundException)
             {
@@ -69,25 +69,23 @@ namespace WinSwag.Models
                 return EmptySession();
             }
 
-            SwaggerSession EmptySession() => new SwaggerSession
+            Session EmptySession() => new Session
             {
-                Url = url,
-                DisplayName = info.DisplayName,
-                Operations = new Dictionary<string, SwaggerSession.StoredOperation>()
+                Info = new SessionInfo(info.DisplayName, url),
             };
         }
 
-        public async Task StoreAsync(SwaggerSession session)
+        public async Task StoreAsync(Session session)
         {
             await _initTask;
 
-            if (!_sessions.TryGetValue(session.Url, out var info))
+            if (!_sessions.TryGetValue(session.Info.Url, out var info))
             {
-                info = new SwaggerSessionInfo(session.DisplayName, session.Url, Guid.NewGuid());
-                _sessions.Add(session.Url, info);
+                info = session.Info;
+                _sessions.Add(session.Info.Url, session.Info);
             }
 
-            var sessionFile = await _folder.CreateFileAsync($"{info.Guid}.json", CreationCollisionOption.ReplaceExisting);
+            var sessionFile = await _folder.CreateFileAsync($"{info.UrlHash}.json", CreationCollisionOption.ReplaceExisting);
             var json = session.ToJson();
             await FileIO.WriteTextAsync(sessionFile, json);
         }
@@ -98,7 +96,7 @@ namespace WinSwag.Models
             {
                 try
                 {
-                    var file = await _folder.GetFileAsync($"{info.Guid}.json");
+                    var file = await _folder.GetFileAsync($"{info.UrlHash}.json");
                     await file.DeleteAsync();
                 }
                 catch (FileNotFoundException) // If file already deleted, that's fine
@@ -110,8 +108,8 @@ namespace WinSwag.Models
 
     static class SampleApi
     {
-        public static readonly SwaggerSessionInfo SessionInfo =
-            new SwaggerSessionInfo("WinSwag Pinboard (Sample API)", "http://winswagsampleapi.azurewebsites.net/swagger/v1/swagger.json", Guid.Empty);
+        public static readonly SessionInfo SessionInfo =
+            new SessionInfo("WinSwag Pinboard (Sample API)", "http://winswagsampleapi.azurewebsites.net/swagger/v1/swagger.json");
 
         public static readonly Uri SessionFileUri =
             new Uri("ms-appx:///Assets/SampleSessions/WinSwagPinboard.json");

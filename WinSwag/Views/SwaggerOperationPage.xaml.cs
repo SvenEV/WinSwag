@@ -1,43 +1,48 @@
 ﻿using System;
-using System.Linq;
-using Windows.ApplicationModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using WinSwag.Core;
 using WinSwag.ViewModels;
+using WinSwag.Xaml;
 
 namespace WinSwag.Views
 {
     public sealed partial class SwaggerOperationPage : Page
     {
         public static readonly DependencyProperty OperationProperty =
-            DependencyProperty.Register(nameof(Operation), typeof(SwaggerOperationViewModel), typeof(SwaggerOperationPage), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(Operation), typeof(Operation), typeof(SwaggerOperationPage), new PropertyMetadata(null));
 
-        public SwaggerOperationViewModel Operation
+        public static readonly DependencyProperty VMProperty =
+            DependencyProperty.Register(nameof(VM), typeof(OperationViewModel), typeof(SwaggerOperationPage), new PropertyMetadata(null));
+
+        public Operation Operation
         {
-            get { return (SwaggerOperationViewModel)GetValue(OperationProperty); }
+            get { return (Operation)GetValue(OperationProperty); }
             set { SetValue(OperationProperty, value); }
+        }
+
+        public OperationViewModel VM
+        {
+            get { return (OperationViewModel)GetValue(VMProperty); }
+            set { SetValue(VMProperty, value); }
         }
 
         public SwaggerOperationPage()
         {
             ApplicationInstance.Current.Services.Populate(this);
             InitializeComponent();
-
-            if (DesignMode.DesignMode2Enabled)
-            {
-                Operation = new SwaggerOperationViewModel(new NSwag.SwaggerOperationDescription
-                {
-                    Method = NSwag.SwaggerOperationMethod.Get,
-                    Path = "api/Pinboard/Image",
-                    Operation = new NSwag.SwaggerOperation { }
-                }, "http://winswagsampleapi.azurewebsites.net");
-            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Operation = e.Parameter as SwaggerOperationViewModel ?? throw new ArgumentNullException();
+            Operation = e.Parameter as Operation ?? throw new ArgumentNullException();
+            VM = ViewModelRegistry.ViewModelFor<OperationViewModel>(Operation);
+        }
+
+        private void OnSendRequestButtonClicked(object sender, RoutedEventArgs e)
+        {
+            VM.BeginSendRequest();
         }
     }
 }

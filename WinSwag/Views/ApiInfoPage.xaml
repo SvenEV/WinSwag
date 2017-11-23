@@ -9,7 +9,8 @@
     RequestedTheme="Dark"
     mc:Ignorable="d">
 
-    <ScrollViewer Background="{StaticResource AcrylicBackgroundBrush}"
+    <ScrollViewer Style="{StaticResource TopMarginScrollViewerStyle}"
+                  Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                   VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto">
         <Grid>
             <Grid.RowDefinitions>
@@ -18,18 +19,23 @@
             </Grid.RowDefinitions>
             
             <!-- Header -->
-            <StackPanel Padding="18,0,18,12" Spacing="12">
+            <StackPanel Padding="18,500,18,12" Margin="0,-500,0,0" Spacing="12"
+                        Background="{StaticResource AcrylicBackgroundBrush}">
+                
                 <!-- API Title & Version -->
                 <TextBlock Padding="0,12,128,12"
                            Style="{StaticResource SubtitleTextBlockStyle}"
                            VerticalAlignment="Center">
-                    <Run Text="{x:Bind Document.DisplayName}" FontWeight="SemiBold"/>
-                    <Run Text="{x:Bind Document.Model.Info.Version}"/>
+                    <Run Text="{x:Bind Document.DisplayName}" FontWeight="Bold"/>
+                    <Run Text="{x:Bind Document.Version}"/>
                 </TextBlock>
+
+                <!-- API Base URL -->
+                <TextBlock Text="{x:Bind Document.BaseUrl}" IsTextSelectionEnabled="True"/>
 
                 <!-- API Description -->
                 <tkc:MarkdownTextBlock Text="{x:Bind Document.Description, Mode=OneWay}"
-                                       Visibility="{x:Bind Document.HasDescription}"
+                                       Visibility="{x:Bind DocumentVM.HasDescription}"
                                        LinkClicked="DescriptionLinkClicked"
                                        TextWrapping="WrapWholeWords"/>
 
@@ -86,17 +92,16 @@
                 </Grid>
             </StackPanel>
 
-            <Border Grid.Row="1" Padding="18,12,18,12"
-                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <Border Grid.Row="1" Padding="18,12,18,12">
                 <!-- Common Parameters -->
-                <StackPanel Visibility="{x:Bind Document.HasCommonParameters, Mode=OneWay}">
-                    <controls:SectionHeader Text="&#xE12B; Global Parameters"
+                <StackPanel Visibility="{x:Bind DocumentVM.HasGlobalArguments, Mode=OneWay}">
+                    <controls:SectionHeader Text="&#xE12B; Global Arguments"
                                             FontFamily="Segoe UI Symbol"/>
 
-                    <TextBlock Text="The following parameters appear in all operations. Values you assign here will apply to all operations, unless they are overridden in individual operations."
+                    <TextBlock Text="Below is a list of all parameters, some of them may appear in multiple or even all operations. Enter a value once in this section and it will apply to all operations so you don't need to manually copy and paste the value between operations. If needed, global values can still be overridden in individual operations ."
                                TextWrapping="WrapWholeWords" Margin="0,0,0,12"/>
 
-                    <ItemsControl ItemsSource="{x:Bind Document.CommonParameters}"
+                    <ItemsControl ItemsSource="{x:Bind Document.GlobalArguments}"
                                   ItemTemplate="{StaticResource SwaggerArgumentTemplate}"/>
                 </StackPanel>
             </Border>

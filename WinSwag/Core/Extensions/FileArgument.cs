@@ -11,35 +11,37 @@ using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace WinSwag.Models.Arguments
+namespace WinSwag.Core.Extensions
 {
-    public class FileArgument : SwaggerArgument
+    public class FileArgument : ArgumentBase
     {
         private string _futureAccessToken;
-        private StorageFile _file;
-        private BitmapImage _fileThumbnail;
+        private StorageFile _value;
+        private BitmapImage _thumbnail;
 
-        public StorageFile File
+        public StorageFile Value
         {
-            get => _file;
-            private set
+            get => _value;
+            set
             {
-                if (Set(ref _file, value))
+                if (Set(ref _value, value))
                     UpdateFileThumbnailAsync();
             }
         }
 
-        public BitmapImage FileThumbnail
+        public override object ObjectValue
         {
-            get => _fileThumbnail;
-            private set => Set(ref _fileThumbnail, value);
+            get => Value;
+            set => Value = (StorageFile)value;
         }
 
-        public override bool HasValue => _file != null;
-
-        public FileArgument(SwaggerParameter parameter) : base(parameter)
+        public BitmapImage Thumbnail
         {
+            get => _thumbnail;
+            private set => Set(ref _thumbnail, value);
         }
+
+        public override object InitialValue => null;
 
         public async void PickFile()
         {
@@ -63,10 +65,9 @@ namespace WinSwag.Models.Arguments
             if (!string.IsNullOrEmpty(_futureAccessToken))
                 StorageApplicationPermissions.FutureAccessList.Remove(_futureAccessToken);
 
-            File = file;
+            Value = file;
 
             // Add new file to FutureAccessList
-            var operation = (SwaggerOperation)Parameter.Parent;
             _futureAccessToken = StorageApplicationPermissions.FutureAccessList.Add(file);
         }
 
@@ -76,13 +77,13 @@ namespace WinSwag.Models.Arguments
             if (!string.IsNullOrEmpty(_futureAccessToken))
                 StorageApplicationPermissions.FutureAccessList.Remove(_futureAccessToken);
 
-            File = null;
+            Value = null;
             _futureAccessToken = null;
         }
 
-        public override async Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri, string contentType)
+        public override async Task ApplyAsync(HttpRequestMessage request, StringBuilder requestUri)
         {
-            if (_file == null)
+            if (_value == null)
                 return;
 
             if (Parameter.Kind != SwaggerParameterKind.FormData)
@@ -95,7 +96,7 @@ namespace WinSwag.Models.Arguments
             //request.Content = new StreamContent(stream);
 
             // Workaround: Load file into memory
-            using (var stream = await _file.OpenStreamForReadAsync())
+            using (var stream = await _value.OpenStreamForReadAsync())
             using (var memStream = new MemoryStream())
             {
                 stream.CopyTo(memStream);
@@ -111,30 +112,29 @@ namespace WinSwag.Models.Arguments
                 return;
 
             var token = o.ToObject<string>();
-            var operation = (SwaggerOperation)Parameter.Parent;
 
             if (token != null && StorageApplicationPermissions.FutureAccessList.ContainsItem(token))
             {
-                File = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(token, AccessCacheOptions.DisallowUserInput);
+                Value = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(token, AccessCacheOptions.DisallowUserInput);
             }
         }
 
         private async void UpdateFileThumbnailAsync()
         {
-            if (_file == null)
+            if (_value == null)
             {
-                FileThumbnail = null;
+                Thumbnail = null;
             }
             else
             {
                 try
                 {
-                    FileThumbnail = new BitmapImage();
-                    FileThumbnail.SetSource(await _file.GetThumbnailAsync(ThumbnailMode.ListView));
+                    Thumbnail = new BitmapImage();
+                    Thumbnail.SetSource(await _value.GetThumbnailAsync(ThumbnailMode.ListView));
                 }
                 catch
                 {
-                    FileThumbnail = null;
+                    Thumbnail = null;
                 }
             }
         }

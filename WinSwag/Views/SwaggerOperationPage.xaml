@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:WinSwag.Controls"
+    xmlns:xaml="using:WinSwag.Xaml"
     RequestedTheme="Dark"
     mc:Ignorable="d">
 
@@ -20,10 +21,10 @@
                    Style="{StaticResource SubtitleTextBlockStyle}"
                    TextTrimming="CharacterEllipsis"
                    TextWrapping="NoWrap" FontFamily="Consolas">
-            <Run Text="{x:Bind Operation.Method}"
-                 Foreground="{x:Bind Operation.MethodBrush}"
+            <Run Text="{x:Bind VM.Method}"
+                 Foreground="{x:Bind VM.MethodBrush}"
                  FontWeight="SemiBold"/>
-            <Run Text="{x:Bind Operation.Model.Path}"/>
+            <Run Text="{x:Bind Operation.Path}"/>
         </TextBlock>
         
         <!-- Selected operation request/response (right) -->
@@ -33,14 +34,14 @@
                 <controls:SectionHeader Text="Request"/>
 
                 <!-- Parameters -->
-                <ItemsControl ItemsSource="{x:Bind Operation.Arguments}"
+                <ItemsControl ItemsSource="{x:Bind VM.LocalArguments}"
                               ItemTemplate="{StaticResource SwaggerArgumentTemplate}"/>
 
                 <!-- Send request button -->
                 <Button HorizontalAlignment="Right" Foreground="Black" Padding="12,8" Margin="0,4,0,0"
-                        Background="{x:Bind Operation.MethodBrush}"
-                        Click="{x:Bind Operation.BeginSendRequest}"
-                        IsEnabled="{x:Bind Operation.CanSendRequest, Mode=OneWay}"
+                        Background="{x:Bind VM.MethodBrush}"
+                        Click="OnSendRequestButtonClicked"
+                        IsEnabled="{x:Bind VM.CanSendRequest, Mode=OneWay}"
                         ToolTipService.ToolTip="Send HTTP Request (F5)">
                     <StackPanel Orientation="Horizontal">
                         <SymbolIcon Symbol="Play"/>
@@ -53,25 +54,25 @@
                 
                 <!-- Response part -->
                 <Border Height="4">
-                    <ProgressBar IsIndeterminate="{x:Bind Operation.IsBusy, Mode=OneWay}"
-                                 Visibility="{x:Bind Operation.IsBusy, Mode=OneWay}"/>
+                    <ProgressBar IsIndeterminate="{x:Bind VM.IsBusy, Mode=OneWay}"
+                                 Visibility="{x:Bind VM.IsBusy, Mode=OneWay}"/>
                 </Border>
 
-                <TextBlock Visibility="{x:Bind Operation.HasRequestError, Mode=OneWay}"
-                           Text="{x:Bind Operation.RequestError, Mode=OneWay}"
+                <TextBlock Visibility="{x:Bind VM.Response.IsFaulted, Mode=OneWay}"
+                           Text="{x:Bind VM.Response.Exception, Mode=OneWay}"
                            TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
 
-                <StackPanel Visibility="{x:Bind Operation.HasResponse, Mode=OneWay}">
+                <StackPanel Visibility="{x:Bind VM.HasResponse, Mode=OneWay}">
 
-                    <TextBlock Text="{x:Bind Operation.Response.Status, Mode=OneWay}"
+                    <TextBlock Text="{x:Bind VM.Response.Status, Mode=OneWay}"
                                FontWeight="SemiBold"/>
 
-                    <TextBlock Text="{x:Bind Operation.Response.RequestUri, Mode=OneWay}"
+                    <TextBlock Text="{x:Bind VM.Response.RequestUri, Mode=OneWay}"
                                TextWrapping="Wrap" FontFamily="Consolas" IsTextSelectionEnabled="True"
                                Margin="0,12,0,0"/>
 
                     <!-- Response headers -->
-                    <ItemsControl ItemsSource="{x:Bind Operation.Response.Response.Headers, Mode=OneWay}"
+                    <ItemsControl ItemsSource="{x:Bind VM.Response.Message.Headers, Mode=OneWay}"
                                   Margin="0,12,0,0">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -88,11 +89,11 @@
                     </ItemsControl>
 
                     <!-- Response content -->
-                    <ContentControl Content="{x:Bind Operation.Response, Mode=OneWay}"
+                    <ContentControl Content="{x:Bind VM.Response.Content, Mode=OneWay}"
                                     ContentTemplateSelector="{StaticResource ResponseTemplateSelector}"
                                     HorizontalContentAlignment="Stretch"
                                     VerticalContentAlignment="Stretch"
-                                    Margin="0,12,0,0"/>
+                                    Margin="0,12,0,12"/>
 
                 </StackPanel>
 

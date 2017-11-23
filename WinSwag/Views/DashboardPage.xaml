@@ -2,10 +2,9 @@
     x:Class="WinSwag.Views.DashboardPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:WinSwag.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="using:WinSwag.Models"
+    xmlns:core="using:WinSwag.Core"
     xmlns:controls="using:WinSwag.Controls"
     mc:Ignorable="d">
 
@@ -109,7 +108,7 @@
                 </Button>
 
                 <AutoSuggestBox Grid.Column="1"
-                                Text="{x:Bind SessionManagerVM.CurrentDocument.Url, Mode=OneWay}"
+                                Text="{x:Bind SessionManagerVM.CurrentDocument.SourceUrl, Mode=OneWay}"
                                 PlaceholderText="URL to a Swagger document (swagger.json, swagger.yaml)"
                                 QuerySubmitted="OnUrlBoxQuerySubmitted"
                                 QueryIcon="Forward" Margin="0,12,12,8"/>
@@ -127,7 +126,7 @@
                     </Style>
                 </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="models:SwaggerSessionInfo">
+                    <DataTemplate x:DataType="core:SessionInfo">
                         <Grid ColumnSpacing="12" ToolTipService.ToolTip="{x:Bind Url}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -151,7 +150,7 @@
                                        FontSize="12"/>
 
                             <Button Style="{StaticResource MyButtonRevealStyle}"
-                                    ToolTipService.ToolTip="Delete Session"
+                                    ToolTipService.ToolTip="Remove from Favorites"
                                     Click="DeleteSessionButtonClick"
                                     BorderThickness="0"
                                     Grid.Column="3"

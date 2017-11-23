@@ -1,6 +1,7 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using WinSwag.Models.Responses;
+using WinSwag.Core;
+using WinSwag.Core.Extensions;
 
 namespace WinSwag.Templates
 {

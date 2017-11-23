@@ -1,6 +1,7 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using WinSwag.Models.Responses;
+using WinSwag.Core;
+using WinSwag.Core.Extensions;
 
 namespace WinSwag.ViewModels
 {
@@ -18,7 +19,7 @@ namespace WinSwag.ViewModels
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
-            if (!(item is ResponseViewModel arg))
+            if (!(item is IResponseContent arg))
                 return null;
 
             switch (arg)

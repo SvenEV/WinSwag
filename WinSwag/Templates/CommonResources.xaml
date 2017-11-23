@@ -5,68 +5,101 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:WinSwag.Controls"
-    xmlns:arguments="using:WinSwag.Models.Arguments"
+    xmlns:core="using:WinSwag.Core"
+    xmlns:xaml="using:WinSwag.Xaml"
+    xmlns:vm="using:WinSwag.ViewModels"
     mc:Ignorable="d">
 
     <AcrylicBrush x:Key="AcrylicBackgroundBrush"
                   BackgroundSource="HostBackdrop"
-                  FallbackColor="#FF101A21"
-                  TintColor="#AA000000"/>
+                  FallbackColor="#FF1F2528"
+                  TintColor="#99202020"/>
+    
+    <vm:BoolSelectorConverter x:Key="IsActiveToOpacity">
+        <vm:BoolSelectorConverter.TrueValue>
+            <x:Double>1</x:Double>
+        </vm:BoolSelectorConverter.TrueValue>
+        <vm:BoolSelectorConverter.FalseValue>
+            <x:Double>.6</x:Double>
+        </vm:BoolSelectorConverter.FalseValue>
+    </vm:BoolSelectorConverter>
 
-    <DataTemplate x:Key="SwaggerArgumentTemplate" x:DataType="arguments:SwaggerArgument">
-        <Grid Margin="0,0,0,4" Padding="0,4,0,4" ColumnSpacing="12">
+    <DataTemplate x:Key="SwaggerArgumentTemplate" x:DataType="core:IArgument">
+        <Grid Margin="0,0,0,4" Padding="0,4,0,4" ColumnSpacing="12"
+              Opacity="{x:Bind IsActive, Mode=OneWay, Converter={StaticResource IsActiveToOpacity}}"
+              Loaded="OnArgumentRootLoaded">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="250"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
             <!-- Parameter info (left column) -->
-            <StackPanel x:Name="ParameterInfo" Margin="0,6,0,0"
-						ToolTipService.PlacementTarget="{Binding ElementName=ParameterInfo}">
-                <ToolTipService.ToolTip>
-                    <StackPanel MaxWidth="600">
-                        <TextBlock Text="{x:Bind DisplayName}"
-								   FontSize="16"
-								   FontFamily="Consolas"/>
+            <CheckBox IsChecked="{x:Bind IsActive, Mode=TwoWay}"
+                      xaml:DataContext.Model="{x:Bind}"
+                      ToolTipService.ToolTip="{Binding ToolTip}"
+                      RightTapped="OnArgumentRightTapped"
+                      VerticalAlignment="Top">
+                
+                <CheckBox.Resources>
+                    <MenuFlyout x:Key="ContextFlyout">
+                        <MenuFlyoutSubItem Text="Go To Operation..."
+                                           xaml:BindableFlyout.ItemsSource="{x:Bind Parameters}"
+                                           xaml:BindableFlyout.DisplayMemberPath="Operation.OperationId"
+                                           xaml:BindableFlyout.ItemClick="{Binding GlobalArgumentRelatedOperationClickHandler, Mode=OneTime}">
+                            <MenuFlyoutSubItem.Icon>
+                                <SymbolIcon Symbol="Go"/>
+                            </MenuFlyoutSubItem.Icon>
+                        </MenuFlyoutSubItem>
+                    </MenuFlyout>
+                </CheckBox.Resources>
 
-                        <TextBlock Grid.Column="2"
-								   Opacity=".6"
-								   Text="{x:Bind Parameter.Description}"
-								   Visibility="{x:Bind HasDescription}"
-								   FontSize="12"
-								   TextWrapping="Wrap"/>
+                <StackPanel x:Name="ParameterInfo"
+						    ToolTipService.PlacementTarget="{Binding ElementName=ParameterInfo}">
+                    <ToolTipService.ToolTip>
+                        <StackPanel MaxWidth="600">
+                            <TextBlock Text="{x:Bind Parameter.Name}"
+								       FontSize="16"
+								       FontFamily="Consolas"/>
 
-                        <TextBlock Margin="0,8,0,0">
-							<Run Text="{x:Bind Parameter.Kind}"/> parameter
-                        </TextBlock>
-                    </StackPanel>
-                </ToolTipService.ToolTip>
+                            <TextBlock Grid.Column="2"
+								       Opacity=".6"
+								       Text="{x:Bind Parameter.Description}"
+								       Visibility="{x:Bind xaml:X.NotEmpty(Parameter.Description)}"
+								       FontSize="12"
+								       TextWrapping="Wrap"/>
 
-                <TextBlock Text="{x:Bind DisplayName}"
-						   FontFamily="Consolas"/>
+                            <TextBlock Margin="0,8,0,0">
+							    <Run Text="{x:Bind Parameter.Kind}"/> parameter
+                            </TextBlock>
+                        </StackPanel>
+                    </ToolTipService.ToolTip>
 
-                <TextBlock Grid.Column="2"
-						   Opacity=".6"
-						   Text="{x:Bind Parameter.Description}"
-						   FontSize="12"
-						   MaxLines="3"
-						   TextWrapping="Wrap"
-						   TextTrimming="WordEllipsis"/>
+                    <TextBlock Text="{x:Bind Parameter.Name}"
+						       FontFamily="Consolas"/>
 
-            </StackPanel>
+                    <TextBlock Grid.Column="2"
+						       Opacity=".6"
+						       Text="{x:Bind Parameter.Description}"
+						       FontSize="12"
+						       MaxLines="3"
+						       TextWrapping="Wrap"
+						       TextTrimming="WordEllipsis"/>
+                </StackPanel>
+            </CheckBox>
 
-            <!-- Value input (right column) -->
-            <StackPanel Grid.Column="1">
+            <!-- Value input (if active, right column) -->
+            <StackPanel Grid.Column="1" Visibility="{x:Bind IsActive, Mode=OneWay}">
                 <ContentControl Content="{x:Bind}" IsTabStop="False"
 								ContentTemplateSelector="{StaticResource ParameterTemplateSelector}"
 								HorizontalContentAlignment="Stretch"
 								VerticalContentAlignment="Top"/>
 
                 <StackPanel Orientation="Horizontal" Spacing="4" Opacity=".7"
-							Visibility="{x:Bind IsBodyParameter}">
+							Visibility="{x:Bind xaml:X.Eq(Parameter.Kind, 'Body')}">
                     <TextBlock Text="Content type:" VerticalAlignment="Center"/>
-                    <ComboBox ItemsSource="{Binding Operation.Model.Operation.ActualConsumes, ElementName=Root}"
-							  SelectedItem="{Binding Operation.SelectedContentType, ElementName=Root, Mode=OneWay}"
+
+                    <ComboBox ItemsSource="{x:Bind Parameter.Operation.AcceptedContentTypes}"
+							  SelectedItem="{x:Bind ContentType, Mode=OneWay}"
 							  SelectionChanged="OnContentTypeComboBoxSelectionChanged"
 							  Background="Transparent"
 							  BorderBrush="Transparent"
@@ -74,6 +107,35 @@
 							  Padding="4,0"/>
                 </StackPanel>
             </StackPanel>
+
+            <!-- Effective value (if not active, right column) -->
+            <Grid Grid.Column="1" xaml:DataContext.Model="{x:Bind}">
+
+                <!-- If effective value is given by global argument -->
+                <StackPanel Visibility="{Binding EffectiveValueIsGlobalArgument}">
+                    <ContentControl IsEnabled="False" IsTabStop="False"
+                                    Content="{Binding Model.Parameter.GlobalArgument}"
+                                    ContentTemplateSelector="{StaticResource ParameterTemplateSelector}"
+                                    HorizontalContentAlignment="Stretch"
+                                    VerticalContentAlignment="Top"/>
+                    <TextBlock Text="(globally assigned value)" FontStyle="Italic" Foreground="Gray" Margin="0,2,0,0"/>
+                </StackPanel>
+
+                <!-- If effective value is given by spec's default -->
+                <TextBlock Visibility="{Binding EffectiveValueIsSpecDefault}"
+                           FontStyle="Italic" Foreground="Gray"
+                           Margin="0,4,0,0">
+                    (<Run Text="{Binding InactiveText}"/>, defaults to "<Run Text="{Binding Model.Parameter.DefaultValue}"/>")
+                </TextBlock>
+
+                <!-- If effective value is none -->
+                <TextBlock Visibility="{Binding EffectiveValueIsNone}"
+                           FontStyle="Italic" Foreground="Gray"
+                           Margin="0,4,0,0">
+                    (<Run Text="{Binding InactiveText}"/>)
+                </TextBlock>
+
+            </Grid>
 
         </Grid>
     </DataTemplate>
@@ -93,7 +155,7 @@
                             Margin="{TemplateBinding Margin}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             BorderBrush="{TemplateBinding BorderBrush}">
-                        
+
                         <TextBlock Text="{TemplateBinding Text}"
                                    FontWeight="{TemplateBinding FontWeight}"
                                    FontFamily="{TemplateBinding FontFamily}"
@@ -105,5 +167,169 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <!-- A ScrollViewer where the vertical ScrollBar has a top margin of 32 pixels
+    to prevent overlapping with window buttons -->
+    <Style x:Key="TopMarginScrollViewerStyle" TargetType="ScrollViewer">
+        <Setter Property="HorizontalScrollMode" Value="Auto" />
+        <Setter Property="VerticalScrollMode" Value="Auto" />
+        <Setter Property="IsHorizontalRailEnabled" Value="True" />
+        <Setter Property="IsVerticalRailEnabled" Value="True" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="ZoomMode" Value="Disabled" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Visible" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ScrollViewer">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="ScrollingIndicatorStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition From="MouseIndicator" To="NoIndicator">
+                                        <Storyboard>
+                                            <FadeOutThemeAnimation TargetName="ScrollBarSeparator" BeginTime="0:0:3" />
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalScrollBar"
+                                                                           Storyboard.TargetProperty="IndicatorMode">
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:3">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <ScrollingIndicatorMode>None</ScrollingIndicatorMode>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalScrollBar"
+                                                                           Storyboard.TargetProperty="IndicatorMode">
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:3">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <ScrollingIndicatorMode>None</ScrollingIndicatorMode>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualTransition>
+                                    <VisualTransition From="TouchIndicator" To="NoIndicator">
+                                        <Storyboard>
+                                            <FadeOutThemeAnimation TargetName="ScrollBarSeparator" />
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalScrollBar"
+                                                                           Storyboard.TargetProperty="IndicatorMode">
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:0.5">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <ScrollingIndicatorMode>None</ScrollingIndicatorMode>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalScrollBar"
+                                                                           Storyboard.TargetProperty="IndicatorMode">
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:0.5">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <ScrollingIndicatorMode>None</ScrollingIndicatorMode>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualTransition>
+                                </VisualStateGroup.Transitions>
+
+                                <VisualState x:Name="NoIndicator">
+                                    <Storyboard>
+                                        <FadeOutThemeAnimation TargetName="ScrollBarSeparator" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="TouchIndicator">
+                                    <Storyboard>
+                                        <FadeOutThemeAnimation TargetName="ScrollBarSeparator" />
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalScrollBar"
+                                                                       Storyboard.TargetProperty="IndicatorMode"
+                                                                       Duration="0">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <ScrollingIndicatorMode>TouchIndicator</ScrollingIndicatorMode>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalScrollBar"
+                                                                       Storyboard.TargetProperty="IndicatorMode"
+                                                                       Duration="0">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <ScrollingIndicatorMode>TouchIndicator</ScrollingIndicatorMode>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="MouseIndicator">
+                                    <Storyboard>
+                                        <FadeInThemeAnimation TargetName="ScrollBarSeparator" />
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="VerticalScrollBar"
+                                                                       Storyboard.TargetProperty="IndicatorMode"
+                                                                       Duration="0">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <ScrollingIndicatorMode>MouseIndicator</ScrollingIndicatorMode>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HorizontalScrollBar"
+                                                                       Storyboard.TargetProperty="IndicatorMode"
+                                                                       Duration="0">
+                                            <DiscreteObjectKeyFrame KeyTime="0">
+                                                <DiscreteObjectKeyFrame.Value>
+                                                    <ScrollingIndicatorMode>MouseIndicator</ScrollingIndicatorMode>
+                                                </DiscreteObjectKeyFrame.Value>
+                                            </DiscreteObjectKeyFrame>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Grid Background="{TemplateBinding Background}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <ScrollContentPresenter x:Name="ScrollContentPresenter"
+                              Grid.RowSpan="2"
+                              Grid.ColumnSpan="2"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              Margin="{TemplateBinding Padding}" />
+                            <ScrollBar x:Name="VerticalScrollBar"
+                                       Grid.Column="1"
+                                       IsTabStop="False"
+                                       Maximum="{TemplateBinding ScrollableHeight}"
+                                       Orientation="Vertical"
+                                       Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+                                       Value="{TemplateBinding VerticalOffset}"
+                                       ViewportSize="{TemplateBinding ViewportHeight}"
+                                       HorizontalAlignment="Right"
+                                       Margin="0,32,0,0" />
+                            <!--                 /\ Here's the important addition -->
+                            <ScrollBar x:Name="HorizontalScrollBar"
+                                       IsTabStop="False"
+                                       Maximum="{TemplateBinding ScrollableWidth}"
+                                       Orientation="Horizontal"
+                                       Grid.Row="1"
+                                       Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
+                                       Value="{TemplateBinding HorizontalOffset}"
+                                       ViewportSize="{TemplateBinding ViewportWidth}" />
+                            <Border x:Name="ScrollBarSeparator"
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

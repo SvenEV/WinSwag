@@ -3,17 +3,15 @@ using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace WinSwag.Models.Responses
+namespace WinSwag.Core
 {
-    public class JsonResponse : ResponseViewModel
+    public class JsonResponse : IResponseContent
     {
         public string Json { get; private set; }
 
-        public JsonResponse(HttpResponseMessage response, string requestUri) : base(response, requestUri) { }
-
-        public static new async Task<JsonResponse> FromResponseAsync(HttpResponseMessage response, string requestUri)
+        public async Task InitAsync(HttpResponseMessage message)
         {
-            var json = await response.Content.ReadAsStringAsync();
+            var json = await message.Content.ReadAsStringAsync();
 
             // Try formatting as indented JSON (in background thread)
             await Task.Run(() =>
@@ -28,7 +26,7 @@ namespace WinSwag.Models.Responses
                 }
             });
 
-            return new JsonResponse(response, requestUri) { Json = json };
+            Json = json;
         }
     }
 }

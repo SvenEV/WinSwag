@@ -7,20 +7,23 @@ using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace WinSwag.Models.Responses
+namespace WinSwag.Core.Extensions
 {
-    public class ImageResponse : ResponseViewModel
+    public class ImageResponse : IResponseContent
     {
+        public HttpResponseMessage Message { get; private set; }
+
         public ImageSource Image { get; private set; }
 
-        public ImageResponse(HttpResponseMessage response, string requestUri) : base(response, requestUri) { }
+        private string MediaType => Message.Content.Headers.ContentType.MediaType;
 
-        public static new async Task<ImageResponse> FromResponseAsync(HttpResponseMessage response, string requestUri)
+        public async Task InitAsync(HttpResponseMessage message)
         {
+            Message = message;
             var image = new BitmapImage();
-            var stream = await response.Content.ReadAsStreamAsync();
+            var stream = await message.Content.ReadAsStreamAsync();
             await image.SetSourceAsync(stream.AsRandomAccessStream());
-            return new ImageResponse(response, requestUri) { Image = image };
+            Image = image;
         }
 
         public async void CopyToClipboard()
@@ -33,7 +36,7 @@ namespace WinSwag.Models.Responses
         {
             var picker = new FileSavePicker();
 
-            switch (Response.Content.Headers.ContentType.MediaType)
+            switch (MediaType)
             {
                 case "image/jpeg": picker.FileTypeChoices.Add("Image", new[] { ".jpg" }); break;
                 case "image/png": picker.FileTypeChoices.Add("Image", new[] { ".png" }); break;
@@ -49,7 +52,7 @@ namespace WinSwag.Models.Responses
             if (file != null)
             {
                 using (var stream = await file.OpenStreamForWriteAsync())
-                    await Response.Content.CopyToAsync(stream);
+                    await Message.Content.CopyToAsync(stream);
             }
         }
 
@@ -72,6 +75,6 @@ namespace WinSwag.Models.Responses
         }
 
         public async Task<(IRandomAccessStream stream, string contentType)> GetResponseContentAsync() =>
-            ((await Response.Content.ReadAsStreamAsync()).AsRandomAccessStream(), Response.Content.Headers.ContentType.MediaType);
+            ((await Message.Content.ReadAsStreamAsync()).AsRandomAccessStream(), MediaType);
     }
 }

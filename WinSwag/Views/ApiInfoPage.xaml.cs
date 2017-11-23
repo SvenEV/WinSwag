@@ -5,8 +5,10 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using WinSwag.Core;
 using WinSwag.Services;
 using WinSwag.ViewModels;
+using WinSwag.Xaml;
 
 namespace WinSwag.Views
 {
@@ -15,11 +17,14 @@ namespace WinSwag.Views
         public static readonly DependencyProperty DocumentProperty =
             DependencyProperty.Register(nameof(Document), typeof(int), typeof(ApiInfoPage), new PropertyMetadata(null));
 
-        public SwaggerDocumentViewModel Document
+        public OpenApiDocument Document
         {
-            get { return (SwaggerDocumentViewModel)GetValue(DocumentProperty); }
-            set { SetValue(DocumentProperty, value); }
+            get => (OpenApiDocument)GetValue(DocumentProperty);
+            set => SetValue(DocumentProperty, value);
         }
+
+        public OpenApiDocumentViewModel DocumentVM =>
+            ViewModelRegistry.ViewModelFor<OpenApiDocumentViewModel>(Document);
 
         [Inject]
         public ISessionManagerVM SessionManagerVM { get; private set; }
@@ -35,7 +40,7 @@ namespace WinSwag.Views
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Document = e.Parameter as SwaggerDocumentViewModel ?? throw new ArgumentNullException();
+            Document = e.Parameter as OpenApiDocument ?? throw new ArgumentNullException();
         }
 
         private async void AddToFavoritesButtonClick(object sender, RoutedEventArgs e)
