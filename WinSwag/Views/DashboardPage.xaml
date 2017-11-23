@@ -75,6 +75,7 @@
                                     <TextBlock>Copyright © 2017 Sven Vinkemeier</TextBlock>
                                     <controls:LinkButton NavigateUri="https://github.com/SvenEV/WinSwag" Content="WinSwag on GitHub"/>
                                     <TextBlock Margin="0,12,0,0" TextWrapping="Wrap">Special thanks to the authors of the following projects:</TextBlock>
+                                    <controls:LinkButton NavigateUri="https://github.com/APIs-guru/openapi-directory" Content="APIs.guru"/>
                                     <controls:LinkButton NavigateUri="https://www.newtonsoft.com/json" Content="Json.NET"/>
                                     <controls:LinkButton NavigateUri="https://github.com/samuelneff/MimeTypeMap" Content="MimeTypeMap"/>
                                     <controls:LinkButton NavigateUri="http://mvvmlight.net/" Content="MVVM Light Toolkit"/>
