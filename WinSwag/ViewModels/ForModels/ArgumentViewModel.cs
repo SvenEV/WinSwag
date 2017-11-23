@@ -33,6 +33,16 @@ namespace WinSwag.ViewModels.ForModels
             ((IsLocalArgument && !Model.IsActive && !Model.Parameter.GlobalArgument.IsActive) ||
             (IsGlobalArgument && !Model.IsActive));
 
+        public string InactiveText => IsLocalArgument
+            ? "not included in requests"
+            : "no global value assigned";
+
+        public string ToolTip => IsLocalArgument
+            ? "Check to specify a value for this parameter. " +
+              "Uncheck to exclude this parameter from requests or to use the globally assigned value."
+            : "Check to specify a global value that is used in operations where no value for this parameter is set. " +
+              "Uncheck to not provide a global value";
+
         public ArgumentViewModelBase(IArgument model)
         {
             Model = model;

@@ -35,7 +35,8 @@
 
             <!-- Parameter info (left column) -->
             <CheckBox IsChecked="{x:Bind IsActive, Mode=TwoWay}"
-                      ToolTipService.ToolTip="If checked, this parameter and its value are included in the request. If unchecked, the parameter is not included, so the server falls back to a default value or, in case of a required parameter, returns an error status code."
+                      xaml:DataContext.Model="{x:Bind}"
+                      ToolTipService.ToolTip="{Binding ToolTip}"
                       VerticalAlignment="Top">
 
                 <StackPanel x:Name="ParameterInfo"
@@ -95,8 +96,7 @@
             </StackPanel>
 
             <!-- Effective value (if not active, right column) -->
-            <Grid Grid.Column="1"
-                  xaml:DataContext.Model="{x:Bind}">
+            <Grid Grid.Column="1" xaml:DataContext.Model="{x:Bind}">
 
                 <!-- If effective value is given by global argument -->
                 <StackPanel Visibility="{Binding EffectiveValueIsGlobalArgument}">
@@ -112,14 +112,15 @@
                 <TextBlock Visibility="{Binding EffectiveValueIsSpecDefault}"
                            FontStyle="Italic" Foreground="Gray"
                            Margin="0,4,0,0">
-                    (not included in request, defaults to "<Run Text="{Binding Model.Parameter.DefaultValue}"/>")
+                    (<Run Text="{Binding InactiveText}"/>, defaults to "<Run Text="{Binding Model.Parameter.DefaultValue}"/>")
                 </TextBlock>
 
                 <!-- If effective value is none -->
                 <TextBlock Visibility="{Binding EffectiveValueIsNone}"
                            FontStyle="Italic" Foreground="Gray"
-                           Text="(not included in request)"
-                           Margin="0,4,0,0"/>
+                           Margin="0,4,0,0">
+                    (<Run Text="{Binding InactiveText}"/>)
+                </TextBlock>
 
             </Grid>
 
