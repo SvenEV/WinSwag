@@ -11,7 +11,7 @@
     xmlns:core="using:WinSwag.Core"
     xmlns:xaml="using:WinSwag.Xaml"
     mc:Ignorable="d"
-    RequestedTheme="Dark">
+    RequestedTheme="{x:Bind AppInfoVM.SelectedTheme, Mode=OneWay}">
 
     <Page.Resources>
         <CollectionViewSource x:Key="Operations"
@@ -35,10 +35,12 @@
 
         <!-- Black background (right) -->
         <tkc:DropShadowPanel Grid.Column="1" Grid.RowSpan="99"
-                             Color="Black" BlurRadius="20"
+                             Color="{ThemeResource DropShadowColor}" BlurRadius="20"
                              HorizontalContentAlignment="Stretch"
                              VerticalContentAlignment="Stretch">
-            <Border Background="Black" BorderThickness="1,0,0,0" BorderBrush="#11FFFFFF"/>
+            <Border Background="{ThemeResource Background}"
+                    BorderThickness="1,0,0,0"
+                    BorderBrush="#11FFFFFF"/>
         </tkc:DropShadowPanel>
 
         <!-- Command bar (top left) -->
@@ -132,11 +134,11 @@
                                                 PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
                                                 PointerOverBackground="{ThemeResource SystemControlHighlightListLowBrush}"
                                                 PointerOverForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
-                                                SelectedBackground="#44FFFFFF"
+                                                SelectedBackground="{ThemeResource OperationSelectedBrush}"
                                                 SelectedForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
-                                                SelectedPointerOverBackground="#88FFFFFF"
+                                                SelectedPointerOverBackground="{ThemeResource OperationSelectedPointerOverBrush}"
                                                 PressedBackground="{ThemeResource SystemControlHighlightListMediumBrush}"
-                                                SelectedPressedBackground="#77FFFFFF"
+                                                SelectedPressedBackground="{ThemeResource OperationSelectedPressedBrush}"
                                                 DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
                                                 DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
                                                 ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}"
@@ -197,7 +199,7 @@
             <StackPanel Grid.RowSpan="99" Spacing="12"
                         HorizontalAlignment="Center" VerticalAlignment="Center"
                         Visibility="{x:Bind ViewStateManagerVM.IsBusy, Mode=OneWay}">
-                <ProgressRing Width="40" Height="40" Foreground="Gold"
+                <ProgressRing Width="40" Height="40" Foreground="{ThemeResource StarBrush}"
                               HorizontalAlignment="Center"
                               IsActive="{x:Bind ViewStateManagerVM.IsBusy, Mode=OneWay}"/>
 

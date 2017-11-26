@@ -10,11 +10,6 @@
     xmlns:vm="using:WinSwag.ViewModels"
     mc:Ignorable="d">
 
-    <AcrylicBrush x:Key="AcrylicBackgroundBrush"
-                  BackgroundSource="HostBackdrop"
-                  FallbackColor="#FF1F2528"
-                  TintColor="#BB1F2528"/>
-    
     <vm:BoolSelectorConverter x:Key="IsActiveToOpacity">
         <vm:BoolSelectorConverter.TrueValue>
             <x:Double>1</x:Double>
@@ -144,7 +139,7 @@
         <Setter Property="Padding" Value="0,0,0,4"/>
         <Setter Property="Margin" Value="0,0,0,4"/>
         <Setter Property="BorderThickness" Value="0,0,0,1"/>
-        <Setter Property="BorderBrush" Value="#44FFFFFF"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource OperationSelectedBrush}"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="FontFamily" Value="Consolas"/>
         <Setter Property="FontSize" Value="20"/>

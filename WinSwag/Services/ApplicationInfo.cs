@@ -1,15 +1,20 @@
 ﻿using NJsonSchema;
+using System;
+using System.Collections.Generic;
 using System.Net.Http.Headers;
 using Windows.ApplicationModel;
 using Windows.Storage;
+using Windows.UI.Xaml;
 using WinSwag.Core;
 using WinSwag.Core.Extensions;
 
 namespace WinSwag.Services
 {
-    public class ApplicationInfo
+    public class ApplicationInfo : ObservableObjectEx
     {
         private const string FirstTimeAppStartKey = "AppStartedOnce";
+
+        private ElementTheme _selectedTheme = ElementTheme.Default;
 
         public string Version
         {
@@ -28,6 +33,15 @@ namespace WinSwag.Services
         /// Indicates whether the app was launched for the first time after being installed.
         /// </summary>
         public bool IsLaunchedFirstTime { get; }
+
+        public ElementTheme SelectedTheme
+        {
+            get => _selectedTheme;
+            set => Set(ref _selectedTheme, value);
+        }
+
+        public IReadOnlyList<ElementTheme> ThemeOptions { get; } =
+            new[] { ElementTheme.Default, ElementTheme.Dark, ElementTheme.Light };
 
         public ApplicationInfo()
         {

@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:WinSwag.Controls"
     xmlns:xaml="using:WinSwag.Xaml"
-    RequestedTheme="Dark"
+    RequestedTheme="{x:Bind AppInfoVM.SelectedTheme, Mode=OneWay}"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">

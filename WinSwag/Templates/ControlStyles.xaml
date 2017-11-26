@@ -8,14 +8,14 @@
 
     <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#33FFFFFF"/>
     <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#33FFFFFF"/>
-    <SolidColorBrush x:Key="TextControlForegroundFocused" Color="White"/>
+    <SolidColorBrush x:Key="TextControlForegroundFocused" Color="{ThemeResource ForegroundColor}"/>
 
     <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver" Color="#33FFFFFF"/>
     <SolidColorBrush x:Key="ComboBoxBackgroundFocused" Color="#33FFFFFF"/>
-    <SolidColorBrush x:Key="ComboBoxForegroundFocused" Color="White"/>
+    <SolidColorBrush x:Key="ComboBoxForegroundFocused" Color="{ThemeResource ForegroundColor}"/>
 
-    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="White"/>
-    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="Black"/>
+    <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{ThemeResource ForegroundColor}"/>
+    <SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="{ThemeResource BackgroundColor}"/>
     <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUncheckedPointerOver" Color="Gray"/>
     <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver" Color="Gray"/>
     <Thickness x:Key="CheckBoxBorderThemeThickness">1</Thickness>
@@ -31,8 +31,8 @@
         <Setter Property="Padding" Value="8,5"/>
         <Setter Property="MinHeight" Value="30"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="Background" Value="#1AFFFFFF"/>
-        <Setter Property="PlaceholderForeground" Value="#44FFFFFF"/>
+        <Setter Property="Background" Value="{ThemeResource Foreground10}"/>
+        <Setter Property="PlaceholderForeground" Value="{ThemeResource Foreground25}"/>
     </Style>
 
     <Style TargetType="ComboBox">
@@ -40,7 +40,7 @@
         <Setter Property="Padding" Value="8,5"/>
         <Setter Property="MinHeight" Value="34"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="Background" Value="#1AFFFFFF"/>
+        <Setter Property="Background" Value="{ThemeResource Foreground10}"/>
     </Style>
 
     <Style TargetType="Button" x:Key="MyButtonRevealStyle"  BasedOn="{StaticResource ButtonRevealStyle}">
@@ -53,8 +53,8 @@
 
     <Style TargetType="FlyoutPresenter">
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="BorderBrush" Value="#FF3F3F46"/>
-        <Setter Property="Background" Value="#FF1E1E1E"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource FlyoutBorder}"/>
+        <Setter Property="Background" Value="{ThemeResource FlyoutBackground}"/>
         <Setter Property="MaxWidth" Value="10000"/>
         <Setter Property="MaxHeight" Value="10000"/>
         <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Auto" />
@@ -65,7 +65,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="FlyoutPresenter">
-                    <controls:DropShadowPanel Color="Black" BlurRadius="50">
+                    <controls:DropShadowPanel Color="{ThemeResource DropShadowColor}" BlurRadius="50">
                         <ScrollViewer x:Name="ScrollViewer"
                                       ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}"
                                       HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}"

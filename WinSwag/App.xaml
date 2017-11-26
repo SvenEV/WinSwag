@@ -7,12 +7,19 @@
 
     <Application.Resources>
         <ResourceDictionary>
+            
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///Templates/ControlStyles.xaml"/>
                 <templates:CommonResources/>
                 <templates:ParameterTemplates/>
                 <templates:ResponseTemplates/>
             </ResourceDictionary.MergedDictionaries>
+
+            <ResourceDictionary.ThemeDictionaries>
+                <templates:ThemeResourcesLight x:Key="Light"/>
+                <templates:ThemeResourcesDark x:Key="Dark"/>
+            </ResourceDictionary.ThemeDictionaries>
+            
         </ResourceDictionary>
     </Application.Resources>
 

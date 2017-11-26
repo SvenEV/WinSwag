@@ -32,11 +32,14 @@ namespace WinSwag
         [Inject]
         public IViewStateManagerVM ViewStateManagerVM { get; private set; }
 
+        [Inject]
+        public ApplicationInfo AppInfoVM { get; private set; }
+
         public MainPage()
         {
             ApplicationInstance.Current.Services.Populate(this);
             InitializeComponent();
-
+            
             Window.Current.SetTitleBar(TitleBar);
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
 

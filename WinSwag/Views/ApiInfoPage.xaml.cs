@@ -32,6 +32,9 @@ namespace WinSwag.Views
         [Inject]
         public IViewStateManagerVM ViewStateManagerVM { get; private set; }
 
+        [Inject]
+        public ApplicationInfo AppInfoVM { get; private set; }
+
         public ApiInfoPage()
         {
             ApplicationInstance.Current.Services.Populate(this);

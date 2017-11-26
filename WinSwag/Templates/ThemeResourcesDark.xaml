@@ -1,0 +1,34 @@
+﻿<ResourceDictionary
+    x:Class="WinSwag.Templates.ThemeResourcesDark"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Color x:Key="ForegroundColor">White</Color>
+    <Color x:Key="BackgroundColor">Black</Color>
+    <Color x:Key="DropShadowColor">Black</Color>
+
+    <SolidColorBrush x:Key="Foreground" Color="White"/>
+    <SolidColorBrush x:Key="Foreground10" Color="#1AFFFFFF"/>
+    <SolidColorBrush x:Key="Foreground25" Color="#44FFFFFF"/>
+    
+    <SolidColorBrush x:Key="Background" Color="Black"/>
+    
+    <SolidColorBrush x:Key="DashboardBackground" Color="#2D2D30"/>
+    <SolidColorBrush x:Key="StarBrush" Color="Gold"/>
+
+    <SolidColorBrush x:Key="FlyoutBackground" Color="#FF1E1E1E"/>
+    <SolidColorBrush x:Key="FlyoutBorder" Color="#FF3F3F46"/>
+
+    <SolidColorBrush x:Key="OperationSelectedBrush" Color="#44FFFFFF"/>
+    <SolidColorBrush x:Key="OperationSelectedPressedBrush" Color="#77FFFFFF"/>
+    <SolidColorBrush x:Key="OperationSelectedPointerOverBrush" Color="#66FFFFFF"/>
+
+    <AcrylicBrush x:Key="AcrylicBackgroundBrush"
+                  BackgroundSource="HostBackdrop"
+                  FallbackColor="#FF1F2528"
+                  TintColor="#BB1F2528"/>
+
+</ResourceDictionary>
