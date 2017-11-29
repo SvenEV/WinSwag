@@ -8,8 +8,8 @@
     xmlns:tkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:tkx="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     xmlns:controls="using:WinSwag.Controls"
-    xmlns:views="using:WinSwag.Views"
     xmlns:core="using:WinSwag.Core"
+    xmlns:views="using:WinSwag.Views"
     xmlns:xaml="using:WinSwag.Xaml"
     mc:Ignorable="d"
     RequestedTheme="{x:Bind AppInfoVM.SelectedTheme, Mode=OneWay}"
@@ -19,10 +19,6 @@
     tkx:TitleBar.ButtonPressedBackgroundColor="DimGray"
     tkx:TitleBar.ButtonInactiveBackgroundColor="Transparent">
     
-    <!-- Note: {ThemeResource ...} somehow doesn't work when assigning title bar colors,
-         so we use {StaticResource ...} instead. However this means that users have to restart the app
-         when changing the theme -->
-
     <Page.Resources>
         <CollectionViewSource x:Key="Operations"
                               x:Name="Operations"
@@ -39,7 +35,7 @@
             <ColumnDefinition MinWidth="186"/>
             <ColumnDefinition Width="2*" MinWidth="200"/>
         </Grid.ColumnDefinitions>
-
+        
         <!-- Acrylic background (left) -->
         <Border Grid.RowSpan="99" Background="{ThemeResource AcrylicBackgroundBrush}"/>
 
@@ -170,7 +166,7 @@
                                     </Grid.ColumnDefinitions>
 
                                     <TextBlock FontWeight="SemiBold"
-                                               Foreground="{Binding MethodBrush, Mode=OneTime}"
+                                               Foreground="{Binding Model.Method, Mode=OneTime, Converter={StaticResource HttpBrush}}"
                                                VerticalAlignment="Top"
                                                Text="{Binding Method, Mode=OneTime}"/>
 

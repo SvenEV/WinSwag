@@ -19,6 +19,14 @@
         </vm:BoolSelectorConverter.FalseValue>
     </vm:BoolSelectorConverter>
 
+    <vm:HttpMethodToBrushConverter x:Key="HttpBrush"
+        GetBrush="{ThemeResource HttpGetBrush}"
+        PostBrush="{ThemeResource HttpPostBrush}"
+        PutBrush="{ThemeResource HttpPutBrush}"
+        PatchBrush="{ThemeResource HttpPatchBrush}"
+        DeleteBrush="{ThemeResource HttpDeleteBrush}"
+        FallbackBrush="{ThemeResource HttpFallbackBrush}"/>
+
     <DataTemplate x:Key="SwaggerArgumentTemplate" x:DataType="core:IArgument">
         <Grid Margin="0,0,0,4" Padding="0,4,0,4" ColumnSpacing="12"
               Opacity="{x:Bind IsActive, Mode=OneWay, Converter={StaticResource IsActiveToOpacity}}"
@@ -34,7 +42,7 @@
                       ToolTipService.ToolTip="{Binding ToolTip}"
                       RightTapped="OnArgumentRightTapped"
                       VerticalAlignment="Top">
-                
+
                 <CheckBox.Resources>
                     <MenuFlyout x:Key="ContextFlyout">
                         <MenuFlyoutSubItem Text="Go To Operation..."

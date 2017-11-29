@@ -2,11 +2,10 @@
     x:Class="WinSwag.Views.SwaggerOperationPage"
     x:Name="Root"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:WinSwag.Controls"
-    xmlns:xaml="using:WinSwag.Xaml"
     RequestedTheme="{x:Bind AppInfoVM.SelectedTheme, Mode=OneWay}"
     mc:Ignorable="d">
 
@@ -22,14 +21,14 @@
                    TextTrimming="CharacterEllipsis"
                    TextWrapping="NoWrap" FontFamily="Consolas">
             <Run Text="{x:Bind VM.Method}"
-                 Foreground="{x:Bind VM.MethodBrush}"
+                 Foreground="{x:Bind Operation.Method, Converter={StaticResource HttpBrush}}"
                  FontWeight="SemiBold"/>
             <Run Text="{x:Bind Operation.Path}"/>
             
             <ToolTipService.ToolTip>
                 <TextBlock TextWrapping="Wrap" FontFamily="Consolas">
                     <Run Text="{x:Bind VM.Method}"
-                         Foreground="{x:Bind VM.MethodBrush}"
+                         Foreground="{x:Bind Operation.Method, Converter={StaticResource HttpBrush}}"
                          FontWeight="SemiBold"/>
                     <Run Text="{x:Bind Operation.Path}"/>
                 </TextBlock>
@@ -47,8 +46,9 @@
                               ItemTemplate="{StaticResource SwaggerArgumentTemplate}"/>
 
                 <!-- Send request button -->
-                <Button HorizontalAlignment="Right" Foreground="Black" Padding="12,8" Margin="0,4,0,0"
-                        Background="{x:Bind VM.MethodBrush}"
+                <Button HorizontalAlignment="Right" Padding="12,8" Margin="0,4,0,0"
+                        Background="{x:Bind Operation.Method, Converter={StaticResource HttpBrush}}"
+                        Foreground="{ThemeResource Background}"
                         Click="OnSendRequestButtonClicked"
                         IsEnabled="{x:Bind VM.CanSendRequest, Mode=OneWay}"
                         ToolTipService.ToolTip="Send HTTP Request (F5)">

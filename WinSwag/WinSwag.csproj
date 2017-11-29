@@ -138,6 +138,7 @@
     <Compile Include="Templates\ThemeResourcesLight.xaml.cs">
       <DependentUpon>ThemeResourcesLight.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\HttpMethodToBrushConverter.cs" />
     <Compile Include="Xaml\BindableFlyout.cs" />
     <Compile Include="Xaml\DataContext.cs" />
     <Compile Include="Xaml\IViewModel.cs" />

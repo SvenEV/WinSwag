@@ -4,6 +4,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:WinSwag.ViewModels"
     mc:Ignorable="d">
 
     <Color x:Key="ForegroundColor">White</Color>
@@ -30,5 +31,12 @@
                   BackgroundSource="HostBackdrop"
                   FallbackColor="#FF1F2528"
                   TintColor="#BB1F2528"/>
+
+    <SolidColorBrush x:Key="HttpGetBrush" Color="SkyBlue"/>
+    <SolidColorBrush x:Key="HttpPostBrush" Color="YellowGreen"/>
+    <SolidColorBrush x:Key="HttpPutBrush" Color="Gold"/>
+    <SolidColorBrush x:Key="HttpPatchBrush" Color="MediumPurple"/>
+    <SolidColorBrush x:Key="HttpDeleteBrush" Color="OrangeRed"/>
+    <SolidColorBrush x:Key="HttpFallbackBrush" Color="Gray"/>
 
 </ResourceDictionary>

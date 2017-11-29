@@ -36,22 +36,6 @@ namespace WinSwag.ViewModels
 
         public string Method => Model.Method.ToString().ToUpper();
 
-        public Brush MethodBrush
-        {
-            get
-            {
-                switch (Model.Method)
-                {
-                    case SwaggerOperationMethod.Get: return GetBrush;
-                    case SwaggerOperationMethod.Post: return PostBrush;
-                    case SwaggerOperationMethod.Put: return PutBrush;
-                    case SwaggerOperationMethod.Patch: return PatchBrush;
-                    case SwaggerOperationMethod.Delete: return DeleteBrush;
-                    default: return DefaultBrush;
-                }
-            }
-        }
-
         public IEnumerable<IArgument> LocalArguments => Model.Parameters.Select(p => p.LocalArgument);
 
         public Response Response

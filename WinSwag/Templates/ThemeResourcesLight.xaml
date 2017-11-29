@@ -4,6 +4,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:WinSwag.ViewModels"
     mc:Ignorable="d">
 
     <Color x:Key="ForegroundColor">Black</Color>
@@ -17,7 +18,7 @@
     <SolidColorBrush x:Key="Background" Color="White"/>
 
     <SolidColorBrush x:Key="DashboardBackground" Color="#EDEDED"/>
-    <SolidColorBrush x:Key="StarBrush" Color="#FFB900"/>
+    <SolidColorBrush x:Key="StarBrush" Color="DarkOrange"/>
 
     <SolidColorBrush x:Key="FlyoutBackground" Color="#FFE2E2E2"/>
     <SolidColorBrush x:Key="FlyoutBorder" Color="#FFA7A7BA"/>
@@ -30,5 +31,12 @@
                   BackgroundSource="HostBackdrop"
                   FallbackColor="#FFEEEEEE"
                   TintColor="#BBEEEEEE"/>
-    
+
+    <SolidColorBrush x:Key="HttpGetBrush" Color="DarkBlue"/>
+    <SolidColorBrush x:Key="HttpPostBrush" Color="Green"/>
+    <SolidColorBrush x:Key="HttpPutBrush" Color="DarkOrange"/>
+    <SolidColorBrush x:Key="HttpPatchBrush" Color="Purple"/>
+    <SolidColorBrush x:Key="HttpDeleteBrush" Color="IndianRed"/>
+    <SolidColorBrush x:Key="HttpFallbackBrush" Color="#2E2E2E"/>
+
 </ResourceDictionary>
