@@ -42,18 +42,6 @@ namespace WinSwag
             
             Window.Current.SetTitleBar(TitleBar);
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
-
-            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.BackgroundColor = Colors.Transparent;
-            titleBar.ButtonBackgroundColor = Colors.Transparent;
-            titleBar.ButtonHoverBackgroundColor = Colors.Gray;
-            titleBar.ButtonPressedBackgroundColor = Colors.DimGray;
-            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-            titleBar.ForegroundColor = Colors.White;
-            titleBar.ButtonForegroundColor = Colors.White;
-            titleBar.ButtonHoverForegroundColor = Colors.White;
-            titleBar.ButtonPressedForegroundColor = Colors.White;
-            titleBar.ButtonInactiveForegroundColor = Colors.Gray;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

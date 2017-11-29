@@ -7,7 +7,12 @@
     xmlns:services="using:WinSwag.Services"
     xmlns:core="using:WinSwag.Core"
     xmlns:controls="using:WinSwag.Controls"
+    xmlns:local="using:WinSwag.Views"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <local:ElementThemeToStringConverter x:Key="ElementThemeToStringConverter"/>
+    </Page.Resources>
 
     <Border Grid.Column="1" Padding="8,20">
         <StackPanel>
@@ -69,14 +74,22 @@
                             ToolTipService.ToolTip="About WinSwag">
                         <SymbolIcon Symbol="Setting"/>
                         <Button.Flyout>
-                            <Flyout>
+                            <Flyout x:Name="SettingsFlyout">
                                 <StackPanel Width="250">
                                     <TextBlock FontWeight="SemiBold">WinSwag <Run Text="{x:Bind AppInfoVM.Version}"/></TextBlock>
                                     <TextBlock>Copyright © 2017 Sven Vinkemeier</TextBlock>
                                     <controls:LinkButton NavigateUri="https://github.com/SvenEV/WinSwag" Content="WinSwag on GitHub"/>
 
                                     <ComboBox Header="Theme" ItemsSource="{x:Bind AppInfoVM.ThemeOptions}"
-                                              SelectedItem="{x:Bind AppInfoVM.SelectedTheme, Mode=TwoWay}"/>
+                                              SelectedItem="{x:Bind AppInfoVM.SelectedTheme, Mode=TwoWay}"
+                                              x:Name="ThemeComboBox"
+                                              SelectionChanged="{x:Bind SettingsFlyout.Hide}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate x:DataType="ElementTheme">
+                                                <TextBlock Text="{x:Bind Converter={StaticResource ElementThemeToStringConverter}}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
 
                                     <TextBlock Margin="0,12,0,0" TextWrapping="Wrap">Special thanks to the authors of the following projects:</TextBlock>
                                     <controls:LinkButton NavigateUri="https://github.com/APIs-guru/openapi-directory" Content="APIs.guru"/>

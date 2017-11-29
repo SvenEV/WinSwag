@@ -2,8 +2,7 @@
     x:Class="WinSwag.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:templates="using:WinSwag.Templates"
-    RequestedTheme="Light">
+    xmlns:templates="using:WinSwag.Templates">
 
     <Application.Resources>
         <ResourceDictionary>

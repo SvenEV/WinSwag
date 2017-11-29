@@ -6,12 +6,22 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:tkx="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     xmlns:controls="using:WinSwag.Controls"
     xmlns:views="using:WinSwag.Views"
     xmlns:core="using:WinSwag.Core"
     xmlns:xaml="using:WinSwag.Xaml"
     mc:Ignorable="d"
-    RequestedTheme="{x:Bind AppInfoVM.SelectedTheme, Mode=OneWay}">
+    RequestedTheme="{x:Bind AppInfoVM.SelectedTheme, Mode=OneWay}"
+    tkx:TitleBar.BackgroundColor="Transparent"
+    tkx:TitleBar.ButtonBackgroundColor="Transparent"
+    tkx:TitleBar.ButtonHoverBackgroundColor="Gray"
+    tkx:TitleBar.ButtonPressedBackgroundColor="DimGray"
+    tkx:TitleBar.ButtonInactiveBackgroundColor="Transparent">
+    
+    <!-- Note: {ThemeResource ...} somehow doesn't work when assigning title bar colors,
+         so we use {StaticResource ...} instead. However this means that users have to restart the app
+         when changing the theme -->
 
     <Page.Resources>
         <CollectionViewSource x:Key="Operations"
@@ -31,7 +41,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Acrylic background (left) -->
-        <Border Grid.RowSpan="99" Background="{StaticResource AcrylicBackgroundBrush}"/>
+        <Border Grid.RowSpan="99" Background="{ThemeResource AcrylicBackgroundBrush}"/>
 
         <!-- Black background (right) -->
         <tkc:DropShadowPanel Grid.Column="1" Grid.RowSpan="99"
