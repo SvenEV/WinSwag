@@ -33,12 +33,6 @@ namespace WinSwag.Views
                 ApplicationInstance.Current.Services.Populate(this);
 
             InitializeComponent();
-            Loaded += OnLoaded;
-        }
-
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            //ThemeComboBox.SelectionChanged += (_, __) => SettingsFlyout.Hide();
         }
 
         private async void OpenFileButtonClick(object sender, RoutedEventArgs e)
