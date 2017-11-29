@@ -37,7 +37,11 @@ namespace WinSwag.Services
         public ElementTheme SelectedTheme
         {
             get => _selectedTheme;
-            set => Set(ref _selectedTheme, value);
+            set
+            {
+                if (Set(ref _selectedTheme, value))
+                    SaveSelectedTheme();
+            }
         }
 
         public IReadOnlyList<ElementTheme> ThemeOptions { get; } =
@@ -49,6 +53,8 @@ namespace WinSwag.Services
             IsLaunchedFirstTime = !settings.ContainsKey(FirstTimeAppStartKey);
             if (IsLaunchedFirstTime)
                 settings.Add(FirstTimeAppStartKey, true);
+
+            LoadSelectedTheme();
 
             Settings = new OpenApiSettings(OpenApiSettings.Default)
             {
@@ -75,6 +81,19 @@ namespace WinSwag.Services
                     }
                 }
             };
+        }
+
+        private void LoadSelectedTheme()
+        {
+            _selectedTheme =
+                ApplicationData.Current.LocalSettings.Values.TryGetValue(nameof(SelectedTheme), out var o) &&
+                Enum.TryParse<ElementTheme>(o?.ToString() ?? "", out var theme)
+                ? theme : ElementTheme.Default;
+        }
+
+        private void SaveSelectedTheme()
+        {
+            ApplicationData.Current.LocalSettings.Values[nameof(SelectedTheme)] = _selectedTheme.ToString();
         }
     }
 }
