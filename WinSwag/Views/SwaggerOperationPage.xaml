@@ -6,8 +6,19 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:WinSwag.Controls"
+    xmlns:vm="using:WinSwag.ViewModels"
     RequestedTheme="{x:Bind AppInfoVM.SelectedTheme, Mode=OneWay}"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <vm:HttpMethodToBrushConverter x:Key="HttpBrush"
+            GetBrush="{ThemeResource HttpGetBrush}"
+            PostBrush="{ThemeResource HttpPostBrush}"
+            PutBrush="{ThemeResource HttpPutBrush}"
+            PatchBrush="{ThemeResource HttpPatchBrush}"
+            DeleteBrush="{ThemeResource HttpDeleteBrush}"
+            FallbackBrush="{ThemeResource HttpFallbackBrush}"/>
+    </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>

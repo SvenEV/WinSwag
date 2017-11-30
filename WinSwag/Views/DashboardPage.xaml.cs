@@ -33,6 +33,12 @@ namespace WinSwag.Views
                 ApplicationInstance.Current.Services.Populate(this);
 
             InitializeComponent();
+            Loaded += OnLoaded;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            ThemeSelector.SelectionChanged += OnThemeSelected;
         }
 
         private async void OpenFileButtonClick(object sender, RoutedEventArgs e)
@@ -80,6 +86,13 @@ namespace WinSwag.Views
         }
 
         private void Close() => _messenger.Send(CloseDashboard.Instance);
+
+        private void OnThemeSelected(object sender, SelectionChangedEventArgs e)
+        {
+            SettingsFlyout.Hide();
+            var frame = (Frame)Window.Current.Content;
+            frame.Navigate(typeof(MainPage));
+        }
     }
 
     public class ElementThemeToStringConverter : IValueConverter

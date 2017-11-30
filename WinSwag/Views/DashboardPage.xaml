@@ -82,7 +82,7 @@
 
                                     <ComboBox Header="Theme" ItemsSource="{x:Bind AppInfoVM.ThemeOptions}"
                                               SelectedItem="{x:Bind AppInfoVM.SelectedTheme, Mode=TwoWay}"
-                                              SelectionChanged="{x:Bind SettingsFlyout.Hide}"
+                                              x:Name="ThemeSelector"
                                               Margin="0,12,0,8">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate x:DataType="ElementTheme">
