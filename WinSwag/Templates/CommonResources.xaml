@@ -149,7 +149,6 @@
         <Setter Property="BorderThickness" Value="0,0,0,1"/>
         <Setter Property="BorderBrush" Value="{ThemeResource OperationSelectedBrush}"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="FontFamily" Value="Consolas"/>
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -164,7 +163,8 @@
                                    FontFamily="{TemplateBinding FontFamily}"
                                    FontSize="{TemplateBinding FontSize}"
                                    FontStretch="{TemplateBinding FontStretch}"
-                                   FontStyle="{TemplateBinding FontStyle}"/>
+                                   FontStyle="{TemplateBinding FontStyle}"
+                                   OpticalMarginAlignment="TrimSideBearings"/>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

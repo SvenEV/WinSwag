@@ -23,9 +23,9 @@
     <SolidColorBrush x:Key="FlyoutBackground" Color="#FFE2E2E2"/>
     <SolidColorBrush x:Key="FlyoutBorder" Color="#FFA7A7BA"/>
 
-    <SolidColorBrush x:Key="OperationSelectedBrush" Color="#44000000"/>
-    <SolidColorBrush x:Key="OperationSelectedPressedBrush" Color="#77000000"/>
-    <SolidColorBrush x:Key="OperationSelectedPointerOverBrush" Color="#66000000"/>
+    <SolidColorBrush x:Key="OperationSelectedBrush" Color="#332E2E2E"/>
+    <SolidColorBrush x:Key="OperationSelectedPressedBrush" Color="#662E2E2E"/>
+    <SolidColorBrush x:Key="OperationSelectedPointerOverBrush" Color="#552E2E2E"/>
 
     <AcrylicBrush x:Key="AcrylicBackgroundBrush"
                   BackgroundSource="HostBackdrop"

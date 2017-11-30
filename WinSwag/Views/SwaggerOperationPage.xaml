@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
 
         <!-- Selected operation title (top right) -->
-        <TextBlock Padding="18,12,140,24"
+        <TextBlock Padding="16,12,140,24"
                    Style="{StaticResource SubtitleTextBlockStyle}"
                    TextTrimming="CharacterEllipsis"
                    TextWrapping="NoWrap" FontFamily="Consolas">
@@ -36,7 +36,7 @@
         </TextBlock>
         
         <!-- Selected operation request/response (right) -->
-        <ScrollViewer Grid.Row="1" Grid.Column="1" Padding="20,0">
+        <ScrollViewer Grid.Row="1" Grid.Column="1" Padding="16,0,20,0">
             <StackPanel>
                 <!-- Request part -->
                 <controls:SectionHeader Text="Request"/>
