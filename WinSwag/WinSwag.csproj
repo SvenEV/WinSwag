@@ -142,7 +142,6 @@
     <Compile Include="Xaml\BindableFlyout.cs" />
     <Compile Include="Xaml\DataContext.cs" />
     <Compile Include="Xaml\IViewModel.cs" />
-    <Compile Include="Xaml\ThemeChangeDetector.cs" />
     <Compile Include="Xaml\ViewModelRegistry.cs" />
     <Compile Include="Xaml\XamlHelper.cs" />
     <Compile Include="ViewModels\ViewStateManagerVM.cs" />

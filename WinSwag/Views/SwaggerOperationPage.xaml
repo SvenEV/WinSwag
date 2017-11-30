@@ -31,15 +31,15 @@
                    Style="{StaticResource SubtitleTextBlockStyle}"
                    TextTrimming="CharacterEllipsis"
                    TextWrapping="NoWrap" FontFamily="Consolas">
-            <Run Text="{x:Bind VM.Method}"
-                 Foreground="{x:Bind Operation.Method, Converter={StaticResource HttpBrush}}"
+            <Run Text="{x:Bind VM.MethodString}"
+                 Foreground="{x:Bind VM.Method, Converter={StaticResource HttpBrush}, Mode=OneWay}"
                  FontWeight="SemiBold"/>
             <Run Text="{x:Bind Operation.Path}"/>
             
             <ToolTipService.ToolTip>
                 <TextBlock TextWrapping="Wrap" FontFamily="Consolas">
-                    <Run Text="{x:Bind VM.Method}"
-                         Foreground="{x:Bind Operation.Method, Converter={StaticResource HttpBrush}}"
+                    <Run Text="{x:Bind VM.MethodString}"
+                         Foreground="{x:Bind VM.Method, Converter={StaticResource HttpBrush}, Mode=OneWay}"
                          FontWeight="SemiBold"/>
                     <Run Text="{x:Bind Operation.Path}"/>
                 </TextBlock>
@@ -58,7 +58,7 @@
 
                 <!-- Send request button -->
                 <Button HorizontalAlignment="Right" Padding="12,8" Margin="0,4,0,0"
-                        Background="{x:Bind Operation.Method, Converter={StaticResource HttpBrush}}"
+                        Background="{x:Bind VM.Method, Converter={StaticResource HttpBrush}, Mode=OneWay}"
                         Foreground="{ThemeResource Background}"
                         Click="OnSendRequestButtonClicked"
                         IsEnabled="{x:Bind VM.CanSendRequest, Mode=OneWay}"

@@ -69,7 +69,7 @@ namespace WinSwag
             });
 
             KeyDown += OnKeyDown;
-            Loaded += OnLoaded;
+            ActualThemeChanged += OnActualThemeChanged;
             SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
         }
 
@@ -77,13 +77,8 @@ namespace WinSwag
         {
             _messenger.Unregister(this);
             KeyDown -= OnKeyDown;
-            Loaded -= OnLoaded;
+            ActualThemeChanged += OnActualThemeChanged;
             SystemNavigationManager.GetForCurrentView().BackRequested -= OnBackRequested;
-        }
-
-        private void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            ActualThemeChanged += OnActualThemeChanged; // removed again in event handler
         }
 
         private void OnBackRequested(object sender, BackRequestedEventArgs e)
@@ -137,7 +132,8 @@ namespace WinSwag
         private void OnActualThemeChanged(FrameworkElement sender, object e)
         {
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            var foregroundColor = (Color)Application.Current.Resources["ForegroundColor"];
+            var resources = (ResourceDictionary)Application.Current.Resources.ThemeDictionaries[ActualTheme.ToString()];
+            var foregroundColor = (Color)resources["ForegroundColor"];
 
             titleBar.ForegroundColor = foregroundColor;
             titleBar.InactiveForegroundColor = foregroundColor;
@@ -147,9 +143,7 @@ namespace WinSwag
             titleBar.ButtonInactiveForegroundColor = foregroundColor;
 
             // To refresh HTTP method brushes
-            ActualThemeChanged -= OnActualThemeChanged;
-            var frame = (Frame)Window.Current.Content;
-            frame.Navigate(typeof(MainPage));
+            _messenger.Send(ThemeChanged.Instance);
         }
     }
 }

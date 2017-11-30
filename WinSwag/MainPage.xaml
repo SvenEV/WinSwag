@@ -33,10 +33,6 @@
             PatchBrush="{ThemeResource HttpPatchBrush}"
             DeleteBrush="{ThemeResource HttpDeleteBrush}"
             FallbackBrush="{ThemeResource HttpFallbackBrush}"/>
-        
-        <xaml:ThemeChangeDetector x:Key="ThemeChangeDetector"
-                                  x:Name="ThemeChangeDetector"
-                                  Theme="{ThemeResource ThemeName}"/>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -179,9 +175,9 @@
                                     </Grid.ColumnDefinitions>
 
                                     <TextBlock FontWeight="SemiBold"
-                                               Foreground="{Binding Model.Method, Mode=OneTime, Converter={StaticResource HttpBrush}}"
+                                               Foreground="{Binding Method, Converter={StaticResource HttpBrush}}"
                                                VerticalAlignment="Top"
-                                               Text="{Binding Method, Mode=OneTime}"/>
+                                               Text="{Binding MethodString, Mode=OneTime}"/>
 
                                     <StackPanel Grid.Column="1">
                                         <TextBlock Grid.Column="1"

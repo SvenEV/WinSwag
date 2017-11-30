@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using NSwag;
 using System;
@@ -24,6 +25,9 @@ namespace WinSwag.ViewModels
         public static readonly SolidColorBrush DeleteBrush = new SolidColorBrush(Colors.OrangeRed);
         public static readonly SolidColorBrush DefaultBrush = new SolidColorBrush(Colors.Gray);
 
+        [Inject]
+        private readonly IMessenger _messenger;
+
         private Response _response;
         private bool _canSendRequest = true;
 
@@ -34,7 +38,12 @@ namespace WinSwag.ViewModels
         public Visibility HasDescription =>
             !string.IsNullOrWhiteSpace(Model.Description) ? Visibility.Visible : Visibility.Collapsed;
 
-        public string Method => Model.Method.ToString().ToUpper();
+        // In the views we have bindings to 'Method' converting it to a brush that dependes on the theme.
+        // If the theme changes, the binding won't update automatically. This property exists so that
+        // we can manually trigger a PropertyChanged-event on 'Method' when the theme changes.
+        public SwaggerOperationMethod Method => Model.Method;
+
+        public string MethodString => Model.Method.ToString().ToUpper();
 
         public IEnumerable<IArgument> LocalArguments => Model.Parameters.Select(p => p.LocalArgument);
 
@@ -64,7 +73,9 @@ namespace WinSwag.ViewModels
 
         public OperationViewModel(Operation model)
         {
+            ApplicationInstance.Current.Services.Populate(this);
             Model = model ?? throw new ArgumentNullException(nameof(model));
+            _messenger.Register<ThemeChanged>(this, _ => RaisePropertyChanged(nameof(Method)));
         }
 
         public async void BeginSendRequest()
