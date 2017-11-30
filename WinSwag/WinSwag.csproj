@@ -132,6 +132,13 @@
     <Compile Include="ViewModels\BoolSelectorConverter.cs" />
     <Compile Include="ViewModels\ForModels\ArgumentViewModel.cs" />
     <Compile Include="ViewModels\ForModels\EnumArgumentViewModel.cs" />
+    <Compile Include="Templates\ThemeResourcesDark.xaml.cs">
+      <DependentUpon>ThemeResourcesDark.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Templates\ThemeResourcesLight.xaml.cs">
+      <DependentUpon>ThemeResourcesLight.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\HttpMethodToBrushConverter.cs" />
     <Compile Include="Xaml\BindableFlyout.cs" />
     <Compile Include="Xaml\DataContext.cs" />
     <Compile Include="Xaml\IViewModel.cs" />
@@ -263,6 +270,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SwaggerOperationPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\ThemeResourcesDark.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates\ThemeResourcesLight.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:WinSwag.Controls"
     xmlns:tkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    RequestedTheme="Dark"
+    RequestedTheme="{x:Bind AppInfoVM.SelectedTheme, Mode=OneWay}"
     mc:Ignorable="d">
 
     <ScrollViewer Style="{StaticResource TopMarginScrollViewerStyle}"
@@ -20,7 +20,7 @@
             
             <!-- Header -->
             <StackPanel Padding="18,500,18,12" Margin="0,-500,0,0" Spacing="12"
-                        Background="{StaticResource AcrylicBackgroundBrush}">
+                        Background="{ThemeResource AcrylicBackgroundBrush}">
                 
                 <!-- API Title & Version -->
                 <TextBlock Padding="0,12,128,12"
@@ -43,7 +43,7 @@
                 <Grid>
                     <Button Style="{StaticResource MyButtonRevealStyle}" Padding="0,8"
                             Visibility="{x:Bind SessionManagerVM.IsntCurrentSessionFavorite, Mode=OneWay}"
-                            AllowFocusOnInteraction="True" Foreground="Gold">
+                            AllowFocusOnInteraction="True" Foreground="{ThemeResource StarBrush}">
 
                         <StackPanel Orientation="Horizontal" Spacing="12">
                             <SymbolIcon Symbol="OutlineStar"/>
@@ -69,7 +69,7 @@
 
                     <Button Style="{StaticResource MyButtonRevealStyle}" Padding="0,8"
                             Visibility="{x:Bind SessionManagerVM.IsCurrentSessionFavorite, Mode=OneWay}"
-                            Foreground="Gold">
+                            Foreground="{ThemeResource StarBrush}">
 
                         <StackPanel Orientation="Horizontal" Spacing="12">
                             <SymbolIcon Symbol="UnFavorite"/>

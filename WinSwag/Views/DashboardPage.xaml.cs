@@ -5,6 +5,7 @@ using Windows.ApplicationModel;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using WinSwag.Core;
 using WinSwag.Services;
 
@@ -79,5 +80,26 @@ namespace WinSwag.Views
         }
 
         private void Close() => _messenger.Send(CloseDashboard.Instance);
+    }
+
+    public class ElementThemeToStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is ElementTheme theme)
+            {
+                switch (theme)
+                {
+                    case ElementTheme.Default: return "System";
+                    case ElementTheme.Light: return "Light";
+                    case ElementTheme.Dark: return "Dark";
+                }
+            }
+
+            return value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language) =>
+            throw new NotImplementedException();
     }
 }

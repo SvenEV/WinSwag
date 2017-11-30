@@ -6,18 +6,33 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:tkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:tkx="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     xmlns:controls="using:WinSwag.Controls"
-    xmlns:views="using:WinSwag.Views"
     xmlns:core="using:WinSwag.Core"
+    xmlns:views="using:WinSwag.Views"
     xmlns:xaml="using:WinSwag.Xaml"
+    xmlns:vm="using:WinSwag.ViewModels"
     mc:Ignorable="d"
-    RequestedTheme="Dark">
-
+    RequestedTheme="{x:Bind AppInfoVM.SelectedTheme, Mode=OneWay}"
+    tkx:TitleBar.BackgroundColor="Transparent"
+    tkx:TitleBar.ButtonBackgroundColor="Transparent"
+    tkx:TitleBar.ButtonHoverBackgroundColor="Gray"
+    tkx:TitleBar.ButtonPressedBackgroundColor="DimGray"
+    tkx:TitleBar.ButtonInactiveBackgroundColor="Transparent">
+    
     <Page.Resources>
         <CollectionViewSource x:Key="Operations"
                               x:Name="Operations"
                               IsSourceGrouped="True"
                               Source="{x:Bind SessionManagerVM.CurrentDocument.OperationGroups, Mode=OneWay}"/>
+
+        <vm:HttpMethodToBrushConverter x:Key="HttpBrush"
+            GetBrush="{ThemeResource HttpGetBrush}"
+            PostBrush="{ThemeResource HttpPostBrush}"
+            PutBrush="{ThemeResource HttpPutBrush}"
+            PatchBrush="{ThemeResource HttpPatchBrush}"
+            DeleteBrush="{ThemeResource HttpDeleteBrush}"
+            FallbackBrush="{ThemeResource HttpFallbackBrush}"/>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -29,16 +44,18 @@
             <ColumnDefinition MinWidth="186"/>
             <ColumnDefinition Width="2*" MinWidth="200"/>
         </Grid.ColumnDefinitions>
-
+        
         <!-- Acrylic background (left) -->
-        <Border Grid.RowSpan="99" Background="{StaticResource AcrylicBackgroundBrush}"/>
+        <Border Grid.RowSpan="99" Background="{ThemeResource AcrylicBackgroundBrush}"/>
 
         <!-- Black background (right) -->
         <tkc:DropShadowPanel Grid.Column="1" Grid.RowSpan="99"
-                             Color="Black" BlurRadius="20"
+                             Color="{ThemeResource DropShadowColor}" BlurRadius="20"
                              HorizontalContentAlignment="Stretch"
                              VerticalContentAlignment="Stretch">
-            <Border Background="Black" BorderThickness="1,0,0,0" BorderBrush="#11FFFFFF"/>
+            <Border Background="{ThemeResource Background}"
+                    BorderThickness="1,0,0,0"
+                    BorderBrush="#11FFFFFF"/>
         </tkc:DropShadowPanel>
 
         <!-- Command bar (top left) -->
@@ -116,7 +133,7 @@
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                 <Setter Property="MinHeight" Value="0"/>
-                                <Setter Property="Padding" Value="12,8"/>
+                                <Setter Property="Padding" Value="12,4,16,4"/>
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="ListViewItem">
@@ -132,11 +149,11 @@
                                                 PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
                                                 PointerOverBackground="{ThemeResource SystemControlHighlightListLowBrush}"
                                                 PointerOverForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
-                                                SelectedBackground="#44FFFFFF"
+                                                SelectedBackground="{ThemeResource OperationSelectedBrush}"
                                                 SelectedForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
-                                                SelectedPointerOverBackground="#88FFFFFF"
+                                                SelectedPointerOverBackground="{ThemeResource OperationSelectedPointerOverBrush}"
                                                 PressedBackground="{ThemeResource SystemControlHighlightListMediumBrush}"
-                                                SelectedPressedBackground="#77FFFFFF"
+                                                SelectedPressedBackground="{ThemeResource OperationSelectedPressedBrush}"
                                                 DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
                                                 DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
                                                 ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}"
@@ -158,9 +175,9 @@
                                     </Grid.ColumnDefinitions>
 
                                     <TextBlock FontWeight="SemiBold"
-                                               Foreground="{Binding MethodBrush, Mode=OneTime}"
+                                               Foreground="{Binding Method, Converter={StaticResource HttpBrush}}"
                                                VerticalAlignment="Top"
-                                               Text="{Binding Method, Mode=OneTime}"/>
+                                               Text="{Binding MethodString, Mode=OneTime}"/>
 
                                     <StackPanel Grid.Column="1">
                                         <TextBlock Grid.Column="1"
@@ -197,7 +214,7 @@
             <StackPanel Grid.RowSpan="99" Spacing="12"
                         HorizontalAlignment="Center" VerticalAlignment="Center"
                         Visibility="{x:Bind ViewStateManagerVM.IsBusy, Mode=OneWay}">
-                <ProgressRing Width="40" Height="40" Foreground="Gold"
+                <ProgressRing Width="40" Height="40" Foreground="{ThemeResource StarBrush}"
                               HorizontalAlignment="Center"
                               IsActive="{x:Bind ViewStateManagerVM.IsBusy, Mode=OneWay}"/>
 

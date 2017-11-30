@@ -2,17 +2,23 @@
     x:Class="WinSwag.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:templates="using:WinSwag.Templates"
-    RequestedTheme="Light">
+    xmlns:templates="using:WinSwag.Templates">
 
     <Application.Resources>
         <ResourceDictionary>
+            
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///Templates/ControlStyles.xaml"/>
                 <templates:CommonResources/>
                 <templates:ParameterTemplates/>
                 <templates:ResponseTemplates/>
             </ResourceDictionary.MergedDictionaries>
+
+            <ResourceDictionary.ThemeDictionaries>
+                <templates:ThemeResourcesLight x:Key="Light"/>
+                <templates:ThemeResourcesDark x:Key="Dark"/>
+            </ResourceDictionary.ThemeDictionaries>
+            
         </ResourceDictionary>
     </Application.Resources>
 

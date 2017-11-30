@@ -32,25 +32,16 @@ namespace WinSwag
         [Inject]
         public IViewStateManagerVM ViewStateManagerVM { get; private set; }
 
+        [Inject]
+        public ApplicationInfo AppInfoVM { get; private set; }
+
         public MainPage()
         {
             ApplicationInstance.Current.Services.Populate(this);
             InitializeComponent();
-
+            
             Window.Current.SetTitleBar(TitleBar);
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
-
-            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            titleBar.BackgroundColor = Colors.Transparent;
-            titleBar.ButtonBackgroundColor = Colors.Transparent;
-            titleBar.ButtonHoverBackgroundColor = Colors.Gray;
-            titleBar.ButtonPressedBackgroundColor = Colors.DimGray;
-            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-            titleBar.ForegroundColor = Colors.White;
-            titleBar.ButtonForegroundColor = Colors.White;
-            titleBar.ButtonHoverForegroundColor = Colors.White;
-            titleBar.ButtonPressedForegroundColor = Colors.White;
-            titleBar.ButtonInactiveForegroundColor = Colors.Gray;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -78,6 +69,7 @@ namespace WinSwag
             });
 
             KeyDown += OnKeyDown;
+            ActualThemeChanged += OnActualThemeChanged;
             SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
         }
 
@@ -85,6 +77,7 @@ namespace WinSwag
         {
             _messenger.Unregister(this);
             KeyDown -= OnKeyDown;
+            ActualThemeChanged += OnActualThemeChanged;
             SystemNavigationManager.GetForCurrentView().BackRequested -= OnBackRequested;
         }
 
@@ -134,6 +127,23 @@ namespace WinSwag
         private void DashboardPopupClosed(PopupWindow sender, object args)
         {
             Window.Current.SetTitleBar(TitleBar);
+        }
+
+        private void OnActualThemeChanged(FrameworkElement sender, object e)
+        {
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            var resources = (ResourceDictionary)Application.Current.Resources.ThemeDictionaries[ActualTheme.ToString()];
+            var foregroundColor = (Color)resources["ForegroundColor"];
+
+            titleBar.ForegroundColor = foregroundColor;
+            titleBar.InactiveForegroundColor = foregroundColor;
+            titleBar.ButtonForegroundColor = foregroundColor;
+            titleBar.ButtonHoverForegroundColor= foregroundColor;
+            titleBar.ButtonPressedForegroundColor = foregroundColor;
+            titleBar.ButtonInactiveForegroundColor = foregroundColor;
+
+            // To refresh HTTP method brushes
+            _messenger.Send(ThemeChanged.Instance);
         }
     }
 }

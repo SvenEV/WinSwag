@@ -3,6 +3,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using WinSwag.Core;
+using WinSwag.Services;
 using WinSwag.ViewModels;
 using WinSwag.Xaml;
 
@@ -27,6 +28,9 @@ namespace WinSwag.Views
             get { return (OperationViewModel)GetValue(VMProperty); }
             set { SetValue(VMProperty, value); }
         }
+
+        [Inject]
+        public ApplicationInfo AppInfoVM { get; private set; }
 
         public SwaggerOperationPage()
         {

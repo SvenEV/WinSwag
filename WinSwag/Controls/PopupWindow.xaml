@@ -28,7 +28,7 @@
 
             <Border x:Name="TitleBarElement" Background="Transparent" Height="32" VerticalAlignment="Top"/>
 
-            <controls:DropShadowPanel Color="Black" BlurRadius="50"
+            <controls:DropShadowPanel Color="{ThemeResource DropShadowColor}" BlurRadius="50"
                                       HorizontalAlignment="{x:Bind HorizontalContentAlignment, Mode=OneWay}"
                                       VerticalAlignment="{x:Bind VerticalContentAlignment, Mode=OneWay}"
                                       HorizontalContentAlignment="{x:Bind HorizontalContentAlignment, Mode=OneWay}"
@@ -51,7 +51,7 @@
                     </ControlTemplate>
                 </controls:DropShadowPanel.Template>
                 
-                <Grid Background="#2D2D30">
+                <Grid Background="{ThemeResource DashboardBackground}">
 
                     <ContentPresenter
                         Content="{x:Bind InnerContent, Mode=OneWay}"

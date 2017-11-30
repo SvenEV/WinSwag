@@ -1,15 +1,20 @@
 ﻿using NJsonSchema;
+using System;
+using System.Collections.Generic;
 using System.Net.Http.Headers;
 using Windows.ApplicationModel;
 using Windows.Storage;
+using Windows.UI.Xaml;
 using WinSwag.Core;
 using WinSwag.Core.Extensions;
 
 namespace WinSwag.Services
 {
-    public class ApplicationInfo
+    public class ApplicationInfo : ObservableObjectEx
     {
         private const string FirstTimeAppStartKey = "AppStartedOnce";
+
+        private ElementTheme _selectedTheme = ElementTheme.Default;
 
         public string Version
         {
@@ -29,12 +34,27 @@ namespace WinSwag.Services
         /// </summary>
         public bool IsLaunchedFirstTime { get; }
 
+        public ElementTheme SelectedTheme
+        {
+            get => _selectedTheme;
+            set
+            {
+                if (Set(ref _selectedTheme, value))
+                    SaveSelectedTheme();
+            }
+        }
+
+        public IReadOnlyList<ElementTheme> ThemeOptions { get; } =
+            new[] { ElementTheme.Default, ElementTheme.Dark, ElementTheme.Light };
+
         public ApplicationInfo()
         {
             var settings = ApplicationData.Current.LocalSettings.Values;
             IsLaunchedFirstTime = !settings.ContainsKey(FirstTimeAppStartKey);
             if (IsLaunchedFirstTime)
                 settings.Add(FirstTimeAppStartKey, true);
+
+            LoadSelectedTheme();
 
             Settings = new OpenApiSettings(OpenApiSettings.Default)
             {
@@ -61,6 +81,19 @@ namespace WinSwag.Services
                     }
                 }
             };
+        }
+
+        private void LoadSelectedTheme()
+        {
+            _selectedTheme =
+                ApplicationData.Current.LocalSettings.Values.TryGetValue(nameof(SelectedTheme), out var o) &&
+                Enum.TryParse<ElementTheme>(o?.ToString() ?? "", out var theme)
+                ? theme : ElementTheme.Default;
+        }
+
+        private void SaveSelectedTheme()
+        {
+            ApplicationData.Current.LocalSettings.Values[nameof(SelectedTheme)] = _selectedTheme.ToString();
         }
     }
 }
