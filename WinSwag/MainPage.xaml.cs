@@ -69,6 +69,7 @@ namespace WinSwag
             });
 
             KeyDown += OnKeyDown;
+            Loaded += OnLoaded;
             SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
         }
 
@@ -76,7 +77,13 @@ namespace WinSwag
         {
             _messenger.Unregister(this);
             KeyDown -= OnKeyDown;
+            Loaded -= OnLoaded;
             SystemNavigationManager.GetForCurrentView().BackRequested -= OnBackRequested;
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            ActualThemeChanged += OnActualThemeChanged; // removed again in event handler
         }
 
         private void OnBackRequested(object sender, BackRequestedEventArgs e)
@@ -125,6 +132,24 @@ namespace WinSwag
         private void DashboardPopupClosed(PopupWindow sender, object args)
         {
             Window.Current.SetTitleBar(TitleBar);
+        }
+
+        private void OnActualThemeChanged(FrameworkElement sender, object e)
+        {
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            var foregroundColor = (Color)Application.Current.Resources["ForegroundColor"];
+
+            titleBar.ForegroundColor = foregroundColor;
+            titleBar.InactiveForegroundColor = foregroundColor;
+            titleBar.ButtonForegroundColor = foregroundColor;
+            titleBar.ButtonHoverForegroundColor= foregroundColor;
+            titleBar.ButtonPressedForegroundColor = foregroundColor;
+            titleBar.ButtonInactiveForegroundColor = foregroundColor;
+
+            // To refresh HTTP method brushes
+            ActualThemeChanged -= OnActualThemeChanged;
+            var frame = (Frame)Window.Current.Content;
+            frame.Navigate(typeof(MainPage));
         }
     }
 }

@@ -33,6 +33,10 @@
             PatchBrush="{ThemeResource HttpPatchBrush}"
             DeleteBrush="{ThemeResource HttpDeleteBrush}"
             FallbackBrush="{ThemeResource HttpFallbackBrush}"/>
+        
+        <xaml:ThemeChangeDetector x:Key="ThemeChangeDetector"
+                                  x:Name="ThemeChangeDetector"
+                                  Theme="{ThemeResource ThemeName}"/>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">

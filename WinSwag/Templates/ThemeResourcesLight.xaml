@@ -7,6 +7,8 @@
     xmlns:vm="using:WinSwag.ViewModels"
     mc:Ignorable="d">
 
+    <x:String x:Key="ThemeName">Light</x:String>
+
     <Color x:Key="ForegroundColor">Black</Color>
     <Color x:Key="BackgroundColor">White</Color>
     <Color x:Key="DropShadowColor">Gray</Color>
