@@ -44,5 +44,20 @@ namespace WinSwag.Templates
                 flyout.ShowAt(checkBox);
             }
         }
+
+        private async void OnSampleValueTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            var argument = (ArgumentViewModel)((FrameworkElement)sender).DataContext;
+            await argument.Model.SetSerializedValueAsync(argument.Model.Parameter.SampleValue);
+            argument.Model.IsActive = true;
+        }
+
+        private void OnSampleValueTextBlockLoaded(object sender, RoutedEventArgs e)
+        {
+            var textBlock = (TextBlock)sender;
+
+            textBlock.AddHandler(UIElement.DoubleTappedEvent,
+                new DoubleTappedEventHandler(OnSampleValueTapped), true);
+        }
     }
 }

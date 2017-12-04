@@ -1,4 +1,5 @@
-﻿using NSwag;
+﻿using Newtonsoft.Json;
+using NSwag;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,17 +93,17 @@ namespace WinSwag.Core
             settings = settings ?? OpenApiSettings.Default;
             try
             {
-                var json = await SwaggerDocument.FromJsonAsync(data);
-                return new OpenApiDocument(json, sourceUrl, settings);
+                var doc = await SwaggerDocument.FromJsonAsync(data);
+                return new OpenApiDocument(doc, sourceUrl, settings);
             }
-            catch
+            catch (JsonException)
             {
                 try
                 {
-                    var yaml = await SwaggerYamlDocument.FromYamlAsync(data);
-                    return new OpenApiDocument(yaml, sourceUrl, settings);
+                    var doc = await SwaggerYamlDocument.FromYamlAsync(data);
+                    return new OpenApiDocument(doc, sourceUrl, settings);
                 }
-                catch
+                catch (JsonException)
                 {
                     throw new InvalidOperationException("Could not determine content type");
                 }

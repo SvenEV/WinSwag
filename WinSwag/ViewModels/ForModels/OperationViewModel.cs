@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using Windows.UI;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using WinSwag.Core;
 using WinSwag.Services;
@@ -38,10 +39,23 @@ namespace WinSwag.ViewModels
         public Visibility HasDescription =>
             !string.IsNullOrWhiteSpace(Model.Description) ? Visibility.Visible : Visibility.Collapsed;
 
-        // In the views we have bindings to 'Method' converting it to a brush that dependes on the theme.
-        // If the theme changes, the binding won't update automatically. This property exists so that
-        // we can manually trigger a PropertyChanged-event on 'Method' when the theme changes.
-        public SwaggerOperationMethod Method => Model.Method;
+        public Brush MethodBrush
+        {
+            get
+            {
+                var theme = ((FrameworkElement)((Frame)Window.Current.Content)?.Content).ActualTheme;
+                var dict = (ResourceDictionary)Application.Current.Resources.ThemeDictionaries[theme.ToString()];
+                switch (Model.Method)
+                {
+                    case SwaggerOperationMethod.Get: return dict["HttpGetBrush"] as Brush;
+                    case SwaggerOperationMethod.Post: return dict["HttpPostBrush"] as Brush;
+                    case SwaggerOperationMethod.Put: return dict["HttpPutBrush"] as Brush;
+                    case SwaggerOperationMethod.Patch: return dict["HttpPatchBrush"] as Brush;
+                    case SwaggerOperationMethod.Delete: return dict["HttpDeleteBrush"] as Brush;
+                    default: return dict["HttpFallbackBrush"] as Brush;
+                }
+            }
+        }
 
         public string MethodString => Model.Method.ToString().ToUpper();
 
@@ -75,7 +89,7 @@ namespace WinSwag.ViewModels
         {
             ApplicationInstance.Current.Services.Populate(this);
             Model = model ?? throw new ArgumentNullException(nameof(model));
-            _messenger.Register<ThemeChanged>(this, _ => RaisePropertyChanged(nameof(Method)));
+            _messenger.Register<ThemeChanged>(this, _ => RaisePropertyChanged(nameof(MethodBrush)));
         }
 
         public async void BeginSendRequest()

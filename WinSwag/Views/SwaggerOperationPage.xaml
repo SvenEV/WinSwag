@@ -10,16 +10,6 @@
     RequestedTheme="{x:Bind AppInfoVM.SelectedTheme, Mode=OneWay}"
     mc:Ignorable="d">
 
-    <Page.Resources>
-        <vm:HttpMethodToBrushConverter x:Key="HttpBrush"
-            GetBrush="{ThemeResource HttpGetBrush}"
-            PostBrush="{ThemeResource HttpPostBrush}"
-            PutBrush="{ThemeResource HttpPutBrush}"
-            PatchBrush="{ThemeResource HttpPatchBrush}"
-            DeleteBrush="{ThemeResource HttpDeleteBrush}"
-            FallbackBrush="{ThemeResource HttpFallbackBrush}"/>
-    </Page.Resources>
-
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -32,14 +22,14 @@
                    TextTrimming="CharacterEllipsis"
                    TextWrapping="NoWrap" FontFamily="Consolas">
             <Run Text="{x:Bind VM.MethodString}"
-                 Foreground="{x:Bind VM.Method, Converter={StaticResource HttpBrush}, Mode=OneWay}"
+                 Foreground="{x:Bind VM.MethodBrush, Mode=OneWay}"
                  FontWeight="SemiBold"/>
             <Run Text="{x:Bind Operation.Path}"/>
             
             <ToolTipService.ToolTip>
                 <TextBlock TextWrapping="Wrap" FontFamily="Consolas">
                     <Run Text="{x:Bind VM.MethodString}"
-                         Foreground="{x:Bind VM.Method, Converter={StaticResource HttpBrush}, Mode=OneWay}"
+                         Foreground="{x:Bind VM.MethodBrush, Mode=OneWay}"
                          FontWeight="SemiBold"/>
                     <Run Text="{x:Bind Operation.Path}"/>
                 </TextBlock>
@@ -58,7 +48,7 @@
 
                 <!-- Send request button -->
                 <Button HorizontalAlignment="Right" Padding="12,8" Margin="0,4,0,0"
-                        Background="{x:Bind VM.Method, Converter={StaticResource HttpBrush}, Mode=OneWay}"
+                        Background="{x:Bind VM.MethodBrush, Mode=OneWay}"
                         Foreground="{ThemeResource Background}"
                         Click="OnSendRequestButtonClicked"
                         IsEnabled="{x:Bind VM.CanSendRequest, Mode=OneWay}"
