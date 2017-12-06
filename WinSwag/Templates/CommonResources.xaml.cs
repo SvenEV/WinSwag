@@ -47,9 +47,9 @@ namespace WinSwag.Templates
 
         private async void OnSampleValueTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
-            var argument = (ArgumentViewModel)((FrameworkElement)sender).DataContext;
-            await argument.Model.SetSerializedValueAsync(argument.Model.Parameter.SampleValue);
-            argument.Model.IsActive = true;
+            var argument = (IArgument)((FrameworkElement)sender).DataContext;
+            await argument.SetSerializedValueAsync(argument.Parameter.SampleValue);
+            argument.IsActive = true;
         }
 
         private void OnSampleValueTextBlockLoaded(object sender, RoutedEventArgs e)

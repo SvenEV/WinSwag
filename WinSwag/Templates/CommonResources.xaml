@@ -8,6 +8,7 @@
     xmlns:core="using:WinSwag.Core"
     xmlns:xaml="using:WinSwag.Xaml"
     xmlns:vm="using:WinSwag.ViewModels"
+    xmlns:tka="using:Microsoft.Toolkit.Uwp.UI.Animations"
     mc:Ignorable="d">
 
     <vm:BoolSelectorConverter x:Key="IsActiveToOpacity">
@@ -21,18 +22,32 @@
 
     <DataTemplate x:Key="SwaggerArgumentTemplate" x:DataType="core:IArgument">
         <Grid Padding="0,4,0,4" ColumnSpacing="12"
-              Opacity="{x:Bind IsActive, Mode=OneWay, Converter={StaticResource IsActiveToOpacity}}"
               Loaded="OnArgumentRootLoaded">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="250"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            
+
+            <xaml:BindingContext x:Name="ArgumentVM" Model="{x:Bind}"/>
+            <xaml:BindingContext x:Name="OperationVM" Model="{x:Bind Parameter.Operation}"/>
+
             <!-- Parameter info (left column) -->
-            <StackPanel xaml:DataContext.Model="{x:Bind}">
-                <CheckBox IsChecked="{x:Bind IsActive, Mode=TwoWay}"
-                          ToolTipService.ToolTip="{Binding ToolTip}"
+            <StackPanel>
+
+                <!-- Gray checkmark if value isn't specified locally, but globally -->
+                <TextBlock Visibility="{Binding ViewModel.EffectiveValueIsGlobalArgument, ElementName=ArgumentVM}"
+                           Text="&#xE8FB;" FontFamily="Segoe MDL2 Assets"
+                           HorizontalAlignment="Left"
+                           TextAlignment="Center"
+                           Width="20" Height="20"
+                           Margin="0,0,0,-34"
+                           Foreground="Gray"/>
+
+                <!-- CheckBox (parameter name, description) -->
+                <CheckBox Opacity="{x:Bind IsActive, Mode=OneWay, Converter={StaticResource IsActiveToOpacity}}"
+                          IsChecked="{x:Bind IsActive, Mode=TwoWay}"
+                          ToolTipService.ToolTip="{Binding ViewModel.ToolTip, ElementName=ArgumentVM}"
                           RightTapped="OnArgumentRightTapped"
                           VerticalAlignment="Top"
                           Margin="0,-1,0,0">
@@ -42,7 +57,7 @@
                             <MenuFlyoutSubItem Text="Go To Operation..."
                                                xaml:BindableFlyout.ItemsSource="{x:Bind Parameters}"
                                                xaml:BindableFlyout.DisplayMemberPath="Operation.OperationId"
-                                               xaml:BindableFlyout.ItemClick="{Binding GlobalArgumentRelatedOperationClickHandler, Mode=OneTime}">
+                                               xaml:BindableFlyout.ItemClick="{Binding ViewModel.GlobalArgumentRelatedOperationClickHandler, Mode=OneTime, ElementName=ArgumentVM}">
                                 <MenuFlyoutSubItem.Icon>
                                     <SymbolIcon Symbol="Go"/>
                                 </MenuFlyoutSubItem.Icon>
@@ -85,22 +100,33 @@
                     </StackPanel>
                 </CheckBox>
 
-                <xaml:BindingContext x:Name="OperationVM" Model="{x:Bind Parameter.Operation}"/>
+                <!-- Example JSON -->
+                <StackPanel Visibility="{x:Bind xaml:X.NotEmpty(Parameter.SampleValue)}">
+                    <TextBlock Text="Example (double-click to insert):"
+                               FontSize="11" Margin="28,0,0,0"
+                               Foreground="{Binding ViewModel.MethodBrush, ElementName=OperationVM}"/>
 
-                <TextBlock Opacity="1"
-                           FontSize="11"
-                           FontWeight="Bold"
-                           Margin="28,0,0,0"
-                           FontFamily="Consolas"
-                           IsTextSelectionEnabled="True"
-                           Loaded="OnSampleValueTextBlockLoaded"
-                           Text="{x:Bind Parameter.SampleValue}"
-                           Visibility="{x:Bind xaml:X.NotEmpty(Parameter.SampleValue)}"
-                           Foreground="{Binding ViewModel.MethodBrush, ElementName=OperationVM}"/>
+                    <TextBlock FontSize="11"
+                               FontWeight="Bold"
+                               Margin="28,0,0,0"
+                               FontFamily="Consolas"
+                               IsTextSelectionEnabled="True"
+                               Loaded="OnSampleValueTextBlockLoaded"
+                               Text="{x:Bind Parameter.SampleValue}"
+                               Foreground="{Binding ViewModel.MethodBrush, ElementName=OperationVM}"/>
+                </StackPanel>
             </StackPanel>
 
             <!-- Value input (if active, right column) -->
             <StackPanel Grid.Column="1" Visibility="{x:Bind IsActive, Mode=OneWay}">
+                <tka:Implicit.ShowAnimations>
+                    <tka:OpacityAnimation Duration="0:0:0.5" From="0" To="1"
+                                          Delay="0:0:0.1" SetInitialValueBeforeDelay="True"/>
+                </tka:Implicit.ShowAnimations>
+                <tka:Implicit.HideAnimations>
+                    <tka:OpacityAnimation Duration="0:0:0.5" From="1" To="0"/>
+                </tka:Implicit.HideAnimations>
+                
                 <ContentControl Content="{x:Bind}" IsTabStop="False"
 								ContentTemplateSelector="{StaticResource ParameterTemplateSelector}"
 								HorizontalContentAlignment="Stretch"
@@ -122,9 +148,17 @@
 
             <!-- Effective value (if not active, right column) -->
             <Grid Grid.Column="1" xaml:DataContext.Model="{x:Bind}">
-
+                
                 <!-- If effective value is given by global argument -->
                 <StackPanel Visibility="{Binding EffectiveValueIsGlobalArgument}">
+                    <tka:Implicit.ShowAnimations>
+                        <tka:OpacityAnimation Duration="0:0:0.3" From="0" To="1"
+                                              Delay="0:0:0.1" SetInitialValueBeforeDelay="True"/>
+                    </tka:Implicit.ShowAnimations>
+                    <tka:Implicit.HideAnimations>
+                        <tka:OpacityAnimation Duration="0:0:0.3" From="1" To="0"/>
+                    </tka:Implicit.HideAnimations>
+
                     <ContentControl IsEnabled="False" IsTabStop="False"
                                     Content="{Binding Model.Parameter.GlobalArgument}"
                                     ContentTemplateSelector="{StaticResource ParameterTemplateSelector}"
@@ -137,6 +171,14 @@
                 <TextBlock Visibility="{Binding EffectiveValueIsSpecDefault}"
                            FontStyle="Italic" Foreground="Gray"
                            Margin="0,4,0,0">
+                    <tka:Implicit.ShowAnimations>
+                        <tka:OpacityAnimation Duration="0:0:0.3" From="0" To="1"
+                                              Delay="0:0:0.1" SetInitialValueBeforeDelay="True"/>
+                    </tka:Implicit.ShowAnimations>
+                    <tka:Implicit.HideAnimations>
+                        <tka:OpacityAnimation Duration="0:0:0.3" From="1" To="0"/>
+                    </tka:Implicit.HideAnimations>
+                    
                     (<Run Text="{Binding InactiveText}"/>, defaults to "<Run Text="{Binding Model.Parameter.DefaultValue}"/>")
                 </TextBlock>
 
@@ -144,6 +186,14 @@
                 <TextBlock Visibility="{Binding EffectiveValueIsNone}"
                            FontStyle="Italic" Foreground="Gray"
                            Margin="0,4,0,0">
+                    <tka:Implicit.ShowAnimations>
+                        <tka:OpacityAnimation Duration="0:0:0.3" From="0" To="1"
+                                              Delay="0:0:0.1" SetInitialValueBeforeDelay="True"/>
+                    </tka:Implicit.ShowAnimations>
+                    <tka:Implicit.HideAnimations>
+                        <tka:OpacityAnimation Duration="0:0:0.3" From="1" To="0"/>
+                    </tka:Implicit.HideAnimations>
+                    
                     (<Run Text="{Binding InactiveText}"/>)
                 </TextBlock>
 
