@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using Windows.ApplicationModel;
 using Windows.Storage.Pickers;
@@ -65,12 +66,20 @@ namespace WinSwag.Views
             if (args.Reason != AutoSuggestionBoxTextChangeReason.UserInput)
                 return;
 
-            var results = await _apisGuruClient.QueryAsync(sender.Text, _apisGuruQueryCancellation.Token);
+            try
+            {
+                var results = await _apisGuruClient.QueryAsync(sender.Text, _apisGuruQueryCancellation.Token);
 
-            if (results == null)
-                return; // 'null' indicates that the query was cancelled
+                if (results == null)
+                    return; // 'null' indicates that the query was cancelled
 
-            sender.ItemsSource = results;
+                sender.ItemsSource = results;
+            }
+            catch
+            {
+                // Query failed (which shouldn't crash the app)
+                Debugger.Break();
+            }
         }
 
         private async void DeleteSessionButtonClick(object sender, RoutedEventArgs e)
