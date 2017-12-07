@@ -78,7 +78,7 @@ namespace WinSwag.Views
             CurrentDocumentDisplayNameTextBox.SelectAll();
         }
 
-        private async void DescriptionLinkClicked(object sender, LinkClickedEventArgs e)
+        private async void OnDescriptionLinkClicked(object sender, LinkClickedEventArgs e)
         {
             if (Uri.TryCreate(e.Link, UriKind.RelativeOrAbsolute, out var uri))
                 await Launcher.LaunchUriAsync(uri);

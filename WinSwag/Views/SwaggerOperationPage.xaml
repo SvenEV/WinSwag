@@ -42,6 +42,7 @@
             <StackPanel>
                 <!-- Operation description -->
                 <tkc:MarkdownTextBlock Text="{x:Bind Operation.Description}"
+                                       LinkClicked="OnDescriptionLinkClicked"
                                        Margin="0,0,20,12"/>
                 
                 <!-- Request part -->

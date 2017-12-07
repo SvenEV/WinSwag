@@ -38,7 +38,7 @@
                 <tkc:MarkdownTextBlock Text="{x:Bind Document.Description, Mode=OneWay}"
                                        Visibility="{x:Bind DocumentVM.HasDescription}"
                                        LinkForeground="{ThemeResource HttpGetBrush}"
-                                       LinkClicked="DescriptionLinkClicked"
+                                       LinkClicked="OnDescriptionLinkClicked"
                                        TextWrapping="WrapWholeWords"
                                        Margin="0,0,0,12"/>
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+using System;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -47,6 +49,12 @@ namespace WinSwag.Views
         private void OnSendRequestButtonClicked(object sender, RoutedEventArgs e)
         {
             VM.BeginSendRequest();
+        }
+
+        private async void OnDescriptionLinkClicked(object sender, LinkClickedEventArgs e)
+        {
+            if (Uri.TryCreate(e.Link, UriKind.RelativeOrAbsolute, out var uri))
+                await Launcher.LaunchUriAsync(uri);
         }
     }
 }
