@@ -195,12 +195,23 @@
 
                             <Button Style="{StaticResource MyButtonRevealStyle}"
                                     ToolTipService.ToolTip="Remove from Favorites"
-                                    Click="DeleteSessionButtonClick"
                                     BorderThickness="0"
                                     Grid.Column="3"
                                     Margin="0,0,-12,0"
                                     Padding="12">
                                 <SymbolIcon Symbol="Delete"/>
+
+                                <Button.Flyout>
+                                    <Flyout x:Name="RemoveFromFavoritesFlyout">
+                                        <StackPanel Spacing="12" Width="240">
+                                            <TextBlock Text="Are you sure you want to remove the API from your favorites?"
+                                                        TextWrapping="WrapWholeWords"/>
+
+                                            <Button Content="Remove this API" HorizontalAlignment="Right"
+                                                    Click="DeleteSessionButtonClick"/>
+                                        </StackPanel>
+                                    </Flyout>
+                                </Button.Flyout>
                             </Button>
                         </Grid>
                     </DataTemplate>

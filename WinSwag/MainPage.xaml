@@ -25,14 +25,6 @@
                               x:Name="Operations"
                               IsSourceGrouped="True"
                               Source="{x:Bind SessionManagerVM.CurrentDocument.OperationGroups, Mode=OneWay}"/>
-
-        <vm:HttpMethodToBrushConverter x:Key="HttpBrush"
-            GetBrush="{ThemeResource HttpGetBrush}"
-            PostBrush="{ThemeResource HttpPostBrush}"
-            PutBrush="{ThemeResource HttpPutBrush}"
-            PatchBrush="{ThemeResource HttpPatchBrush}"
-            DeleteBrush="{ThemeResource HttpDeleteBrush}"
-            FallbackBrush="{ThemeResource HttpFallbackBrush}"/>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -59,7 +51,7 @@
         </tkc:DropShadowPanel>
 
         <!-- Command bar (top left) -->
-        <Grid Height="48">
+        <Grid Height="36">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
@@ -71,27 +63,26 @@
             <Button VerticalAlignment="Stretch" Padding="12,0"
                     Style="{StaticResource MyButtonRevealStyle}"
                     Click="{x:Bind DashboardPopup.Show}"
-                    ToolTipService.ToolTip="Open Dashboard (ESC)">
-                <SymbolIcon Symbol="GlobalNavigationButton"/>
-            </Button>
+                    ToolTipService.ToolTip="Open Dashboard (ESC)"
+                    Content="&#xE700;" FontFamily="Segoe MDL2 Assets"/>
 
             <!-- Button "Go Back" -->
             <Button Grid.Column="1" Click="{x:Bind OperationManagerVM.GoBack}"
                     IsEnabled="{x:Bind OperationManagerVM.CanGoBack, Mode=OneWay}"
-                    VerticalAlignment="Stretch" Padding="12,0"
+                    VerticalAlignment="Stretch" Padding="12,11"
                     Style="{StaticResource MyButtonRevealStyle}"
-                    ToolTipService.ToolTip="Navigate backward (Alt+Left)">
-                <SymbolIcon Symbol="Back"/>
-            </Button>
+                    ToolTipService.ToolTip="Navigate backward (Alt+Left)"
+                    FontFamily="Segoe MDL2 Assets"
+                    Content="&#xE830;"/>
 
             <!-- Button "Go Forward" -->
             <Button Grid.Column="2" Click="{x:Bind OperationManagerVM.GoForward}"
                     IsEnabled="{x:Bind OperationManagerVM.CanGoForward, Mode=OneWay}"
-                    VerticalAlignment="Stretch" Padding="12,0"
+                    VerticalAlignment="Stretch" Padding="12,11"
                     Style="{StaticResource MyButtonRevealStyle}"
-                    ToolTipService.ToolTip="Navigate forward (Alt+Right)">
-                <SymbolIcon Symbol="Forward"/>
-            </Button>
+                    ToolTipService.ToolTip="Navigate forward (Alt+Right)"
+                    FontFamily="Segoe MDL2 Assets"
+                    Content="&#xEA47;"/>
 
             <!-- Button "API Info" -->
             <Button Grid.Column="3"
@@ -100,13 +91,13 @@
                     Style="{StaticResource MyButtonRevealStyle}"
                     Click="{x:Bind OperationManagerVM.NavigateToApiInfo}"
                     Visibility="{x:Bind SessionManagerVM.IsSessionLoaded, Mode=OneWay}"
-                    Height="48" Padding="12,0">
-                <Grid ColumnSpacing="12">
+                    Height="36" Padding="12,0">
+                <Grid ColumnSpacing="8">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <SymbolIcon Symbol="Home"/>
+                    <TextBlock Text="&#xE80F;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center"/>
                     <TextBlock Text="{x:Bind SessionManagerVM.CurrentDocument.DisplayName, Mode=OneWay}"
                                TextTrimming="CharacterEllipsis" Grid.Column="1"/>
                 </Grid>
@@ -175,7 +166,7 @@
                                     </Grid.ColumnDefinitions>
 
                                     <TextBlock FontWeight="SemiBold"
-                                               Foreground="{Binding Method, Converter={StaticResource HttpBrush}}"
+                                               Foreground="{Binding MethodBrush}"
                                                VerticalAlignment="Top"
                                                Text="{Binding MethodString, Mode=OneTime}"/>
 
@@ -195,9 +186,15 @@
                         </ListView.ItemTemplate>
                         <ListView.GroupStyle>
                             <GroupStyle>
+                                <GroupStyle.HeaderContainerStyle>
+                                    <Style TargetType="ListViewHeaderItem">
+                                        <Setter Property="MinHeight" Value="0"/>
+                                    </Style>
+                                </GroupStyle.HeaderContainerStyle>
                                 <GroupStyle.HeaderTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Name, Mode=OneTime}"/>
+                                        <TextBlock Text="{Binding Name, Mode=OneTime}"
+                                                   FontWeight="SemiBold" FontSize="15"/>
                                     </DataTemplate>
                                 </GroupStyle.HeaderTemplate>
                             </GroupStyle>

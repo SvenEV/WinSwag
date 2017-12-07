@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Linq;
 using WinSwag.Core;
 using WinSwag.Services;
 using WinSwag.Xaml;
@@ -21,6 +22,8 @@ namespace WinSwag.ViewModels.ForModels
         public bool IsLocalArgument => Model == Model.Parameter.LocalArgument;
 
         public bool IsGlobalArgument => Model == Model.Parameter.GlobalArgument;
+
+        public bool HasUniqueSampleValue { get; }
 
         public bool EffectiveValueIsGlobalArgument =>
             IsLocalArgument && !Model.IsActive && Model.Parameter.GlobalArgument.IsActive;
@@ -51,6 +54,10 @@ namespace WinSwag.ViewModels.ForModels
         public ArgumentViewModelBase(IArgument model)
         {
             Model = model;
+
+            HasUniqueSampleValue =
+                !string.IsNullOrEmpty(Model.Parameter.SampleValue) &&
+                Model.Parameters.Select(p => p.SampleValue).Distinct().Count() == 1;
 
             model.PropertyChanges.OfProperty<bool>(nameof(IArgument.IsActive)).Subscribe(_ =>
             {

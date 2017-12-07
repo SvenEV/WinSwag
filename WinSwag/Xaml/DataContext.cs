@@ -18,8 +18,39 @@ namespace WinSwag.Xaml
 
         private static void OnModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var dataContext = (FrameworkElement)d;
-            dataContext.DataContext = ViewModelRegistry.ViewModelFor(e.NewValue);
+            var element = (FrameworkElement)d;
+            element.DataContext = ViewModelRegistry.ViewModelFor(e.NewValue);
+        }
+    }
+
+    /// <summary>
+    /// An invisible element providing a viewmodel for a specified model object.
+    /// </summary>
+    public class BindingContext : FrameworkElement
+    {
+        public static readonly DependencyProperty ModelProperty =
+            DependencyProperty.Register(nameof(Model), typeof(object), typeof(BindingContext), new PropertyMetadata(null, OnModelChanged));
+
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register(nameof(ViewModel), typeof(object), typeof(BindingContext), new PropertyMetadata(null));
+
+        private static void OnModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            d.SetValue(ViewModelProperty, ViewModelRegistry.ViewModelFor(e.NewValue));
+        }
+
+        public object Model
+        {
+            get => GetValue(ModelProperty);
+            set => SetValue(ModelProperty, value);
+        }
+
+        public object ViewModel => GetValue(ViewModelProperty);
+
+        public BindingContext()
+        {
+            Visibility = Visibility.Collapsed;
+            IsHitTestVisible = false;
         }
     }
 }

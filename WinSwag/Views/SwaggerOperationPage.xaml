@@ -5,20 +5,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:controls="using:WinSwag.Controls"
-    xmlns:vm="using:WinSwag.ViewModels"
     RequestedTheme="{x:Bind AppInfoVM.SelectedTheme, Mode=OneWay}"
     mc:Ignorable="d">
-
-    <Page.Resources>
-        <vm:HttpMethodToBrushConverter x:Key="HttpBrush"
-            GetBrush="{ThemeResource HttpGetBrush}"
-            PostBrush="{ThemeResource HttpPostBrush}"
-            PutBrush="{ThemeResource HttpPutBrush}"
-            PatchBrush="{ThemeResource HttpPatchBrush}"
-            DeleteBrush="{ThemeResource HttpDeleteBrush}"
-            FallbackBrush="{ThemeResource HttpFallbackBrush}"/>
-    </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -27,28 +17,34 @@
         </Grid.RowDefinitions>
 
         <!-- Selected operation title (top right) -->
-        <TextBlock Padding="16,12,140,24"
-                   Style="{StaticResource SubtitleTextBlockStyle}"
-                   TextTrimming="CharacterEllipsis"
-                   TextWrapping="NoWrap" FontFamily="Consolas">
+        <TextBlock Style="{StaticResource SubtitleTextBlockStyle}"
+                    TextTrimming="CharacterEllipsis"
+                    TextWrapping="NoWrap" FontFamily="Consolas"
+                    Padding="16,8,140,8"
+                    FontSize="16">
             <Run Text="{x:Bind VM.MethodString}"
-                 Foreground="{x:Bind VM.Method, Converter={StaticResource HttpBrush}, Mode=OneWay}"
-                 FontWeight="SemiBold"/>
+                    Foreground="{x:Bind VM.MethodBrush, Mode=OneWay}"
+                    FontWeight="SemiBold"/>
             <Run Text="{x:Bind Operation.Path}"/>
             
             <ToolTipService.ToolTip>
                 <TextBlock TextWrapping="Wrap" FontFamily="Consolas">
                     <Run Text="{x:Bind VM.MethodString}"
-                         Foreground="{x:Bind VM.Method, Converter={StaticResource HttpBrush}, Mode=OneWay}"
-                         FontWeight="SemiBold"/>
+                            Foreground="{x:Bind VM.MethodBrush, Mode=OneWay}"
+                            FontWeight="SemiBold"/>
                     <Run Text="{x:Bind Operation.Path}"/>
                 </TextBlock>
             </ToolTipService.ToolTip>
         </TextBlock>
-        
+
         <!-- Selected operation request/response (right) -->
         <ScrollViewer Grid.Row="1" Grid.Column="1" Padding="16,0,20,0">
             <StackPanel>
+                <!-- Operation description -->
+                <tkc:MarkdownTextBlock Text="{x:Bind Operation.Description}"
+                                       LinkClicked="OnDescriptionLinkClicked"
+                                       Margin="0,0,20,12"/>
+                
                 <!-- Request part -->
                 <controls:SectionHeader Text="Request"/>
 
@@ -58,7 +54,7 @@
 
                 <!-- Send request button -->
                 <Button HorizontalAlignment="Right" Padding="12,8" Margin="0,4,0,0"
-                        Background="{x:Bind VM.Method, Converter={StaticResource HttpBrush}, Mode=OneWay}"
+                        Background="{x:Bind VM.MethodBrush, Mode=OneWay}"
                         Foreground="{ThemeResource Background}"
                         Click="OnSendRequestButtonClicked"
                         IsEnabled="{x:Bind VM.CanSendRequest, Mode=OneWay}"

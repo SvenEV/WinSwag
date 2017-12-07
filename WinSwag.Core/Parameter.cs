@@ -1,4 +1,6 @@
-﻿using NSwag;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using NSwag;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -31,6 +33,8 @@ namespace WinSwag.Core
 
         public IArgument GlobalArgument { get; }
 
+        public string SampleValue { get; }
+
         public Parameter(SwaggerParameter parameter, Operation operation, ArgumentBase localArgument, IArgument globalArgument)
         {
             Specification = parameter ?? throw new ArgumentNullException(nameof(parameter));
@@ -38,6 +42,11 @@ namespace WinSwag.Core
             LocalArgument = localArgument ?? throw new ArgumentNullException(nameof(localArgument));
             GlobalArgument = globalArgument ?? throw new ArgumentNullException(nameof(globalArgument));
             localArgument.Init(new[] { this });
+
+            var sampleJson = JsonExampleGenerator.CreateSample(parameter);
+
+            if (sampleJson is JObject)
+                SampleValue = sampleJson.ToString(Formatting.Indented);
         }
 
         public Parameter(SwaggerParameter spec, DocumentCreationContext context) : this(

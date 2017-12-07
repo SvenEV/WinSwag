@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using WinSwag.Core;
 using WinSwag.ViewModels.ForModels;
+using WinSwag.Xaml;
 
 namespace WinSwag.Templates
 {
@@ -36,13 +37,28 @@ namespace WinSwag.Templates
         private void OnArgumentRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             var checkBox = (FrameworkElement)sender;
-            var argumentVM = (ArgumentViewModelBase)checkBox.DataContext;
+            var argumentVM = (ArgumentViewModelBase)((BindingContext)checkBox.FindName("ArgumentVM")).ViewModel;
 
             if (argumentVM.IsGlobalArgument)
             {
                 var flyout = checkBox.Resources["ContextFlyout"] as FlyoutBase;
                 flyout.ShowAt(checkBox);
             }
+        }
+
+        private async void OnSampleValueTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            var argument = (IArgument)((FrameworkElement)sender).DataContext;
+            await argument.SetSerializedValueAsync(argument.Parameter.SampleValue);
+            argument.IsActive = true;
+        }
+
+        private void OnSampleValueTextBlockLoaded(object sender, RoutedEventArgs e)
+        {
+            var textBlock = (TextBlock)sender;
+
+            textBlock.AddHandler(UIElement.DoubleTappedEvent,
+                new DoubleTappedEventHandler(OnSampleValueTapped), true);
         }
     }
 }

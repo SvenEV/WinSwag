@@ -20,13 +20,15 @@
     <DataTemplate x:Key="StringResponseTemplate" x:DataType="core:StringResponse">
         <TextBlock Margin="0,12,0,0" IsTextSelectionEnabled="True"
                    TextWrapping="Wrap" FontFamily="Consolas"
-                   Text="{x:Bind Value}"/>
+                   Text="{x:Bind Value}"
+                   FontSize="14"/>
     </DataTemplate>
 
     <DataTemplate x:Key="JsonResponseTemplate" x:DataType="core:JsonResponse">
         <TextBlock Margin="0,12,0,0" IsTextSelectionEnabled="True"
                    TextWrapping="Wrap" FontFamily="Consolas"
-                   Text="{x:Bind Json}"/>
+                   Text="{x:Bind Json}"
+                   FontSize="14"/>
     </DataTemplate>
 
     <DataTemplate x:Key="ImageResponseTemplate" x:DataType="coreex:ImageResponse">

@@ -65,7 +65,9 @@ namespace WinSwag.Services
         [JsonProperty("preferred")]
         private string _preferredVersion;
 
-        public ApiVersion PreferredVersion => Versions.TryGetValue(_preferredVersion, out var v) ? v : null;
+        public ApiVersion PreferredVersion => _preferredVersion == null
+            ? Versions.FirstOrDefault().Value
+            : Versions.TryGetValue(_preferredVersion, out var v) ? v : null;
 
         public IReadOnlyDictionary<string, ApiVersion> Versions { get; set; }
     }

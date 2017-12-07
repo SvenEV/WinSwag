@@ -19,7 +19,7 @@
             </Grid.RowDefinitions>
             
             <!-- Header -->
-            <StackPanel Padding="18,500,18,12" Margin="0,-500,0,0" Spacing="12"
+            <StackPanel Padding="18,500,18,12" Margin="0,-500,0,0"
                         Background="{ThemeResource AcrylicBackgroundBrush}">
                 
                 <!-- API Title & Version -->
@@ -31,17 +31,20 @@
                 </TextBlock>
 
                 <!-- API Base URL -->
-                <TextBlock Text="{x:Bind Document.BaseUrl}" IsTextSelectionEnabled="True"/>
+                <TextBlock Text="{x:Bind Document.BaseUrl}" IsTextSelectionEnabled="True"
+                           Margin="0,0,0,12"/>
 
                 <!-- API Description -->
                 <tkc:MarkdownTextBlock Text="{x:Bind Document.Description, Mode=OneWay}"
                                        Visibility="{x:Bind DocumentVM.HasDescription}"
-                                       LinkClicked="DescriptionLinkClicked"
-                                       TextWrapping="WrapWholeWords"/>
+                                       LinkForeground="{ThemeResource HttpGetBrush}"
+                                       LinkClicked="OnDescriptionLinkClicked"
+                                       TextWrapping="WrapWholeWords"
+                                       Margin="0,0,0,12"/>
 
                 <!-- Buttons "Add/remove favorite" -->
                 <Grid>
-                    <Button Style="{StaticResource MyButtonRevealStyle}" Padding="0,8"
+                    <Button Style="{StaticResource MyButtonRevealStyle}" Padding="0,4"
                             Visibility="{x:Bind SessionManagerVM.IsntCurrentSessionFavorite, Mode=OneWay}"
                             AllowFocusOnInteraction="True" Foreground="{ThemeResource StarBrush}">
 
@@ -52,7 +55,7 @@
 
                         <Button.Flyout>
                             <Flyout x:Name="AddToFavoritesFlyout">
-                                <StackPanel Width="300" Spacing="12">
+                                <StackPanel Width="300" Spacing="8">
                                     <TextBox x:Name="CurrentDocumentDisplayNameTextBox"
                                              Text="{x:Bind Document.DisplayName, Mode=OneWay}"
                                              KeyDown="CurrentDocumentDisplayNameTextBoxKeyDown"
@@ -67,11 +70,11 @@
                         </Button.Flyout>
                     </Button>
 
-                    <Button Style="{StaticResource MyButtonRevealStyle}" Padding="0,8"
+                    <Button Style="{StaticResource MyButtonRevealStyle}" Padding="0,4"
                             Visibility="{x:Bind SessionManagerVM.IsCurrentSessionFavorite, Mode=OneWay}"
                             Foreground="{ThemeResource StarBrush}">
 
-                        <StackPanel Orientation="Horizontal" Spacing="12">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
                             <SymbolIcon Symbol="UnFavorite"/>
                             <TextBlock Text="Remove from Favorites"/>
                         </StackPanel>
@@ -92,7 +95,7 @@
                 </Grid>
             </StackPanel>
 
-            <Border Grid.Row="1" Padding="18,12,18,12">
+            <Border Grid.Row="1" Padding="18,16,18,12">
                 <!-- Common Parameters -->
                 <StackPanel Visibility="{x:Bind DocumentVM.HasGlobalArguments, Mode=OneWay}">
                     <controls:SectionHeader Text="&#xE12B; Global Arguments"
