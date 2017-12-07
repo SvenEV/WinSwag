@@ -65,7 +65,7 @@
                         </MenuFlyout>
                     </CheckBox.Resources>
 
-                    <StackPanel x:Name="ParameterInfo" Margin="0,1,0,0"
+                    <StackPanel x:Name="ParameterInfo" Margin="0,2,0,0"
 						        ToolTipService.PlacementTarget="{Binding ElementName=ParameterInfo}">
                         <ToolTipService.ToolTip>
                             <StackPanel MaxWidth="600">
@@ -208,7 +208,7 @@
         <Setter Property="BorderThickness" Value="0,0,0,1"/>
         <Setter Property="BorderBrush" Value="{ThemeResource OperationSelectedBrush}"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
-        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontSize" Value="15"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="controls:SectionHeader">

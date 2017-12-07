@@ -52,7 +52,9 @@ namespace WinSwag.Core
 
                     return obj;
 
-                case JsonObjectType.None: throw new ArgumentException("Invalid type", nameof(schema));
+                case JsonObjectType.None:
+                    return null; // Invalid type
+
                 default: throw new NotImplementedException();
             }
         }

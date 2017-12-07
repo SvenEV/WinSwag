@@ -84,6 +84,9 @@ namespace WinSwag.Views
 
         private async void DeleteSessionButtonClick(object sender, RoutedEventArgs e)
         {
+            var flyout = ((Button)sender).FindName("RemoveFromFavoritesFlyout") as Flyout;
+            flyout?.Hide();
+
             var sessionInfo = (SessionInfo)((Button)sender).DataContext;
             await SessionManagerVM.DeleteSessionAsync(sessionInfo);
         }

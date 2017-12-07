@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:controls="using:WinSwag.Controls"
     RequestedTheme="{x:Bind AppInfoVM.SelectedTheme, Mode=OneWay}"
     mc:Ignorable="d">
@@ -16,28 +17,33 @@
         </Grid.RowDefinitions>
 
         <!-- Selected operation title (top right) -->
-        <TextBlock Padding="16,12,140,24"
-                   Style="{StaticResource SubtitleTextBlockStyle}"
-                   TextTrimming="CharacterEllipsis"
-                   TextWrapping="NoWrap" FontFamily="Consolas">
+        <TextBlock Style="{StaticResource SubtitleTextBlockStyle}"
+                    TextTrimming="CharacterEllipsis"
+                    TextWrapping="NoWrap" FontFamily="Consolas"
+                    Padding="16,8,140,8"
+                    FontSize="16">
             <Run Text="{x:Bind VM.MethodString}"
-                 Foreground="{x:Bind VM.MethodBrush, Mode=OneWay}"
-                 FontWeight="SemiBold"/>
+                    Foreground="{x:Bind VM.MethodBrush, Mode=OneWay}"
+                    FontWeight="SemiBold"/>
             <Run Text="{x:Bind Operation.Path}"/>
             
             <ToolTipService.ToolTip>
                 <TextBlock TextWrapping="Wrap" FontFamily="Consolas">
                     <Run Text="{x:Bind VM.MethodString}"
-                         Foreground="{x:Bind VM.MethodBrush, Mode=OneWay}"
-                         FontWeight="SemiBold"/>
+                            Foreground="{x:Bind VM.MethodBrush, Mode=OneWay}"
+                            FontWeight="SemiBold"/>
                     <Run Text="{x:Bind Operation.Path}"/>
                 </TextBlock>
             </ToolTipService.ToolTip>
         </TextBlock>
-        
+
         <!-- Selected operation request/response (right) -->
         <ScrollViewer Grid.Row="1" Grid.Column="1" Padding="16,0,20,0">
             <StackPanel>
+                <!-- Operation description -->
+                <tkc:MarkdownTextBlock Text="{x:Bind Operation.Description}"
+                                       Margin="0,0,20,12"/>
+                
                 <!-- Request part -->
                 <controls:SectionHeader Text="Request"/>
 

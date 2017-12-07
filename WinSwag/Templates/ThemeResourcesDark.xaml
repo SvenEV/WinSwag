@@ -28,6 +28,8 @@
     <SolidColorBrush x:Key="OperationSelectedPressedBrush" Color="#77FFFFFF"/>
     <SolidColorBrush x:Key="OperationSelectedPointerOverBrush" Color="#66FFFFFF"/>
 
+    <SolidColorBrush x:Key="HyperlinkButtonForeground" Color="SkyBlue" />
+
     <AcrylicBrush x:Key="AcrylicBackgroundBrush"
                   BackgroundSource="HostBackdrop"
                   FallbackColor="#FF1F2528"
