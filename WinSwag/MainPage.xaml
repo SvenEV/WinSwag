@@ -92,7 +92,7 @@
                     Click="{x:Bind OperationManagerVM.NavigateToApiInfo}"
                     Visibility="{x:Bind SessionManagerVM.IsSessionLoaded, Mode=OneWay}"
                     Height="36" Padding="12,0">
-                <Grid ColumnSpacing="12">
+                <Grid ColumnSpacing="8">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>

@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using WinSwag.Core;
 using WinSwag.ViewModels.ForModels;
+using WinSwag.Xaml;
 
 namespace WinSwag.Templates
 {
@@ -36,7 +37,7 @@ namespace WinSwag.Templates
         private void OnArgumentRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             var checkBox = (FrameworkElement)sender;
-            var argumentVM = (ArgumentViewModelBase)checkBox.DataContext;
+            var argumentVM = (ArgumentViewModelBase)((BindingContext)checkBox.FindName("ArgumentVM")).ViewModel;
 
             if (argumentVM.IsGlobalArgument)
             {

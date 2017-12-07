@@ -101,7 +101,7 @@
                 </CheckBox>
 
                 <!-- Example JSON -->
-                <StackPanel Visibility="{x:Bind xaml:X.NotEmpty(Parameter.SampleValue)}">
+                <StackPanel Visibility="{Binding ViewModel.HasUniqueSampleValue, ElementName=ArgumentVM}">
                     <TextBlock Text="Example (double-click to insert):"
                                FontSize="11" Margin="28,0,0,0"
                                Foreground="{Binding ViewModel.MethodBrush, ElementName=OperationVM}"/>
