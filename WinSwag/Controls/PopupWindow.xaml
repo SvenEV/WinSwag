@@ -20,7 +20,7 @@
                 </TransitionCollection>
             </Grid.Transitions>
 
-            <Border Opacity=".92">
+            <Border Opacity=".92" IsTapEnabled="True" Tapped="{x:Bind Hide}">
                 <Border.Background>
                     <AcrylicBrush BackgroundSource="Backdrop" TintColor="#A0000000"/>
                 </Border.Background>
