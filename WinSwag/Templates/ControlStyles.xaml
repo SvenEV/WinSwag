@@ -5,10 +5,6 @@
 
     <Style TargetType="AppBarButton" BasedOn="{StaticResource AppBarButtonRevealStyle}"/>
 
-    <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#33FFFFFF"/>
-    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#33FFFFFF"/>
-    <SolidColorBrush x:Key="TextControlForegroundFocused" Color="{ThemeResource ForegroundColor}"/>
-
     <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver" Color="#33FFFFFF"/>
     <SolidColorBrush x:Key="ComboBoxBackgroundFocused" Color="#33FFFFFF"/>
     <SolidColorBrush x:Key="ComboBoxForegroundFocused" Color="{ThemeResource ForegroundColor}"/>

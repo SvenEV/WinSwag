@@ -42,4 +42,11 @@
     <SolidColorBrush x:Key="HttpDeleteBrush" Color="IndianRed"/>
     <SolidColorBrush x:Key="HttpFallbackBrush" Color="#2E2E2E"/>
 
+    <SolidColorBrush x:Key="TextControlBackground" Color="#33FFFFFF"/>
+    <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#33FFFFFF"/>
+    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#33FFFFFF"/>
+    <SolidColorBrush x:Key="TextControlForeground" Color="{StaticResource ForegroundColor}"/>
+    <SolidColorBrush x:Key="TextControlForegroundFocused" Color="{StaticResource ForegroundColor}"/>
+    <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="{StaticResource ForegroundColor}"/>
+
 </ResourceDictionary>
