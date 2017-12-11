@@ -21,6 +21,8 @@ namespace WinSwag.Core
 
         public SwaggerParameterKind Kind => Specification.Kind;
 
+        public bool IsRequired => Specification.IsRequired;
+
         public Operation Operation { get; }
 
         /// <summary>

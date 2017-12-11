@@ -47,7 +47,6 @@
                 <!-- CheckBox (parameter name, description) -->
                 <CheckBox Opacity="{x:Bind IsActive, Mode=OneWay, Converter={StaticResource IsActiveToOpacity}}"
                           IsChecked="{x:Bind IsActive, Mode=TwoWay}"
-                          ToolTipService.ToolTip="{Binding ViewModel.ToolTip, ElementName=ArgumentVM}"
                           RightTapped="OnArgumentRightTapped"
                           VerticalAlignment="Top"
                           Margin="0,-1,0,0">
@@ -65,29 +64,41 @@
                         </MenuFlyout>
                     </CheckBox.Resources>
 
+                    <ToolTipService.ToolTip>
+                        <StackPanel MaxWidth="600" Spacing="8">
+                            <TextBlock FontSize="16"
+								        FontFamily="Consolas">
+                                <Run Text="{x:Bind Parameter.Name}"/>
+                                <Run Text="{Binding ViewModel.IsRequiredStringLong, ElementName=ArgumentVM, Mode=OneTime}"
+                                        Foreground="{ThemeResource StarBrush}"/>
+                            </TextBlock>
+
+                            <TextBlock FontWeight="SemiBold">
+							    <Run Text="{x:Bind Parameter.Kind}"/> parameter
+                            </TextBlock>
+                            
+                            <TextBlock Grid.Column="2"
+								       Text="{x:Bind Parameter.Description}"
+								       Visibility="{x:Bind xaml:X.NotEmpty(Parameter.Description)}"
+								       TextWrapping="Wrap"
+								       FontSize="12"/>
+
+                            <Border BorderThickness="0,1,0,0"
+                                    BorderBrush="{ThemeResource Foreground25}"
+                                    Padding="0,6,0,0">
+                                <TextBlock Text="{Binding ViewModel.ToolTip, ElementName=ArgumentVM}"
+                                           TextWrapping="WrapWholeWords"/>
+                            </Border>
+                            
+                        </StackPanel>
+                    </ToolTipService.ToolTip>
+                    
                     <StackPanel x:Name="ParameterInfo" Margin="0,2,0,0"
 						        ToolTipService.PlacementTarget="{Binding ElementName=ParameterInfo}">
-                        <ToolTipService.ToolTip>
-                            <StackPanel MaxWidth="600">
-                                <TextBlock Text="{x:Bind Parameter.Name}"
-								           FontSize="16"
-								           FontFamily="Consolas"/>
 
-                                <TextBlock Grid.Column="2"
-								           Opacity=".6"
-								           Text="{x:Bind Parameter.Description}"
-								           Visibility="{x:Bind xaml:X.NotEmpty(Parameter.Description)}"
-								           FontSize="12"
-								           TextWrapping="Wrap"/>
-
-                                <TextBlock Margin="0,8,0,0">
-							        <Run Text="{x:Bind Parameter.Kind}"/> parameter
-                                </TextBlock>
-                            </StackPanel>
-                        </ToolTipService.ToolTip>
-
-                        <TextBlock Text="{x:Bind Parameter.Name}"
-						           FontFamily="Consolas"/>
+                        <TextBlock FontFamily="Consolas">
+                            <Run Text="{x:Bind Parameter.Name}"/><Run Text="{Binding ViewModel.IsRequiredString, ElementName=ArgumentVM, Mode=OneTime}" Foreground="{ThemeResource StarBrush}"/>
+                        </TextBlock>
 
                         <TextBlock Opacity=".6"
 						           Text="{x:Bind Parameter.Description}"

@@ -19,7 +19,7 @@
     <SolidColorBrush x:Key="Background" Color="White"/>
 
     <SolidColorBrush x:Key="DashboardBackground" Color="#EDEDED"/>
-    <SolidColorBrush x:Key="StarBrush" Color="DarkOrange"/>
+    <SolidColorBrush x:Key="StarBrush" Color="#AF8F00"/>
 
     <SolidColorBrush x:Key="FlyoutBackground" Color="#FFE2E2E2"/>
     <SolidColorBrush x:Key="FlyoutBorder" Color="#FFA7A7BA"/>
@@ -37,7 +37,7 @@
 
     <SolidColorBrush x:Key="HttpGetBrush" Color="DarkBlue"/>
     <SolidColorBrush x:Key="HttpPostBrush" Color="Green"/>
-    <SolidColorBrush x:Key="HttpPutBrush" Color="DarkOrange"/>
+    <SolidColorBrush x:Key="HttpPutBrush" Color="#AF8F00"/>
     <SolidColorBrush x:Key="HttpPatchBrush" Color="Purple"/>
     <SolidColorBrush x:Key="HttpDeleteBrush" Color="IndianRed"/>
     <SolidColorBrush x:Key="HttpFallbackBrush" Color="#2E2E2E"/>

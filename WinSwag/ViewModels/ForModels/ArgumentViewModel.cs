@@ -25,6 +25,10 @@ namespace WinSwag.ViewModels.ForModels
 
         public bool HasUniqueSampleValue { get; }
 
+        public string IsRequiredString => Model.Parameter.IsRequired ? "*" : "";
+
+        public string IsRequiredStringLong => Model.Parameter.IsRequired ? "(required)" : "";
+
         public bool EffectiveValueIsGlobalArgument =>
             IsLocalArgument && !Model.IsActive && Model.Parameter.GlobalArgument.IsActive;
 
