@@ -15,7 +15,14 @@
     </Page.Resources>
 
     <Border Grid.Column="1" Padding="8,20">
-        <StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <!-- Dashboard header -->
             <Grid ColumnSpacing="12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -113,7 +120,7 @@
             </Grid>
 
             <!-- Dashboard URL box -->
-            <Grid ColumnSpacing="12">
+            <Grid ColumnSpacing="12" Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
@@ -160,7 +167,9 @@
             </Grid>
 
             <!-- Dashboard favorites -->
-            <ListView ItemsSource="{x:Bind SessionManagerVM.StoredSessions}"
+            <ListView Grid.Row="2"
+                      ScrollViewer.VerticalScrollMode="Auto"
+                      ItemsSource="{x:Bind SessionManagerVM.StoredSessions}"
                       ItemClick="StoredSessionClick"
                       IsItemClickEnabled="True"
                       SelectionMode="None">
@@ -217,6 +226,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-        </StackPanel>
+            
+        </Grid>
     </Border>
 </Page>
