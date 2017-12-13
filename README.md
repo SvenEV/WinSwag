@@ -1,12 +1,22 @@
-# WinSwag
-A UWP app for loading Swagger definitions and exploring REST APIs.
+<h1 align="center">
+    <img src="WinSwag/Assets/Square44x44Logo.targetsize-256.png" width="40" style="vertical-align:middle;margin-top:-5px"/>
+    WinSwag
+</h1>
 
-## Get WinSwag
+<h4 align="center">
+    A UWP app for loading Swagger/OpenAPI definitions and exploring REST APIs.
+</h4>
+
+<p align="center">
+    <a href="https://www.microsoft.com/store/apps/9nxf9f8sjmdm">
+        <img src="ReadmeAssets/English_get it from MS_864X312.svg" width="150">
+    </a>
+</p>
+
+<p align="center">
+    <img src="ReadmeAssets/Screenshot.png"/>
+</p>
+
+---
+
 WinSwag requires Windows 10 Fall Creators Update.
-
-### Install from Windows Store
-**[Get WinSwag from the Windows Store](https://www.microsoft.com/store/apps/9nxf9f8sjmdm)**  
-
-### Install from Web
-1. **[Install the certificate](http://sven.vinkemeier.de/Downloads/WinSwag/WinSwag_0.6.1.0_x86_x64_arm.cer)** into "LocalMachine/Trusted People"
-1. **[Install WinSwag](http://sven.vinkemeier.de/Apps/WinSwag)** using Windows App Installer
