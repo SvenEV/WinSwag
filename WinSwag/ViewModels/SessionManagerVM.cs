@@ -136,7 +136,7 @@ namespace WinSwag.ViewModels
                     _messenger.Send(CloseDashboard.Instance);
                     await UnloadCurrentSessionAsync(); // unload before loading new session (important when loading the same session again)
                     var session = await _sessionManager.LoadAsync(sessionInfo.Url);
-                    CurrentDocument = await Session.ToDocumentAsync(session);
+                    CurrentDocument = await Session.ToDocumentAsync(session, _appInfo.Settings);
 
                     _operationManager.ClearNavigationStack();
                     _operationManager.NavigateToApiInfo();
