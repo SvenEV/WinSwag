@@ -100,7 +100,16 @@ namespace WinSwag.ViewModels
             CanSendRequest = false;
 
             var settings = ApplicationInstance.Current.Services.GetService<ApplicationInfo>().Settings;
-            Response = await OpenApi.SendRequestAsync(Model, settings);
+
+            try
+            {
+                Response = await OpenApi.SendRequestAsync(Model, settings);
+            }
+            catch (Exception e)
+            {
+                // TODO: This should probably already be handled in SendRequestAsync(...)
+                Response = new Response("", e);
+            }
 
             CanSendRequest = true;
         }

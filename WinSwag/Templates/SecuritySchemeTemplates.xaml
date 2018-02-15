@@ -1,0 +1,48 @@
+﻿<ResourceDictionary
+    x:Class="WinSwag.Templates.SecuritySchemeTemplates"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:core="using:WinSwag.Core"
+    xmlns:vm="using:WinSwag.ViewModels"
+    xmlns:local="using:WinSwag.Templates">
+
+    <vm:SecuritySchemeTemplateSelector
+        x:Key="SecuritySchemeTemplateSelector"
+        BasicTemplate="{StaticResource SecuritySchemeBasicTemplate}"
+        ApiKeyTemplate="{StaticResource SecuritySchemeApiKeyTemplate}"
+        OAuth2Template="{StaticResource SecuritySchemeOAuth2Template}"/>
+
+    <DataTemplate x:Key="SecuritySchemeBasicTemplate" x:DataType="core:SecuritySchemeBasic">
+        <StackPanel>
+            <TextBox Header="Username" Text="{x:Bind Username, Mode=TwoWay}"/>
+            <PasswordBox Header="Password" Password="{x:Bind Password, Mode=TwoWay}"/>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="SecuritySchemeApiKeyTemplate" x:DataType="core:SecuritySchemeApiKey">
+        <StackPanel>
+            <TextBox Header="{x:Bind Specification.Name}" Text="{x:Bind ApiKey, Mode=TwoWay}"/>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="SecuritySchemeOAuth2Template" x:DataType="core:SecuritySchemeOAuth2">
+        <StackPanel>
+            <TextBlock Foreground="Red">Not yet implemented, sorry :(</TextBlock>
+            <ItemsControl ItemsSource="{x:Bind Scopes}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="core:OAuth2Scope">
+                        <CheckBox>
+                            <StackPanel>
+                                <TextBlock Text="{x:Bind Name}"/>
+                                <TextBlock Text="{x:Bind Description}"
+                                           Visibility="{x:Bind HasDescription}"
+                                           Opacity=".7"/>
+                            </StackPanel>
+                        </CheckBox>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </DataTemplate>
+
+</ResourceDictionary>

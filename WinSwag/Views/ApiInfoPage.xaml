@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:WinSwag.Controls"
+    xmlns:core="using:WinSwag.Core"
     xmlns:tkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     RequestedTheme="{x:Bind AppInfoVM.SelectedTheme, Mode=OneWay}"
     mc:Ignorable="d">
@@ -42,57 +43,107 @@
                                        TextWrapping="WrapWholeWords"
                                        Margin="0,0,0,12"/>
 
-                <!-- Buttons "Add/remove favorite" -->
-                <Grid>
+                <!-- Buttons (favorite, authorize) -->
+                <StackPanel Orientation="Horizontal" Spacing="24">
+                    <StackPanel.ChildrenTransitions>
+                        <TransitionCollection>
+                            <RepositionThemeTransition/>
+                        </TransitionCollection>
+                    </StackPanel.ChildrenTransitions>
+                    
+                    <!-- Buttons "Add/remove favorite" -->
+                    <Grid>
+                        <Button Style="{StaticResource MyButtonRevealStyle}" Padding="0,4"
+                                Visibility="{x:Bind SessionManagerVM.IsntCurrentSessionFavorite, Mode=OneWay}"
+                                AllowFocusOnInteraction="True" Foreground="{ThemeResource StarBrush}">
+
+                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                <SymbolIcon Symbol="OutlineStar"/>
+                                <TextBlock Text="Add to Favorites"/>
+                            </StackPanel>
+
+                            <Button.Flyout>
+                                <Flyout x:Name="AddToFavoritesFlyout">
+                                    <StackPanel Width="300" Spacing="8">
+                                        <TextBox x:Name="CurrentDocumentDisplayNameTextBox"
+                                                 Text="{x:Bind Document.DisplayName, Mode=OneWay}"
+                                                 KeyDown="CurrentDocumentDisplayNameTextBoxKeyDown"
+                                                 GotFocus="CurrentDocumentDisplayNameTextBoxGotFocus"
+                                                 PlaceholderText="Name this API!"
+                                                 Header="Display Name"/>
+                                        <Button Content="Add to Favorites"
+                                                Click="AddToFavoritesButtonClick"
+                                                HorizontalContentAlignment="Stretch"/>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+
+                        <Button Style="{StaticResource MyButtonRevealStyle}" Padding="0,4"
+                                Visibility="{x:Bind SessionManagerVM.IsCurrentSessionFavorite, Mode=OneWay}"
+                                Foreground="{ThemeResource StarBrush}">
+
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <SymbolIcon Symbol="UnFavorite"/>
+                                <TextBlock Text="Remove from Favorites"/>
+                            </StackPanel>
+
+                            <Button.Flyout>
+                                <Flyout x:Name="RemoveFromFavoritesFlyout">
+                                    <StackPanel Spacing="12" Width="240">
+                                        <TextBlock Text="Are you sure you want to remove the API from your favorites?"
+                                                            TextWrapping="WrapWholeWords"/>
+
+                                        <Button Content="Remove this API" HorizontalAlignment="Right"
+                                                        IsEnabled="{x:Bind SessionManagerVM.IsCurrentSessionFavorite, Mode=OneWay}"
+                                                        Click="RemoveFromFavoritesButtonClick"/>
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                    </Grid>
+
+                    <!-- Button "Authorize" -->
                     <Button Style="{StaticResource MyButtonRevealStyle}" Padding="0,4"
-                            Visibility="{x:Bind SessionManagerVM.IsntCurrentSessionFavorite, Mode=OneWay}"
-                            AllowFocusOnInteraction="True" Foreground="{ThemeResource StarBrush}">
-
-                        <StackPanel Orientation="Horizontal" Spacing="12">
-                            <SymbolIcon Symbol="OutlineStar"/>
-                            <TextBlock Text="Add to Favorites"/>
-                        </StackPanel>
-
-                        <Button.Flyout>
-                            <Flyout x:Name="AddToFavoritesFlyout">
-                                <StackPanel Width="300" Spacing="8">
-                                    <TextBox x:Name="CurrentDocumentDisplayNameTextBox"
-                                             Text="{x:Bind Document.DisplayName, Mode=OneWay}"
-                                             KeyDown="CurrentDocumentDisplayNameTextBoxKeyDown"
-                                             GotFocus="CurrentDocumentDisplayNameTextBoxGotFocus"
-                                             PlaceholderText="Name this API!"
-                                             Header="Display Name"/>
-                                    <Button Content="Add to Favorites"
-                                            Click="AddToFavoritesButtonClick"
-                                            HorizontalContentAlignment="Stretch"/>
-                                </StackPanel>
-                            </Flyout>
-                        </Button.Flyout>
-                    </Button>
-
-                    <Button Style="{StaticResource MyButtonRevealStyle}" Padding="0,4"
-                            Visibility="{x:Bind SessionManagerVM.IsCurrentSessionFavorite, Mode=OneWay}"
+                            Visibility="{x:Bind DocumentVM.CanAuthorize}"
                             Foreground="{ThemeResource StarBrush}">
-
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <SymbolIcon Symbol="UnFavorite"/>
-                            <TextBlock Text="Remove from Favorites"/>
+                        
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <SymbolIcon Symbol="Permissions"/>
+                            <TextBlock Text="Authorize"/>
                         </StackPanel>
 
                         <Button.Flyout>
-                            <Flyout x:Name="RemoveFromFavoritesFlyout">
-                                <StackPanel Spacing="12" Width="240">
-                                    <TextBlock Text="Are you sure you want to remove the API from your favorites?"
-                                                        TextWrapping="WrapWholeWords"/>
-
-                                    <Button Content="Remove this API" HorizontalAlignment="Right"
-                                                    IsEnabled="{x:Bind SessionManagerVM.IsCurrentSessionFavorite, Mode=OneWay}"
-                                                    Click="RemoveFromFavoritesButtonClick"/>
-                                </StackPanel>
+                            <Flyout Placement="Bottom">
+                                <ItemsControl ItemsSource="{x:Bind Document.SecuritySchemes}"
+                                              Width="450">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Spacing="24"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="core:ISecurityScheme">
+                                            <Grid>
+                                                <SymbolIcon Symbol="Permissions" Margin="0,2,0,0"
+                                                            HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                                <StackPanel Margin="32,0,0,0">
+                                                    <TextBlock Text="{x:Bind Name}" FontWeight="Bold" FontSize="18"/>
+                                                    <TextBlock Text="{x:Bind Specification.Description}"
+                                                               Visibility="{x:Bind HasDescription}"
+                                                               Margin="0,6,0,0"/>
+                                                    <ContentControl Content="{x:Bind}" Margin="0,6,0,0"
+                                                                    HorizontalContentAlignment="Stretch"
+                                                                    ContentTemplateSelector="{StaticResource SecuritySchemeTemplateSelector}"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
                             </Flyout>
                         </Button.Flyout>
                     </Button>
-                </Grid>
+                </StackPanel>
             </StackPanel>
 
             <Border Grid.Row="1" Padding="18,16,18,12">

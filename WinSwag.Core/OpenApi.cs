@@ -30,6 +30,11 @@ namespace WinSwag.Core
                 foreach (var parameter in operation.Parameters)
                     await parameter.ApplyAsync(request, requestUri);
 
+                // TODO: This is temporary. Operations should reference a subset of the doc's
+                // security schemes and only those that are enabled should be included.
+                foreach (var securityScheme in operation.Document.SecuritySchemes)
+                    await securityScheme.ApplyAsync(request, requestUri);
+
                 requestUri.Length--; // remove trailing '?' or '&'
                 var finalUri = requestUri.ToString();
                 request.RequestUri = new Uri(finalUri);

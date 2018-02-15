@@ -16,6 +16,8 @@ namespace WinSwag.Core
 
         public IReadOnlyList<OperationGroup> OperationGroups { get; }
 
+        public IReadOnlyList<ISecurityScheme> SecuritySchemes { get; }
+
         public string Description => Specification.Info?.Description?.Trim();
 
         public string BaseUrl => Specification.BaseUrl;
@@ -66,6 +68,10 @@ namespace WinSwag.Core
                 .Where(arg => arg.Parameters.Count > 1)
                 .OrderBy(arg => arg.Parameter.Name)
                 .ToList(); // TODO: Select only those that appear frequently
+
+            SecuritySchemes = specification.SecurityDefinitions
+                .Select(kvp => SecurityScheme.FromSpec(kvp.Key, kvp.Value))
+                .ToList();
         }
 
         public static async Task<OpenApiDocument> LoadFromUrlAsync(string url, OpenApiSettings settings = null)

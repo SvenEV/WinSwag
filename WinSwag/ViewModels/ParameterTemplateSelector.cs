@@ -13,10 +13,6 @@ namespace WinSwag.ViewModels
         public DataTemplate DateTimeTemplate { get; set; }
         public DataTemplate FileTemplate { get; set; }
 
-        public ParameterTemplateSelector()
-        {
-        }
-
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
             if (!(item is IArgument arg))

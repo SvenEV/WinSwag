@@ -129,6 +129,9 @@
     <Compile Include="Templates\CommonResources.xaml.cs">
       <DependentUpon>CommonResources.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Templates\SecuritySchemeTemplates.xaml.cs">
+		<DependentUpon>SecuritySchemeTemplates.xaml</DependentUpon>
+	</Compile>
     <Compile Include="ViewModels\BoolSelectorConverter.cs" />
     <Compile Include="ViewModels\ForModels\ArgumentViewModel.cs" />
     <Compile Include="ViewModels\ForModels\EnumArgumentViewModel.cs" />
@@ -138,6 +141,7 @@
     <Compile Include="Templates\ThemeResourcesLight.xaml.cs">
       <DependentUpon>ThemeResourcesLight.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\SecuritySchemeTemplateSelector.cs" />
     <Compile Include="Xaml\BindableFlyout.cs" />
     <Compile Include="Xaml\DataContext.cs" />
     <Compile Include="Xaml\IViewModel.cs" />
@@ -260,6 +264,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Templates\SecuritySchemeTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
     <Page Include="Views\ApiInfoPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -289,22 +298,19 @@
       <Version>2.0.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.0.4</Version>
+      <Version>6.0.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Services.Store.Engagement">
       <Version>10.1711.28001</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>2.1.0</Version>
+      <Version>2.1.1</Version>
     </PackageReference>
     <PackageReference Include="MvvmLightLibs">
-      <Version>5.3.0</Version>
+      <Version>5.4.1</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>10.0.3</Version>
-    </PackageReference>
-    <PackageReference Include="NSwag.Core.Yaml">
-      <Version>11.12.12</Version>
     </PackageReference>
     <PackageReference Include="System.Reactive.Linq">
       <Version>3.1.1</Version>

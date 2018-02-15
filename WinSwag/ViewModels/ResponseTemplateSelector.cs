@@ -13,10 +13,6 @@ namespace WinSwag.ViewModels
         public DataTemplate ImageTemplate { get; set; }
         public DataTemplate AudioTemplate { get; set; }
 
-        public ResponseTemplateSelector()
-        {
-        }
-
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
         {
             if (!(item is IResponseContent arg))

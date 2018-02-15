@@ -12,6 +12,7 @@
                 <templates:CommonResources/>
                 <templates:ParameterTemplates/>
                 <templates:ResponseTemplates/>
+                <templates:SecuritySchemeTemplates/>
             </ResourceDictionary.MergedDictionaries>
 
             <ResourceDictionary.ThemeDictionaries>
